@@ -7,9 +7,9 @@ package compiler;
  * @author Gustavo H P Carvalho
  * @email gustavohpcarvalho@ecomp.poli.br
  */
-public interface Properties {
+public class Properties {
 
 	// The source code file
-	public static final String sourceCodeLocation = "program1.extension";
+	public static String sourceCodeLocation = "program1.extension";
 	
 }
