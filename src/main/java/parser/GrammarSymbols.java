@@ -81,6 +81,12 @@ public class GrammarSymbols
 	public static final int LP = 34;
 
 	public static final int RP = 35;
+	
+	public static final int BEGIN_DECL = 36;
+	
+	public static final int END_DECL = 37;
+	
+	public static final int END_COM = 38;
 
 	public static final int EOT = 1000;
 

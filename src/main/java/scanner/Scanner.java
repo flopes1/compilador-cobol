@@ -470,6 +470,18 @@ public class Scanner
 		{
 			return GrammarSymbols.CONTINUE;
 		}
+		else if (this.currentSpelling.toString().equalsIgnoreCase("BEGINDECLARATIONS"))
+		{
+			return GrammarSymbols.BEGIN_DECL;
+		}
+		else if (this.currentSpelling.toString().equalsIgnoreCase("ENDDECLARATIONS"))
+		{
+			return GrammarSymbols.END_DECL;
+		}
+		else if (this.currentSpelling.toString().equalsIgnoreCase("ENDCOM"))
+		{
+			return GrammarSymbols.END_COM;
+		}
 		else
 		{
 			return GrammarSymbols.ID;

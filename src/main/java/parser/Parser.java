@@ -20,7 +20,7 @@ import util.AST.AST;
  */
 public class Parser
 {
-	//marcos
+
 	// The current token
 	private Token currentToken = null;
 	// The scanner
@@ -153,23 +153,24 @@ public class Parser
 
 	private void parseVarDeclare() throws SyntacticException
 	{
-		if (currentToken.getKind() == GrammarSymbols.ID)
+		
+		
+		accept(GrammarSymbols.ID);
+		accept(GrammarSymbols.PIC);
+		
+		if (currentToken.getKind() == GrammarSymbols.INTEGER)
 		{
+
 			acceptIt();
-			accept(GrammarSymbols.PIC);
-
-			if (currentToken.getKind() == GrammarSymbols.INTEGER)
-			{
-
-				acceptIt();
-			}
-			else
-			{
-				accept(GrammarSymbols.BOOLEAN);
-
-			}
-			accept(GrammarSymbols.DOT);
 		}
+		else
+		{
+			accept(GrammarSymbols.BOOLEAN);
+
+		}
+		
+		accept(GrammarSymbols.DOT);
+
 	}
 
 	private void parseDataDivisionScope() throws SyntacticException
@@ -181,7 +182,6 @@ public class Parser
 				break;
 			}
 			parseVarDeclare();
-			accept(GrammarSymbols.DOT);
 
 		}
 
@@ -201,17 +201,20 @@ public class Parser
 				acceptIt();
 				accept(GrammarSymbols.ID);
 			}
+			
+			accept(GrammarSymbols.BEGIN_DECL);
+			
 			while (true)
 			{
-				//Nao vai rolar
-				if (currentToken.getKind() == GrammarSymbols.DOT)
+				
+				if (currentToken.getKind() == GrammarSymbols.END_DECL)
 				{
 					break;
 				}
 
 				parseVarDeclare();
 			}
-			acceptIt(); //Nao vai rolar
+			acceptIt(); 
 			parseCommand();
 			accept(GrammarSymbols.END_PROC);
 			accept(GrammarSymbols.DOT);
@@ -242,7 +245,7 @@ public class Parser
 		{
 			parseStatement();
 			//Nao vai rolar
-			if (currentToken.getKind() == GrammarSymbols.EXIT)
+			if (currentToken.getKind() == GrammarSymbols.END_COM)
 			{
 				break;
 			}
