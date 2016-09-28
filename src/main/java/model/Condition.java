@@ -3,11 +3,13 @@ package model;
 import util.AST.AST;
 
 public class Condition extends AST{
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+	
+	Expression e;
+	
+	public Condition(Expression e) {
+		this.e = e;
 	}
+	
 
 	@Override
 	public String toString(int level) {

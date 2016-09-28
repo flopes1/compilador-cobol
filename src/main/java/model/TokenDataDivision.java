@@ -1,7 +1,13 @@
 package model;
 
-public class TokenDataDivision extends Terminal {
+import scanner.Token;
 
+public class TokenDataDivision extends Terminal {
+	
+	public TokenDataDivision (Token t){
+		super.setT(t);
+	}
+	
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub

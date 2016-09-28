@@ -1,15 +1,19 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import util.AST.AST;
 
 public class DataDivisionScope extends AST{
 	
+	List<VarDeclare> lvd = new ArrayList<VarDeclare>();
+	Terminal texit, tdot;
 	
-	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+	public DataDivisionScope(List<VarDeclare> lvd, Terminal texit, Terminal tdot) {
+		this.lvd = lvd;
+		this.texit = texit;
+		this.tdot = tdot;
 	}
 
 	@Override

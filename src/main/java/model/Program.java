@@ -1,30 +1,25 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import util.AST.AST;;
 
 public class Program extends AST
 {
-
-	private List<Command> commands = new ArrayList<Command>();
+	private DataDivisionScope dds;
+	private ProcedureDivisionScope pds;
 	
-	public Program(List<Command> commands)
-	{
-		this.commands = commands;
+	
+	public Program(DataDivisionScope d, ProcedureDivisionScope p) {
+		this.dds = d;
+		this.pds = p;
 	}
+	
 	
 	@Override
-	public String toString(int level)
-	{
-		String tr = "";
-		
-		for (Command command : commands)
-		{
-			tr = command.toString() + "\n";
-		}
-		return tr;
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	
 
 }
