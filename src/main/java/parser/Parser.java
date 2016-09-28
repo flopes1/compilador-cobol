@@ -49,11 +49,12 @@ public class Parser
 		// Raises an exception
 		if (this.currentToken.getKind() == kind)
 		{
+
 			this.acceptIt();
 		}
 		else
 		{
-			throw new SyntacticException("Illegal Token", this.currentToken);
+			throw new SyntacticException("Illegal Token " + kind, this.currentToken);
 		}
 	}
 
@@ -89,29 +90,323 @@ public class Parser
 		return abstractSintaticTree;
 	}
 
-	private Program parseProgram()
+	/*
+	 * private Program parseProgram() { Program program = null;
+	 * 
+	 * List<Command> commandList = new ArrayList<Command>();
+	 * 
+	 * do { Command command = parseCommand(); commandList.add(command);
+	 * 
+	 * } while (this.currentToken.getKind() != GrammarSymbols.EOT);
+	 * 
+	 * program = new Program(commandList);
+	 * 
+	 * return program; }
+	 */
+
+	/*
+	 * private Command parseCommand() { return null; // TODO Auto-generated
+	 * method stub
+	 * 
+	 * }
+	 * 
+	 */
+
+	private Program parseProgram() throws SyntacticException
 	{
-		Program program = null;
 
-		List<Command> commandList = new ArrayList<Command>();
+		Program prog = null;
 
-		do
+		if (currentToken.getKind() == GrammarSymbols.IDENTIFICATOR_DIVISION)
 		{
-			Command command = parseCommand();
-			commandList.add(command);
+			acceptIt();
+			accept(GrammarSymbols.DOT);
+			accept(GrammarSymbols.PROGRAMID);
+			accept(GrammarSymbols.DOT);
+			accept(GrammarSymbols.ID);
+			accept(GrammarSymbols.DOT);
 
-		} while (this.currentToken.getKind() != GrammarSymbols.EOT);
+			if (currentToken.getKind() == GrammarSymbols.DATA_DIVISION)
+			{
+				acceptIt();
+				accept(GrammarSymbols.DOT);
+				parseDataDivisionScope();
+			}
 
-		program = new Program(commandList);
+			if (currentToken.getKind() == GrammarSymbols.PROCEDURE_DIVISION)
+			{
+				acceptIt();
+				accept(GrammarSymbols.DOT);
+				parseProcedureDivisionScope();
+			}
 
-		return program;
+		}
+		else
+		{
+			throw new SyntacticException("Qual mensagem colocar?", currentToken);
+		}
+
+		return prog;
 	}
 
-	private Command parseCommand()
-	{
-		return null;
-		// TODO Auto-generated method stub
+	// TODO fazer vários parseISSO, parseAQUILO
 
+	private void parseVarDeclare() throws SyntacticException
+	{
+		if (currentToken.getKind() == GrammarSymbols.ID)
+		{
+			acceptIt();
+			accept(GrammarSymbols.PIC);
+			// nesse ponto o CurrentToken é um ID
+
+			if (currentToken.getKind() == GrammarSymbols.INTEGER)
+			{
+
+				acceptIt();
+			}
+			else
+			{
+				accept(GrammarSymbols.BOOLEAN);
+
+			}
+			accept(GrammarSymbols.DOT);
+		}
+	}
+
+	private void parseDataDivisionScope() throws SyntacticException
+	{
+		while (true)
+		{
+			if (currentToken.getKind() == GrammarSymbols.EXIT)
+			{
+				break;
+			}
+			parseVarDeclare();
+			accept(GrammarSymbols.DOT);
+
+		}
+
+		acceptIt();
+		accept(GrammarSymbols.DOT);
+	}
+
+	private void parseProcedure() throws SyntacticException
+	{
+		if (currentToken.getKind() == GrammarSymbols.ID)
+		{
+			acceptIt();
+			accept(GrammarSymbols.SECTION);
+			accept(GrammarSymbols.DOT);
+			while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
+			{
+				acceptIt();
+				accept(GrammarSymbols.ID);
+			}
+			while (true)
+			{
+
+				if (currentToken.getKind() == GrammarSymbols.DOT)
+				{
+					break;
+				}
+
+				parseVarDeclare();
+			}
+			acceptIt();
+			parseCommand();
+			accept(GrammarSymbols.END_PROC);
+			accept(GrammarSymbols.DOT);
+
+		}
+
+	}
+
+	private void parseProcedureDivisionScope() throws SyntacticException
+	{
+		while (true)
+		{
+			if (currentToken.getKind() == GrammarSymbols.EXIT)
+			{
+				break;
+			}
+			parseProcedure();
+
+		}
+		acceptIt();
+		accept(GrammarSymbols.DOT);
+
+	}
+
+	private void parseCommand() throws SyntacticException
+	{
+		do
+		{
+			parseStatement();
+			if (currentToken.getKind() == GrammarSymbols.EXIT)
+			{
+				break;
+			}
+
+		} while (true);
+
+		acceptIt();
+		accept(GrammarSymbols.DOT);
+
+	}
+
+	private void parseAttrib() throws SyntacticException
+	{
+
+		if (currentToken.getKind() == GrammarSymbols.MOVE)
+		{
+			acceptIt();
+			parseExpression();
+			accept(GrammarSymbols.TO);
+			accept(GrammarSymbols.ID);
+			accept(GrammarSymbols.DOT);
+
+		}
+
+	}
+
+	private void parseCallProcedure() throws SyntacticException
+	{
+		if (currentToken.getKind() == GrammarSymbols.PERFORM)
+		{
+			acceptIt();
+			accept(GrammarSymbols.ID);
+
+			while (currentToken.getKind() == GrammarSymbols.USING)
+			{
+				acceptIt();
+				accept(GrammarSymbols.ID);
+
+			}
+
+		}
+
+	}
+
+	private void parseStatement() throws SyntacticException
+	{
+		if (currentToken.getKind() == GrammarSymbols.IF)
+		{
+			acceptIt();
+			parseCondition();
+			accept(GrammarSymbols.THEN);
+			parseCommand();
+
+			if (currentToken.getKind() == GrammarSymbols.ELSE)
+			{
+				acceptIt();
+				parseCommand();
+			}
+
+			accept(GrammarSymbols.END_IF);
+			accept(GrammarSymbols.DOT);
+
+		}
+		else if (currentToken.getKind() == GrammarSymbols.RETURN)
+		{
+			acceptIt();
+			parseExpression();
+			accept(GrammarSymbols.DOT);
+		}
+		else if (currentToken.getKind() == GrammarSymbols.UNTIL)
+		{
+			parseWhile();
+			accept(GrammarSymbols.END_WHILE);
+			accept(GrammarSymbols.DOT);
+		}
+		else if (currentToken.getKind() == GrammarSymbols.MOVE)
+		{
+			parseAttrib();
+		}
+		else if (currentToken.getKind() == GrammarSymbols.PERFORM)
+		{
+			parseCallProcedure();
+		}
+		else if (currentToken.getKind() == GrammarSymbols.BREAK || currentToken.getKind() == GrammarSymbols.CONTINUE)
+		{
+			acceptIt();
+		}
+		else
+		{
+			accept(GrammarSymbols.DISPLAY);
+			parseExpression();
+			accept(GrammarSymbols.DOT);
+		}
+	}
+
+	private void parseWhile() throws SyntacticException
+	{
+		acceptIt();
+		parseCondition();
+		parseCommand();
+	}
+
+	private void parseExpression() throws SyntacticException
+	{
+		parseOperator();
+		if (currentToken.getKind() == GrammarSymbols.COMP)
+		{
+			acceptIt();
+			parseOperator();
+		}
+	}
+
+	private void parseOperator() throws SyntacticException
+	{
+		parseTerm();
+		while (currentToken.getKind() == GrammarSymbols.PLUS || currentToken.getKind() == GrammarSymbols.MINUS)
+		{
+			acceptIt();
+			parseTerm();
+		}
+	}
+
+	private void parseTerm() throws SyntacticException
+	{
+		parseFator();
+		while (currentToken.getKind() == GrammarSymbols.MULTIPLICATION
+				|| currentToken.getKind() == GrammarSymbols.DIVISION)
+		{
+			acceptIt();
+			parseFator();
+		}
+	}
+
+	private void parseFator() throws SyntacticException
+	{
+		// ALTERANDO boolean por bool
+		if (currentToken.getKind() == GrammarSymbols.BOOL)
+		{
+			acceptIt();
+		}
+		else if (currentToken.getKind() == GrammarSymbols.ID)
+		{
+			acceptIt();
+		}
+		else if (currentToken.getKind() == GrammarSymbols.NUMBER)
+		{
+			acceptIt();
+		}
+		else if (currentToken.getKind() == GrammarSymbols.LP)
+		{
+			acceptIt();
+			parseExpression();
+			accept(GrammarSymbols.RP);
+		}
+		else
+		{
+			accept(GrammarSymbols.PERFORM);
+			parseCallProcedure();
+		}
+	}
+
+	private void parseCondition() throws SyntacticException
+	{
+		parseExpression();
 	}
 
 	private void initializeToken()

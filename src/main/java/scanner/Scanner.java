@@ -43,7 +43,7 @@ public class Scanner
 	 * Returns the next token
 	 * 
 	 * @return
-	 * @throws LexicalException 
+	 * @throws LexicalException
 	 */ // TODO
 	public Token getNextToken() throws LexicalException
 	{
@@ -121,7 +121,6 @@ public class Scanner
 			this.getNextChar();
 		}
 	}
-
 
 	/**
 	 * Gets the next char
@@ -256,15 +255,25 @@ public class Scanner
 						state = 4;
 						this.getNextChar();
 					}
-					else if (this.currentChar == '>' || this.currentChar == '<' || this.currentChar == '=')
-					{
-						state = 5;
-						this.getNextChar();
-					}
-
 					else if (this.currentChar == '!')
 					{
 						state = 6;
+						this.getNextChar();
+					}
+					else if (this.currentChar == '>' || this.currentChar == '<')
+					{
+						state = 5;
+						this.getNextChar();
+
+						if (this.currentChar == '=')
+						{
+							this.getNextChar();
+						}
+					}
+
+					else if (this.currentChar == '=')
+					{
+						state = 5;
 						this.getNextChar();
 					}
 					else if (this.currentChar == '+')
@@ -287,9 +296,19 @@ public class Scanner
 						state = 10;
 						this.getNextChar();
 					}
-					else
+					else if (this.currentChar == '(')
 					{
 						state = 11;
+						this.getNextChar();
+					}
+					else if (this.currentChar == ')')
+					{
+						state = 12;
+						this.getNextChar();
+					}
+					else
+					{
+						state = 13;
 					}
 					break;
 				}
@@ -327,7 +346,7 @@ public class Scanner
 					}
 					else
 					{
-						state = 11;
+						state = 13;
 					}
 				}
 				case 7:
@@ -339,6 +358,10 @@ public class Scanner
 				case 10:
 					return GrammarSymbols.DIVISION;
 				case 11:
+					return GrammarSymbols.LP;
+				case 12:
+					return GrammarSymbols.RP;
+				case 13:
 					throw new LexicalException("Invalid character", this.currentChar, this.line, this.column);
 			}
 		}
@@ -351,7 +374,7 @@ public class Scanner
 		{
 			return GrammarSymbols.IDENTIFICATOR_DIVISION;
 		}
-		else if (this.currentSpelling.toString().equalsIgnoreCase("DATADIVISION "))
+		else if (this.currentSpelling.toString().equalsIgnoreCase("DATADIVISION"))
 		{
 			return GrammarSymbols.DATA_DIVISION;
 		}
@@ -366,6 +389,14 @@ public class Scanner
 		else if (this.currentSpelling.toString().equalsIgnoreCase("BOOL"))
 		{
 			return GrammarSymbols.BOOL;
+		}
+		else if (this.currentSpelling.toString().equalsIgnoreCase("BOOLEAN"))
+		{
+			return GrammarSymbols.BOOLEAN;
+		}
+		else if (this.currentSpelling.toString().equalsIgnoreCase("INTEGER"))
+		{
+			return GrammarSymbols.INTEGER;
 		}
 		else if (this.currentSpelling.toString().equalsIgnoreCase("EXIT"))
 		{
