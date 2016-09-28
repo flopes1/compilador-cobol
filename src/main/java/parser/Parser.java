@@ -191,9 +191,8 @@ public class Parser
 
 	private void parseProcedure() throws SyntacticException
 	{
-		if (currentToken.getKind() == GrammarSymbols.ID)
-		{
-			acceptIt();
+		
+			accept(GrammarSymbols.ID);
 			accept(GrammarSymbols.SECTION);
 			accept(GrammarSymbols.DOT);
 			while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
@@ -219,7 +218,7 @@ public class Parser
 			accept(GrammarSymbols.END_PROC);
 			accept(GrammarSymbols.DOT);
 
-		}
+		
 
 	}
 
@@ -244,7 +243,7 @@ public class Parser
 		do
 		{
 			parseStatement();
-			//Nao vai rolar
+		
 			if (currentToken.getKind() == GrammarSymbols.END_COM)
 			{
 				break;
@@ -252,8 +251,8 @@ public class Parser
 
 		} while (true);
 
-		acceptIt(); //Nao vai rolar
-		accept(GrammarSymbols.DOT); //Nao vai rolar
+		acceptIt(); 
+		accept(GrammarSymbols.DOT); 
 
 	}
 
