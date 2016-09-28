@@ -33,16 +33,16 @@ public class ScannerTest
 		{
 			try
 			{
-				token = scanner.getNextToken();
+				token = this.scanner.getNextToken();
 			}
 			catch (LexicalException e)
 			{
 				this.e = e;
 			}
 
-			assertEquals(e == null, true);
-			assertEquals(token != null, true);
-			
+			assertEquals(true, this.e == null);
+			assertEquals(true, token != null);
+
 		} while (token.getKind() != 1000);
 	}
 
