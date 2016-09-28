@@ -114,7 +114,7 @@ public class Parser
 
 	private Program parseProgram() throws SyntacticException
 	{
-
+		//null
 		Program prog = null;
 
 		if (currentToken.getKind() == GrammarSymbols.IDENTIFICATOR_DIVISION)
