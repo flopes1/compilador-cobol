@@ -28,7 +28,3 @@ PROCEDUREDIVISION.
 
 	
 EXIT. 
-
-# não consegui delimitar um ponto de fim do arquivo com o \000, sempre acontece estouro de memoria
-# para corrigir isso utilizei @
-@

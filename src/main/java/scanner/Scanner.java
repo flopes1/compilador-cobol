@@ -107,7 +107,7 @@ public class Scanner
 		// Reads characters while they are graphics or '\t'
 		// A command line should finish with a \n
 
-		while (this.currentChar != '@' && this.isSeparator(this.currentChar) || !this.isGraphic(this.currentChar))
+		while ((this.isSeparator(this.currentChar) || !this.isGraphic(this.currentChar)) && this.currentChar != '\0')
 		{
 
 			if (this.currentChar == '#')
@@ -237,7 +237,7 @@ public class Scanner
 			{
 				case 0:
 				{
-					if (this.currentChar == '@')
+					if (this.currentChar == '\0')
 					{
 						state = 1;
 					}
