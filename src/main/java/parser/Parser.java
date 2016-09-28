@@ -54,7 +54,7 @@ public class Parser
 		}
 		else
 		{
-			throw new SyntacticException("Illegal Token " + kind, this.currentToken);
+			throw new SyntacticException("Illegal Token", this.currentToken);
 		}
 	}
 
@@ -157,7 +157,6 @@ public class Parser
 		{
 			acceptIt();
 			accept(GrammarSymbols.PIC);
-			// nesse ponto o CurrentToken é um ID
 
 			if (currentToken.getKind() == GrammarSymbols.INTEGER)
 			{
@@ -204,7 +203,7 @@ public class Parser
 			}
 			while (true)
 			{
-
+				//Nao vai rolar
 				if (currentToken.getKind() == GrammarSymbols.DOT)
 				{
 					break;
@@ -212,7 +211,7 @@ public class Parser
 
 				parseVarDeclare();
 			}
-			acceptIt();
+			acceptIt(); //Nao vai rolar
 			parseCommand();
 			accept(GrammarSymbols.END_PROC);
 			accept(GrammarSymbols.DOT);
@@ -242,6 +241,7 @@ public class Parser
 		do
 		{
 			parseStatement();
+			//Nao vai rolar
 			if (currentToken.getKind() == GrammarSymbols.EXIT)
 			{
 				break;
@@ -249,42 +249,30 @@ public class Parser
 
 		} while (true);
 
-		acceptIt();
-		accept(GrammarSymbols.DOT);
+		acceptIt(); //Nao vai rolar
+		accept(GrammarSymbols.DOT); //Nao vai rolar
 
 	}
 
 	private void parseAttrib() throws SyntacticException
 	{
-
-		if (currentToken.getKind() == GrammarSymbols.MOVE)
-		{
-			acceptIt();
-			parseExpression();
-			accept(GrammarSymbols.TO);
-			accept(GrammarSymbols.ID);
-			accept(GrammarSymbols.DOT);
-
-		}
-
+		acceptIt();
+		parseExpression();
+		accept(GrammarSymbols.TO);
+		accept(GrammarSymbols.ID);
+		accept(GrammarSymbols.DOT);
 	}
 
 	private void parseCallProcedure() throws SyntacticException
 	{
-		if (currentToken.getKind() == GrammarSymbols.PERFORM)
-		{
+		acceptIt();
+		accept(GrammarSymbols.ID);
+
+		while (currentToken.getKind() == GrammarSymbols.USING) {
 			acceptIt();
 			accept(GrammarSymbols.ID);
 
-			while (currentToken.getKind() == GrammarSymbols.USING)
-			{
-				acceptIt();
-				accept(GrammarSymbols.ID);
-
-			}
-
 		}
-
 	}
 
 	private void parseStatement() throws SyntacticException
