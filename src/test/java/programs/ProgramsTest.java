@@ -53,7 +53,7 @@ public class ProgramsTest
 	{
 		List<Parser> parsers = new ArrayList<Parser>();
 
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program" + (i + 1) + ".cobol")
 					.getFile();
