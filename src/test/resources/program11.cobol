@@ -1,0 +1,36 @@
+IDENTIFICATORDIVISION. PROGRAMID. TESTCONTINUE.
+
+	PROCEDUREDIVISION.
+	
+		MAIN SECTION.
+			
+			BEGINDECLARATIONS
+				A PIC INTEGER.
+			ENDDECLARATIONS
+			
+			MOVE 10 TO A.
+			
+			UNTIL A = 1
+			
+				MOVE (A - 1) TO A
+			
+				IF A <= 5 THEN
+					
+					CONTINUE
+					ENDCOM.
+				
+				ENDIF.					
+				
+				DISPLAY A.
+				ENDCOM.
+				
+			ENDWHILE.
+			
+			DISPLAY A.
+			
+			ENDCOM.
+			
+		ENDPROC.
+		
+	EXIT.
+	
