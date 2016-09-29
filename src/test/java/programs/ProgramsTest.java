@@ -13,7 +13,7 @@ import parser.Parser;
 import parser.SyntacticException;
 import util.AST.AST;
 
-public class Program
+public class ProgramsTest
 {
 
 	private List<Parser> parsers = null;
@@ -28,20 +28,22 @@ public class Program
 	@Test
 	public void parseProgram()
 	{
+		int i = 1;
 		try
 		{
-
 			for (Parser parser : this.parsers)
 			{
 				AST tree = parser.parse();
-				
+				i++;
 				assertEquals(true, tree != null);
 				
 			}
 		}
 		catch (SyntacticException e)
 		{
+			System.err.println(i);
 			this.e = e;
+			System.err.println(e.toString());
 		}
 		
 		assertEquals(true, e == null);
@@ -51,7 +53,7 @@ public class Program
 	{
 		List<Parser> parsers = new ArrayList<Parser>();
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program" + (i + 1) + ".cobol")
 					.getFile();
