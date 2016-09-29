@@ -13,16 +13,11 @@ IDENTIFICATORDIVISION. PROGRAMID. TESTBREAK.
 			UNTIL TRUE
 			
 				IF A <= 3 THEN
-					
 					BREAK
-		
 					ENDCOM.
-					
 				ELSE
-				
-					MOVE (A - 1) TO A
+					MOVE (A - 1) TO A.
 					ENDCOM. 
-								
 				ENDIF.
 				
 				ENDCOM.

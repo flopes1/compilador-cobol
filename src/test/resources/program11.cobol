@@ -12,7 +12,7 @@ IDENTIFICATORDIVISION. PROGRAMID. TESTCONTINUE.
 			
 			UNTIL A = 1
 			
-				MOVE (A - 1) TO A
+				MOVE (A - 1) TO A.
 			
 				IF A <= 5 THEN
 					
