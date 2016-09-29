@@ -7,12 +7,9 @@ import util.AST.AST;
 public class Term extends AST{
 
 	Fator fator;
-	List<Object[]> list;
 	
-	public Term(Fator fator,List<Object[]> list) {
+	public Term(Fator fator) {
 		this.fator = fator;
-		this.list = list;
-	
 	}
 	
 	@Override
