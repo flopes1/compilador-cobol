@@ -19,7 +19,7 @@ public class ScannerTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("modeloDePrograma.cobol").getFile();
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program12.cobol").getFile();
 		this.scanner = new Scanner();
 	}
 
@@ -34,7 +34,7 @@ public class ScannerTest
 			try
 			{
 				token = this.scanner.getNextToken();
-				//System.out.println(token.getSpelling());
+				System.out.println(token.getSpelling());
 			}
 			catch (LexicalException e)
 			{

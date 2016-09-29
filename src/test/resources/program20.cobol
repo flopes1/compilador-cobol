@@ -1,39 +1,56 @@
-#IDENTIFICAÇAO DO PROGRAMA (OBRIGATORIO)
-IDENTIFICATORDIVISION. PROGRAMID. idQualquer.
-	#INICIO DO DATADIVISION(PODE NAO TER)
-	DATADIVISION. 
-		#INICIO DOS VARDECLARE(PODE NAO TER)
-		varIdQualquer PIC INTEGER.
-		varIdQqr PIC BOOLEAN.
-	#FIM DO DATADIVISION
-	EXIT.
+IDENTIFICATORDIVISION. PROGRAMID. testando.
 	
-	#INICIO DO PROCEDURE DIVISION, QUE PODE TER VARIOS PROCEDURES(PODE NAO TER)
 	PROCEDUREDIVISION.	
-			#COMEÇO DE UM PROCEDURE(PODE NAO TER)
-			nomeDaProcedure SECTION. INTEGER exemploDePrmt
+			sec SECTION. INTEGER nomevar1
 				BEGINDECLARATIONS
-		
-				#PODE TER OU NAO VARDECLARATIONS
-		
+					nomevar2 PIC INTEGER.
+					cont PIC INTEGER.
+					b PIC BOOLEAN.
+					
+					
 				ENDDECLARATIONS
 		
-				#COMANDO OBRIGATORIO, PELO MENOS UM
+					MOVE nomevar1 TO nomevar2.
+					MOVE 0 TO cont.
 					
-					#EXEMPLOS DE COMANDOS
-					MOVE 5+5+5+5 TO NUM2A.
-					MOVE 10*3*5 TO NUM1A.
-					DISPLAY NUM2A + NUM1A.
+					
+					UNTIL  cont <= nomevar2 
+						MOVE PERFORM iq20 USING varnome3 TO b.
+						IF ( b )  THEN 
+							DISPLAY 0000000.
+							ENDCOM.
+					
+						ENDIF.
+							
+						MOVE nomevar2 + 1 TO nomevar2.
+										
+						
+						ENDCOM.
+					ENDWHILE.
+									
 		
-				#FIM DE TODOS OS COMANDOS
-				ENDCOM.
-				
-			#FIM DA PRECEDURE nomeDaProcedure
+					ENDCOM.
+			
 			ENDPROC.
 			
+			iq20 SECTION. INTEGER nomevar10
+				BEGINDECLARATIONS
+					nomevar11 PIC INTEGER.
+				ENDDECLARATIONS
+					
+					MOVE nomevar10 + 1 TO nomevar11.
+					
+					IF ( nomevar11 = 20 )  THEN 
+						RETURN TRUE.
+						ENDCOM.
+					ELSE
+						RETURN FALSE.
+						ENDCOM.
+					ENDIF.
+					
+					
+		
+					ENDCOM.
 			
-			#PODE TER MAIS PROCEDURES
-			
-			
-	#FIM DE TODOS OS PROCEDURES
+			ENDPROC.
 	EXIT.

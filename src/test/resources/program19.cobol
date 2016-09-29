@@ -1,39 +1,38 @@
-#IDENTIFICAÇAO DO PROGRAMA (OBRIGATORIO)
-IDENTIFICATORDIVISION. PROGRAMID. idQualquer.
-	#INICIO DO DATADIVISION(PODE NAO TER)
-	DATADIVISION. 
-		#INICIO DOS VARDECLARE(PODE NAO TER)
-		varIdQualquer PIC INTEGER.
-		varIdQqr PIC BOOLEAN.
-	#FIM DO DATADIVISION
-	EXIT.
+IDENTIFICATORDIVISION. PROGRAMID. testando.
 	
-	#INICIO DO PROCEDURE DIVISION, QUE PODE TER VARIOS PROCEDURES(PODE NAO TER)
 	PROCEDUREDIVISION.	
-			#COMEÇO DE UM PROCEDURE(PODE NAO TER)
-			nomeDaProcedure SECTION. INTEGER exemploDePrmt
+			sec SECTION. INTEGER nomevar1
 				BEGINDECLARATIONS
-		
-				#PODE TER OU NAO VARDECLARATIONS
-		
+					nomevar2 PIC INTEGER.
+					nomevar3 PIC INTEGER.
+					nomevar4 PIC INTEGER.
 				ENDDECLARATIONS
 		
-				#COMANDO OBRIGATORIO, PELO MENOS UM
+					MOVE nomevar1 TO nomevar2.
+					MOVE 0 TO nomevar3.
+					MOVE 0 TO nomevar4.
 					
-					#EXEMPLOS DE COMANDOS
-					MOVE 5+5+5+5 TO NUM2A.
-					MOVE 10*3*5 TO NUM1A.
-					DISPLAY NUM2A + NUM1A.
+					IF 0 < nomevar2  THEN 
+						UNTIL nomevar3 <= nomevar2 
+						
+							DISPLAY nomevar2.
+							MOVE nomevar2 + 1 TO nomevar2.
+							MOVE 0 TO nomevar4.
+								UNTIL nomevar4 <= nomevar2 
+									DISPLAY 000000.
+									MOVE nomevar4 + 1 TO nomevar4.
+									ENDCOM.
+								ENDWHILE.
+								ENDCOM.
+						ENDWHILE.
+						
+						ENDCOM.
+					ENDIF.
+						
 		
-				#FIM DE TODOS OS COMANDOS
-				ENDCOM.
-				
-			#FIM DA PRECEDURE nomeDaProcedure
+					ENDCOM.
+			
 			ENDPROC.
 			
-			
-			#PODE TER MAIS PROCEDURES
-			
-			
-	#FIM DE TODOS OS PROCEDURES
+
 	EXIT.
