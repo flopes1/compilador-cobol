@@ -3,8 +3,28 @@ package parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Attrib;
+import model.CallProcedure;
 import model.Command;
+import model.Condition;
+import model.DataDivisionScope;
+import model.Expression;
+import model.Fator;
+import model.Operator;
+import model.Procedure;
+import model.ProcedureDivisionScope;
 import model.Program;
+import model.Statement;
+import model.Term;
+import model.Terminal;
+import model.TokenDataDivision;
+import model.TokenDot;
+import model.TokenId;
+import model.TokenIdentificatorDivision;
+import model.TokenProcedureDivision;
+import model.TokenProgramId;
+import model.VarDeclare;
+import model.While;
 import scanner.LexicalException;
 import scanner.Scanner;
 import scanner.Token;
@@ -116,30 +136,52 @@ public class Parser
 	{
 		//null
 		Program prog = null;
+		Terminal datdiv = null,dot4 = null,procdiv = null,dot5 = null;
+		DataDivisionScope d = null;
+		ProcedureDivisionScope p = null;
 
 		if (currentToken.getKind() == GrammarSymbols.IDENTIFICATOR_DIVISION)
 		{
+			Terminal iddiv= new TokenIdentificatorDivision(currentToken);
 			acceptIt();
+					
+			Terminal dot= new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
+			
+			Terminal progid= new TokenProgramId(currentToken);
 			accept(GrammarSymbols.PROGRAMID);
+			
+			Terminal dot2= new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
+			
+			Terminal id= new TokenId(currentToken);
 			accept(GrammarSymbols.ID);
+			
+			Terminal dot3= new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
+			
 
 			if (currentToken.getKind() == GrammarSymbols.DATA_DIVISION)
 			{
+				datdiv= new TokenDataDivision(currentToken);
 				acceptIt();
+				
+				dot4= new TokenDot(currentToken);
 				accept(GrammarSymbols.DOT);
-				parseDataDivisionScope();
+				d = parseDataDivisionScope();
+				
 			}
 
 			if (currentToken.getKind() == GrammarSymbols.PROCEDURE_DIVISION)
 			{
+				procdiv = new TokenProcedureDivision(currentToken);
 				acceptIt();
+				
+				dot5= new TokenDot(currentToken);
 				accept(GrammarSymbols.DOT);
-				parseProcedureDivisionScope();
+				p = parseProcedureDivisionScope();
 			}
-
+			prog = new Program(iddiv, dot3, progid, dot2, id, dot3, datdiv, dot4, d, procdiv, dot5, p);
 		}
 		else
 		{
@@ -151,7 +193,7 @@ public class Parser
 
 	// TODO fazer vários parseISSO, parseAQUILO
 
-	private void parseVarDeclare() throws SyntacticException
+	private VarDeclare parseVarDeclare() throws SyntacticException
 	{
 		
 		
@@ -170,10 +212,11 @@ public class Parser
 		}
 		
 		accept(GrammarSymbols.DOT);
+		return null;
 
 	}
 
-	private void parseDataDivisionScope() throws SyntacticException
+	private DataDivisionScope parseDataDivisionScope() throws SyntacticException
 	{
 		while (true)
 		{
@@ -187,9 +230,10 @@ public class Parser
 
 		acceptIt();
 		accept(GrammarSymbols.DOT);
+		return null;
 	}
 
-	private void parseProcedure() throws SyntacticException
+	private Procedure parseProcedure() throws SyntacticException
 	{
 		
 			accept(GrammarSymbols.ID);
@@ -217,12 +261,13 @@ public class Parser
 			parseCommand();
 			accept(GrammarSymbols.END_PROC);
 			accept(GrammarSymbols.DOT);
+			return null;
 
 		
 
 	}
 
-	private void parseProcedureDivisionScope() throws SyntacticException
+	private ProcedureDivisionScope parseProcedureDivisionScope() throws SyntacticException
 	{
 		while (true)
 		{
@@ -235,10 +280,11 @@ public class Parser
 		}
 		acceptIt();
 		accept(GrammarSymbols.DOT);
+		return null;
 
 	}
 
-	private void parseCommand() throws SyntacticException
+	private Command parseCommand() throws SyntacticException
 	{
 		do
 		{
@@ -252,20 +298,22 @@ public class Parser
 		} while (true);
 
 		acceptIt(); 
-		accept(GrammarSymbols.DOT); 
+		accept(GrammarSymbols.DOT);
+		return null; 
 
 	}
 
-	private void parseAttrib() throws SyntacticException
+	private Attrib parseAttrib() throws SyntacticException
 	{
 		acceptIt();
 		parseExpression();
 		accept(GrammarSymbols.TO);
 		accept(GrammarSymbols.ID);
 		accept(GrammarSymbols.DOT);
+		return null;
 	}
 
-	private void parseCallProcedure() throws SyntacticException
+	private CallProcedure parseCallProcedure() throws SyntacticException
 	{
 		acceptIt();
 		accept(GrammarSymbols.ID);
@@ -275,9 +323,10 @@ public class Parser
 			accept(GrammarSymbols.ID);
 
 		}
+		return null;
 	}
 
-	private void parseStatement() throws SyntacticException
+	private Statement parseStatement() throws SyntacticException
 	{
 		if (currentToken.getKind() == GrammarSymbols.IF)
 		{
@@ -326,16 +375,18 @@ public class Parser
 			parseExpression();
 			accept(GrammarSymbols.DOT);
 		}
+		return null;
 	}
 
-	private void parseWhile() throws SyntacticException
+	private While parseWhile() throws SyntacticException
 	{
 		acceptIt();
 		parseCondition();
 		parseCommand();
+		return null;
 	}
 
-	private void parseExpression() throws SyntacticException
+	private Expression parseExpression() throws SyntacticException
 	{
 		parseOperator();
 		if (currentToken.getKind() == GrammarSymbols.COMP)
@@ -343,9 +394,10 @@ public class Parser
 			acceptIt();
 			parseOperator();
 		}
+		return null;
 	}
 
-	private void parseOperator() throws SyntacticException
+	private Operator parseOperator() throws SyntacticException
 	{
 		parseTerm();
 		while (currentToken.getKind() == GrammarSymbols.PLUS || currentToken.getKind() == GrammarSymbols.MINUS)
@@ -353,9 +405,10 @@ public class Parser
 			acceptIt();
 			parseTerm();
 		}
+		return null;
 	}
 
-	private void parseTerm() throws SyntacticException
+	private Term parseTerm() throws SyntacticException
 	{
 		parseFator();
 		while (currentToken.getKind() == GrammarSymbols.MULTIPLICATION
@@ -364,9 +417,10 @@ public class Parser
 			acceptIt();
 			parseFator();
 		}
+		return null;
 	}
 
-	private void parseFator() throws SyntacticException
+	private Fator parseFator() throws SyntacticException
 	{
 		// ALTERANDO boolean por bool
 		if (currentToken.getKind() == GrammarSymbols.BOOL)
@@ -392,11 +446,13 @@ public class Parser
 			accept(GrammarSymbols.PERFORM);
 			parseCallProcedure();
 		}
+		return null;
 	}
 
-	private void parseCondition() throws SyntacticException
+	private Condition parseCondition() throws SyntacticException
 	{
 		parseExpression();
+		return null;
 	}
 
 	private void initializeToken()
