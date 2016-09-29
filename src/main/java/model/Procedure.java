@@ -7,17 +7,17 @@ import util.AST.AST;
 
 public class Procedure extends AST{
 	
-	Terminal id, sec, dot, begindecl, enddecl, endproc, dot2;
-	List<VarDeclare> lvd = new ArrayList<VarDeclare>();
-	List<Terminal[]> lt;
-	Command com;
+	private Terminal id, sec, dot, begindecl, enddecl, endproc, dot2;
+	private List<VarDeclare> lvd = new ArrayList<VarDeclare>();
+	private List<Terminal> argumentList;
+	private Command com;
 	
-	public Procedure(Terminal id,Terminal sec, Terminal dot, List<Terminal[]> lt, Terminal begindecl,
+	public Procedure(Terminal id,Terminal sec, Terminal dot, List<Terminal> terminalList, Terminal begindecl,
 			List<VarDeclare> lvd, Terminal enddecl, Command com, Terminal endproc, Terminal dot2) {
 		this.id = id;
 		this.sec = sec;
 		this.dot = dot;
-		this.lt = lt;
+		this.argumentList = terminalList;
 		this.begindecl = begindecl;
 		this.lvd = lvd;
 		this.enddecl = enddecl;
