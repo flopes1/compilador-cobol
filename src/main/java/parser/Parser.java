@@ -134,50 +134,49 @@ public class Parser
 
 	private Program parseProgram() throws SyntacticException
 	{
-		//null
+		// null
 		Program prog = null;
-		Terminal datdiv = null,dot4 = null,procdiv = null,dot5 = null;
+		Terminal datdiv = null, dot4 = null, procdiv = null, dot5 = null;
 		DataDivisionScope d = null;
 		ProcedureDivisionScope p = null;
 
 		if (currentToken.getKind() == GrammarSymbols.IDENTIFICATOR_DIVISION)
 		{
-			Terminal iddiv= new TokenIdentificatorDivision(currentToken);
+			Terminal iddiv = new TokenIdentificatorDivision(currentToken);
 			acceptIt();
-					
-			Terminal dot= new TokenDot(currentToken);
+
+			Terminal dot = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
-			
-			Terminal progid= new TokenProgramId(currentToken);
+
+			Terminal progid = new TokenProgramId(currentToken);
 			accept(GrammarSymbols.PROGRAMID);
-			
-			Terminal dot2= new TokenDot(currentToken);
+
+			Terminal dot2 = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
-			
-			Terminal id= new TokenId(currentToken);
+
+			Terminal id = new TokenId(currentToken);
 			accept(GrammarSymbols.ID);
-			
-			Terminal dot3= new TokenDot(currentToken);
+
+			Terminal dot3 = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
-			
 
 			if (currentToken.getKind() == GrammarSymbols.DATA_DIVISION)
 			{
-				datdiv= new TokenDataDivision(currentToken);
+				datdiv = new TokenDataDivision(currentToken);
 				acceptIt();
-				
-				dot4= new TokenDot(currentToken);
+
+				dot4 = new TokenDot(currentToken);
 				accept(GrammarSymbols.DOT);
 				d = parseDataDivisionScope();
-				
+
 			}
 
 			if (currentToken.getKind() == GrammarSymbols.PROCEDURE_DIVISION)
 			{
 				procdiv = new TokenProcedureDivision(currentToken);
 				acceptIt();
-				
-				dot5= new TokenDot(currentToken);
+
+				dot5 = new TokenDot(currentToken);
 				accept(GrammarSymbols.DOT);
 				p = parseProcedureDivisionScope();
 			}
@@ -195,11 +194,10 @@ public class Parser
 
 	private VarDeclare parseVarDeclare() throws SyntacticException
 	{
-		
-		
+
 		accept(GrammarSymbols.ID);
 		accept(GrammarSymbols.PIC);
-		
+
 		if (currentToken.getKind() == GrammarSymbols.INTEGER)
 		{
 
@@ -210,7 +208,7 @@ public class Parser
 			accept(GrammarSymbols.BOOLEAN);
 
 		}
-		
+
 		accept(GrammarSymbols.DOT);
 		return null;
 
@@ -235,35 +233,33 @@ public class Parser
 
 	private Procedure parseProcedure() throws SyntacticException
 	{
-		
+
+		accept(GrammarSymbols.ID);
+		accept(GrammarSymbols.SECTION);
+		accept(GrammarSymbols.DOT);
+		while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
+		{
+			acceptIt();
 			accept(GrammarSymbols.ID);
-			accept(GrammarSymbols.SECTION);
-			accept(GrammarSymbols.DOT);
-			while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
-			{
-				acceptIt();
-				accept(GrammarSymbols.ID);
-			}
-			
-			accept(GrammarSymbols.BEGIN_DECL);
-			
-			while (true)
-			{
-				
-				if (currentToken.getKind() == GrammarSymbols.END_DECL)
-				{
-					break;
-				}
+		}
 
-				parseVarDeclare();
-			}
-			acceptIt(); 
-			parseCommand();
-			accept(GrammarSymbols.END_PROC);
-			accept(GrammarSymbols.DOT);
-			return null;
+		accept(GrammarSymbols.BEGIN_DECL);
 
-		
+		while (true)
+		{
+
+			if (currentToken.getKind() == GrammarSymbols.END_DECL)
+			{
+				break;
+			}
+
+			parseVarDeclare();
+		}
+		acceptIt();
+		parseCommand();
+		accept(GrammarSymbols.END_PROC);
+		accept(GrammarSymbols.DOT);
+		return null;
 
 	}
 
@@ -289,7 +285,7 @@ public class Parser
 		do
 		{
 			parseStatement();
-		
+
 			if (currentToken.getKind() == GrammarSymbols.END_COM)
 			{
 				break;
@@ -297,9 +293,9 @@ public class Parser
 
 		} while (true);
 
-		acceptIt(); 
+		acceptIt();
 		accept(GrammarSymbols.DOT);
-		return null; 
+		return null;
 
 	}
 
@@ -318,7 +314,8 @@ public class Parser
 		acceptIt();
 		accept(GrammarSymbols.ID);
 
-		while (currentToken.getKind() == GrammarSymbols.USING) {
+		while (currentToken.getKind() == GrammarSymbols.USING)
+		{
 			acceptIt();
 			accept(GrammarSymbols.ID);
 
