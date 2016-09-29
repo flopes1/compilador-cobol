@@ -1,21 +1,16 @@
 package model;
 
 import java.util.List;
-import java.util.ArrayList;
-
 import util.AST.AST;
 
 public class Operator extends AST{
 	
-	List<Terminal> lt = new ArrayList<Terminal>();
-	List<Term> lterm = new ArrayList<Term>();
+	Term termo;
+	List<Object[]> list;
 	
-	Term ter,ter2;
-	Terminal op;
-	
-	public Operator(List<Terminal> lt,List<Term> lterm) {
-		this.lt = lt;
-		this.lterm = lterm;
+	public Operator(Term term,List<Object[]> ltermo) {
+		this.termo = term;
+		this.list = ltermo;
 	
 	}
 	

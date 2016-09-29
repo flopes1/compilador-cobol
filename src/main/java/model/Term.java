@@ -1,21 +1,17 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import util.AST.AST;
 
 public class Term extends AST{
 
-	List<Terminal> lt = new ArrayList<Terminal>();
-	List<Fator> fat = new ArrayList<Fator>();
+	Fator fator;
+	List<Object[]> list;
 	
-	Term ter,ter2;
-	Terminal op;
-	
-	public Term(List<Terminal> lt,List<Fator> fat) {
-		this.lt = lt;
-		this.fat = fat;
+	public Term(Fator fator,List<Object[]> list) {
+		this.fator = fator;
+		this.list = list;
 	
 	}
 	

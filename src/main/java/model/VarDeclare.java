@@ -5,12 +5,12 @@ import util.AST.AST;
 public class VarDeclare extends AST{
 	
 	
-	Terminal id,pic,boolid,dot;
+	Terminal id,pic,intOrBool,dot;
 	
-	public VarDeclare(Terminal id, Terminal pic, Terminal boolid, Terminal dot) {
+	public VarDeclare(Terminal id, Terminal pic, Terminal intOrBool, Terminal dot) {
 		this.id=id;
 		this.pic=pic;
-		this.boolid=boolid;
+		this.intOrBool = intOrBool;
 		this.dot=dot;
 	}
 	
