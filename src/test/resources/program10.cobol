@@ -1,0 +1,39 @@
+IDENTIFICATORDIVISION. PROGRAMID. TESTBREAK.
+
+	PROCEDUREDIVISION.
+	
+		MAIN SECTION.
+			
+			BEGINDECLARATIONS
+				A PIC INTEGER.
+			ENDDECLARATIONS
+			
+			MOVE 10 TO A.
+			
+			UNTIL TRUE
+			
+				IF A <= 3 THEN
+					
+					BREAK
+		
+					ENDCOM.
+					
+				ELSE
+				
+					MOVE (A - 1) TO A
+					ENDCOM. 
+								
+				ENDIF.
+				
+				ENDCOM.
+				
+			ENDWHILE.
+			
+			DISPLAY A.
+			
+			ENDCOM.
+			
+		ENDPROC.
+		
+	EXIT.
+	

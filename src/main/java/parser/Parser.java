@@ -215,7 +215,7 @@ public class Parser {
 		return prog;
 	}
 
-	// TODO fazer vários parseISSO, parseAQUILO
+	// TODO fazer vï¿½rios parseISSO, parseAQUILO
 
 	private VarDeclare parseVarDeclare() throws SyntacticException {
 		VarDeclare var = null;
@@ -277,7 +277,7 @@ public class Parser {
 
 		Terminal boolOrInt = null;
 		Terminal id2 = null;
-		List<VarDeclare> lvd = null;
+		List<VarDeclare> lvd = new ArrayList<VarDeclare>();
 
 		while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER) {
 			if (currentToken.getKind() == GrammarSymbols.BOOLEAN) {
@@ -603,7 +603,6 @@ public class Parser {
 
 			f = new FatorExpression(tlp, e, trp);
 		} else {
-			accept(GrammarSymbols.PERFORM);
 			CallProcedure cp = parseCallProcedure();
 
 			f = new FatorCallProcedure(cp);

@@ -1,0 +1,31 @@
+IDENTIFICATORDIVISION. PROGRAMID. COMPARACAO.
+	
+	PROCEDUREDIVISION.
+	
+		MAIN SECTION.
+			
+			BEGINDECLARATIONS
+				A PIC INTEGER.
+				B PIC INTEGER.
+			ENDDECLARATIONS
+
+			# Teste comentario
+			
+			MOVE 4 TO A.
+			MOVE 3 TO B.
+			
+			IF A > B THEN
+				DISPLAY A.
+				ENDCOM.
+			ELSE
+				DISPLAY B.
+				ENDCOM.
+			ENDIF.
+			
+			ENDCOM.
+			
+		ENDPROC.
+		
+	
+	EXIT.
+	

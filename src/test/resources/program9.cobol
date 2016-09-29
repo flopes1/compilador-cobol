@@ -1,0 +1,28 @@
+IDENTIFICATORDIVISION. PROGRAMID. LOOP.
+
+	PROCEDUREDIVISION.
+	
+		MAIN SECTION.
+			
+			BEGINDECLARATIONS
+				A PIC INTEGER.
+			ENDDECLARATIONS
+			
+			MOVE 0 TO A.
+			
+			UNTIL A > 10 
+				
+				MOVE (A + 1) TO A.
+				
+				ENDCOM.
+				
+			ENDWHILE.
+			
+			DISPLAY A.
+				
+			ENDCOM.
+			
+		ENDPROC.
+		
+	EXIT.
+	

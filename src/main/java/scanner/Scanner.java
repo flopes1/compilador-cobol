@@ -386,7 +386,11 @@ public class Scanner
 		{
 			return GrammarSymbols.PROGRAMID;
 		}
-		else if (this.currentSpelling.toString().equalsIgnoreCase("BOOL"))
+		else if (this.currentSpelling.toString().equalsIgnoreCase("TRUE"))
+		{
+			return GrammarSymbols.BOOL;
+		}
+		else if (this.currentSpelling.toString().equalsIgnoreCase("FALSE"))
 		{
 			return GrammarSymbols.BOOL;
 		}
