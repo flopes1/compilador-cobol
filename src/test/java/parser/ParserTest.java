@@ -1,14 +1,11 @@
 package parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import compiler.Properties;
-import scanner.LexicalException;
-import scanner.Scanner;
-import scanner.Token;
 import util.AST.AST;
 
 public class ParserTest
