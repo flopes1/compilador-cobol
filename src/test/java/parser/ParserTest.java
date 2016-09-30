@@ -20,7 +20,7 @@ public class ParserTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program12.cobol").getFile();
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program1.cobol").getFile();
 		this.parser = new Parser();
 	}
 

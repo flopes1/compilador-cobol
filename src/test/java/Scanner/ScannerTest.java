@@ -19,7 +19,7 @@ public class ScannerTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program12.cobol").getFile();
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program14.cobol").getFile();
 		this.scanner = new Scanner();
 	}
 
