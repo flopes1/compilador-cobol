@@ -4,6 +4,8 @@ import util.AST.AST;
 
 public class Attrib extends AST{
 	
+	//teste
+	
 	private Expression expression;
 	private Terminal tokenId;
 	
