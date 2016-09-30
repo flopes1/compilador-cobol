@@ -322,7 +322,7 @@ public class Parser
 			terminalList.add(id2);
 		}
 
-		//lt.add(dupla);
+		// lt.add(dupla);
 
 		List<VarDeclare> lvd = new ArrayList<VarDeclare>();
 
