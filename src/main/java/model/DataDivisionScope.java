@@ -5,19 +5,32 @@ import java.util.List;
 
 import util.AST.AST;
 
-public class DataDivisionScope extends AST{
+public class DataDivisionScope extends AST
+{
+
+	private List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
+
+	public DataDivisionScope(List<VarDeclare> varDeclareList)
+	{
+		this.varDeclareList = varDeclareList;
+	}
 	
-	List<VarDeclare> lvd = new ArrayList<VarDeclare>();
-	Terminal texit, tdot;
-	
-	public DataDivisionScope(List<VarDeclare> lvd, Terminal texit, Terminal tdot) {
-		this.lvd = lvd;
-		this.texit = texit;
-		this.tdot = tdot;
+	@Override
+	public String toString()
+	{
+		String string = "";
+		
+		for (VarDeclare varDeclare : this.varDeclareList)
+		{
+			string += varDeclare.toString() + "\n";
+		}
+		
+		return string;
 	}
 
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

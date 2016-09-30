@@ -2,20 +2,38 @@ package model;
 
 public class StatementWhile extends Statement{
 
-	Terminal endwhi,dot;
-	While whi;
+	private While meuWhile;
 	
-	public StatementWhile(While whi, Terminal endwhi, Terminal dot) {
-		this.whi=whi;
-		this.endwhi=endwhi;
-		this.dot=dot;
+	public StatementWhile(While meuWhile) {
+		this.setMeuWhile(meuWhile);
 	}
 	
+	@Override
+	public String toString()
+	{
+		String string = "";
+		
+		string += this.meuWhile.toString() + "\n";
+		
+		return string;
+	}
 	
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public While getMeuWhile()
+	{
+		return meuWhile;
+	}
+
+
+	public void setMeuWhile(While meuWhile)
+	{
+		this.meuWhile = meuWhile;
 	}
 
 }

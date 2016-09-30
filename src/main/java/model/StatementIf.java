@@ -1,27 +1,57 @@
 package model;
 
+import java.util.List;
+
 public class StatementIf extends Statement{
 
-	Terminal iff,thenn,els,endif,dot;
-	Condition cond;
-	Command com,com2;
+	private Condition condition;
+	private List<Command> commandList = null;
 	
-	public StatementIf(Terminal iff, Condition cond, Terminal thenn, Command com, Terminal els, Command com2, Terminal endif, Terminal dot) {
-		this.iff=iff;
-		this.cond=cond;
-		this.thenn=thenn;
-		this.com=com;
-		this.els=els;
-		this.com2=com2;
-		this.endif=endif;
-		this.dot=dot;
-		
+	public StatementIf(Condition condition, List<Command> commandList) {
+		this.setCond(condition);
+		this.setCommandList(commandList);
 	}
+	
+	@Override
+	public String toString()
+	{
+		String string = "";
+		
+		string += this.condition.toString() + "\n";
+		
+		for (Command command : commandList)
+		{
+			string += command.toString() + "\n";
+		}
+		
+		return string;
+	}
+	
 	
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Condition getCond()
+	{
+		return condition;
+	}
+
+	public void setCond(Condition cond)
+	{
+		this.condition = cond;
+	}
+
+	public List<Command> getCommandList()
+	{
+		return commandList;
+	}
+
+	public void setCommandList(List<Command> commandList)
+	{
+		this.commandList = commandList;
 	}
 
 }

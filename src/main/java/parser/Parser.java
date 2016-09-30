@@ -29,42 +29,16 @@ import model.StatementReturn;
 import model.StatementWhile;
 import model.Term;
 import model.Terminal;
-import model.TokenBeginDecl;
 import model.TokenBool;
 import model.TokenBoolean;
-import model.TokenBreak;
 import model.TokenComp;
-import model.TokenDataDivision;
-import model.TokenDisplay;
 import model.TokenDiv;
-import model.TokenDot;
-import model.TokenElse;
-import model.TokenEndCom;
-import model.TokenEndDecl;
-import model.TokenEndProc;
-import model.TokenEndWhile;
-import model.TokenEndif;
-import model.TokenExit;
 import model.TokenId;
-import model.TokenIdentificatorDivision;
-import model.TokenIf;
 import model.TokenInteger;
-import model.TokenLP;
 import model.TokenMinus;
-import model.TokenMove;
 import model.TokenMult;
 import model.TokenNumber;
-import model.TokenPerform;
-import model.TokenPic;
 import model.TokenPlus;
-import model.TokenProcedureDivision;
-import model.TokenProgramId;
-import model.TokenRP;
-import model.TokenReturn;
-import model.TokenSection;
-import model.TokenThen;
-import model.TokenTo;
-import model.TokenUntil;
 import model.VarDeclare;
 import model.While;
 import scanner.LexicalException;
@@ -154,96 +128,87 @@ public class Parser
 
 	private Program parseProgram() throws SyntacticException
 	{
-		// null
-		Program prog = null;
-		Terminal datdiv = null, dot4 = null, procdiv = null, dot5 = null;
-		DataDivisionScope d = null;
-		ProcedureDivisionScope p = null;
+		Program program = null;
+		DataDivisionScope dataDivisionScope = null;
+		ProcedureDivisionScope procedureDivisionScope = null;
 
 		if (currentToken.getKind() == GrammarSymbols.IDENTIFICATOR_DIVISION)
 		{
-			Terminal iddiv = new TokenIdentificatorDivision(currentToken);
 			acceptIt();
 
-			Terminal dot = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
 
-			Terminal progid = new TokenProgramId(currentToken);
 			accept(GrammarSymbols.PROGRAMID);
 
-			Terminal dot2 = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
 
 			Terminal id = new TokenId(currentToken);
+			
 			accept(GrammarSymbols.ID);
 
-			Terminal dot3 = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
 
 			if (currentToken.getKind() == GrammarSymbols.DATA_DIVISION)
 			{
-				datdiv = new TokenDataDivision(currentToken);
 				acceptIt();
 
-				dot4 = new TokenDot(currentToken);
 				accept(GrammarSymbols.DOT);
-				d = parseDataDivisionScope();
+				dataDivisionScope = parseDataDivisionScope();
 
 			}
 
 			if (currentToken.getKind() == GrammarSymbols.PROCEDURE_DIVISION)
 			{
-				procdiv = new TokenProcedureDivision(currentToken);
 				acceptIt();
 
-				dot5 = new TokenDot(currentToken);
 				accept(GrammarSymbols.DOT);
-				p = parseProcedureDivisionScope();
+				procedureDivisionScope = parseProcedureDivisionScope();
 			}
-			prog = new Program(iddiv, dot, progid, dot2, id, dot3, datdiv, dot4, d, procdiv, dot5, p);
+			
+			program = new Program(id, dataDivisionScope, procedureDivisionScope);
 		}
 		else
 		{
-			throw new SyntacticException("A Cobol Program dont begins with", currentToken);
+			throw new SyntacticException("A Cobol Program dont begins with", this.currentToken);
 		}
 
-		return prog;
+		return program;
 	}
 
 	private VarDeclare parseVarDeclare() throws SyntacticException
 	{
-		VarDeclare var = null;
-		Terminal intOrBool = null;
+		VarDeclare varDeclare = null;
+		Terminal intOrBoolTerminal = null;
 
 		Terminal id = new TokenId(currentToken);
 		accept(GrammarSymbols.ID);
 
-		Terminal pic = new TokenPic(currentToken);
 		accept(GrammarSymbols.PIC);
 
 		if (currentToken.getKind() == GrammarSymbols.INTEGER)
 		{
-			intOrBool = new TokenInteger(currentToken);
+			intOrBoolTerminal = new TokenInteger(currentToken);
 			acceptIt();
 		}
 		else
 		{
-			intOrBool = new TokenBoolean(currentToken);
+			intOrBoolTerminal = new TokenBoolean(currentToken);
 			accept(GrammarSymbols.BOOLEAN);
 
 		}
 
-		Terminal dot = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
-		var = new VarDeclare(id, pic, intOrBool, dot);
-		return var;
+		varDeclare = new VarDeclare(id, intOrBoolTerminal);
+		
+		return varDeclare;
 
 	}
 
 	private DataDivisionScope parseDataDivisionScope() throws SyntacticException
 	{
-		DataDivisionScope datdiv = null;
-		List<VarDeclare> lvd = new ArrayList<VarDeclare>();
+		DataDivisionScope dataDivisionScope = null;
+		List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
+		
 		while (true)
 		{
 			if (currentToken.getKind() == GrammarSymbols.EXIT)
@@ -251,56 +216,52 @@ public class Parser
 				break;
 			}
 
-			lvd.add(parseVarDeclare());
+			varDeclareList.add(parseVarDeclare());
 
 		}
-		Terminal texit = new TokenExit(currentToken);
 		acceptIt();
-		Terminal tdot = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
 
-		datdiv = new DataDivisionScope(lvd, texit, tdot);
+		dataDivisionScope = new DataDivisionScope(varDeclareList);
 
-		return datdiv;
+		return dataDivisionScope;
 	}
 
 	private Procedure parseProcedure() throws SyntacticException
 	{
-		Procedure pro = null;
-		Terminal id = new TokenId(currentToken);
+		Procedure procedure = null;
+		Terminal tokenId = new TokenId(currentToken);
+		
 		accept(GrammarSymbols.ID);
-		Terminal sec = new TokenSection(currentToken);
 		accept(GrammarSymbols.SECTION);
-		Terminal dot = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
 
-		Terminal boolOrInt = null;
-		Terminal id2 = null;
+		Terminal boolOrIntTerminal = null;
+		Terminal varTypeTokenId = null;
 		List<Terminal> terminalList = new ArrayList<Terminal>();
 
 		while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
 		{
 			if (currentToken.getKind() == GrammarSymbols.BOOLEAN)
 			{
-				boolOrInt = new TokenBoolean(currentToken);
+				boolOrIntTerminal = new TokenBoolean(currentToken);
 			}
 			else
 			{
-				boolOrInt = new TokenInteger(currentToken);
+				boolOrIntTerminal = new TokenInteger(currentToken);
 			}
 
 			acceptIt();
 
-			id2 = new TokenId(currentToken);
+			varTypeTokenId = new TokenId(currentToken);
 			accept(GrammarSymbols.ID);
 
-			terminalList.add(boolOrInt);
-			terminalList.add(id2);
+			terminalList.add(boolOrIntTerminal);
+			terminalList.add(varTypeTokenId);
 		}
 
-		List<VarDeclare> lvd = new ArrayList<VarDeclare>();
+		List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
 
-		Terminal begindecl = new TokenBeginDecl(currentToken);
 		accept(GrammarSymbols.BEGIN_DECL);
 
 		while (true)
@@ -311,27 +272,24 @@ public class Parser
 				break;
 			}
 
-			lvd.add(parseVarDeclare());
+			varDeclareList.add(parseVarDeclare());
 
 		}
 
-		Terminal enddecl = new TokenEndDecl(currentToken);
 		acceptIt();
-		Command com = parseCommand();
-		Terminal endproc = new TokenEndProc(currentToken);
+		Command command = parseCommand();
 		accept(GrammarSymbols.END_PROC);
-		Terminal dot2 = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
+		
+		procedure = new Procedure(tokenId, terminalList, varDeclareList, command);
 
-		pro = new Procedure(id, sec, dot, terminalList, begindecl, lvd, enddecl, com, endproc, dot2);
-
-		return pro;
+		return procedure;
 	}
-
+	
 	private ProcedureDivisionScope parseProcedureDivisionScope() throws SyntacticException
 	{
-		ProcedureDivisionScope pds = null;
-		List<Procedure> lp = new ArrayList<Procedure>();
+		ProcedureDivisionScope procedureDivisionScope = null;
+		List<Procedure> procedureList = new ArrayList<Procedure>();
 
 		while (true)
 		{
@@ -339,27 +297,25 @@ public class Parser
 			{
 				break;
 			}
-			lp.add(parseProcedure());
+			procedureList.add(parseProcedure());
 
 		}
-		Terminal exit = new TokenExit(currentToken);
 		acceptIt();
-		Terminal dot = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
 
-		pds = new ProcedureDivisionScope(lp, exit, dot);
+		procedureDivisionScope = new ProcedureDivisionScope(procedureList);
 
-		return pds;
+		return procedureDivisionScope;
 
 	}
-
+	// TODO Refactor, toString, modificadores de acesso, construtores, corrigir nomenclatura de atributos
 	private Command parseCommand() throws SyntacticException
 	{
-		Command com = null;
-		List<Statement> ls = new ArrayList<Statement>();
+		Command command = null;
+		List<Statement> statementList = new ArrayList<Statement>();
 		do
 		{
-			ls.add(parseStatement());
+			statementList.add(parseStatement());
 
 			if (currentToken.getKind() == GrammarSymbols.END_COM)
 			{
@@ -368,186 +324,160 @@ public class Parser
 
 		} while (true);
 
-		Terminal tec = new TokenEndCom(currentToken);
 		acceptIt();
-		Terminal tdot = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
 
-		com = new Command(ls, tec, tdot);
+		command = new Command(statementList);
 
-		return com;
+		return command;
 	}
 
 	private Attrib parseAttrib() throws SyntacticException
 	{
-		Attrib at = null;
+		Attrib attrib = null;
 
-		Terminal tmov = new TokenMove(currentToken);
 		acceptIt();
-		Expression e = parseExpression();
-		Terminal tto = new TokenTo(currentToken);
+		Expression expression = parseExpression();
 		accept(GrammarSymbols.TO);
-		Terminal tid = new TokenId(currentToken);
+		Terminal tokenId = new TokenId(currentToken);
 		accept(GrammarSymbols.ID);
-		Terminal tdot = new TokenDot(currentToken);
 		accept(GrammarSymbols.DOT);
 
-		at = new Attrib(tmov, e, tto, tid, tdot);
+		attrib = new Attrib(expression, tokenId);
 
-		return at;
+		return attrib;
 	}
 
 	private CallProcedure parseCallProcedure() throws SyntacticException
 	{
-		CallProcedure cp = null;
+		CallProcedure callProcedure = null;
 
-		Terminal tperf = new TokenPerform(currentToken);
 		acceptIt();
-		Terminal tid = new TokenId(currentToken);
+		Terminal tokenId = new TokenId(currentToken);
 		accept(GrammarSymbols.ID);
 
-		Terminal[] dupla = new Terminal[2];
-		List<Terminal[]> lt = new ArrayList<Terminal[]>();
+		List<Terminal> terminalIdList = new ArrayList<Terminal>();
+		
+		terminalIdList.add(tokenId);
 
 		while (currentToken.getKind() == GrammarSymbols.USING)
 		{
-			Terminal tusing = new TokenId(currentToken);
 			acceptIt();
-			Terminal tid2 = new TokenId(currentToken);
+			Terminal possibleTokenId = new TokenId(currentToken);
 			accept(GrammarSymbols.ID);
 
-			dupla[0] = tusing;
-			dupla[1] = tid2;
-
-			lt.add(dupla);
-
+			terminalIdList.add(possibleTokenId);
 		}
-		cp = new CallProcedure(tperf, tid, lt);
-		return cp;
+		
+		callProcedure = new CallProcedure(terminalIdList);
+		
+		return callProcedure;
 	}
 
 	private Statement parseStatement() throws SyntacticException
 	{
-		Statement sta = null;
+		Statement statement = null;
 
+		List<Command> commandList = new ArrayList<Command>();	
+		
 		if (currentToken.getKind() == GrammarSymbols.IF)
 		{
-			Terminal iff = new TokenIf(currentToken);
 			acceptIt();
-			Condition cond = parseCondition();
-			Terminal thenn = new TokenThen(currentToken);
+			Condition condition = parseCondition();
 			accept(GrammarSymbols.THEN);
-			Command com = parseCommand();
+			Command command = parseCommand();
+			
+			commandList.add(command);
 
-			Terminal els = null;
-			Command com2 = null;
+			Command possibleElseCommand = null;
 
 			if (currentToken.getKind() == GrammarSymbols.ELSE)
 			{
-				els = new TokenElse(currentToken);
 				acceptIt();
-				com2 = parseCommand();
+				possibleElseCommand = parseCommand();
+				commandList.add(possibleElseCommand);
 			}
-			Terminal endif = new TokenEndif(currentToken);
 			accept(GrammarSymbols.END_IF);
-			Terminal dot = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
 
-			sta = new StatementIf(iff, cond, thenn, com, els, com2, endif, dot);
+			statement = new StatementIf(condition, commandList);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.RETURN)
 		{
-			Terminal ret = new TokenReturn(currentToken);
 			acceptIt();
-			Expression exp = parseExpression();
-			Terminal dot = new TokenDot(currentToken);
+			Expression expression = parseExpression();
 			accept(GrammarSymbols.DOT);
 
-			sta = new StatementReturn(ret, exp, dot);
+			statement = new StatementReturn(expression);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.UNTIL)
 		{
-			While whi = parseWhile();
-			Terminal endwhi = new TokenEndWhile(currentToken);
+			While meuWhile = parseWhile();
 			accept(GrammarSymbols.END_WHILE);
-			Terminal dot = new TokenDot(currentToken);
 			accept(GrammarSymbols.DOT);
 
-			sta = new StatementWhile(whi, endwhi, dot);
+			statement = new StatementWhile(meuWhile);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.MOVE)
 		{
-			Attrib at = parseAttrib();
+			Attrib attrib = parseAttrib();
 
-			sta = new StatementAttrib(at);
+			statement = new StatementAttrib(attrib);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.PERFORM)
 		{
-			CallProcedure cal = parseCallProcedure();
+			CallProcedure callProcedure = parseCallProcedure();
 
-			sta = new StatementCallProcedure(cal);
+			statement = new StatementCallProcedure(callProcedure);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.BREAK || currentToken.getKind() == GrammarSymbols.CONTINUE)
 		{
-			Terminal boolid;
-
-			if (currentToken.getKind() == GrammarSymbols.BREAK)
-			{
-				boolid = new TokenBreak(currentToken);
-			}
-			else
-			{
-				boolid = new TokenEndWhile(currentToken);
-			}
-
 			acceptIt();
-
-			sta = new StatementBreakContinue(boolid);
+			
+			statement = new StatementBreakContinue();
 		}
 		else
 		{
-			Terminal dis = new TokenDisplay(currentToken);
 			accept(GrammarSymbols.DISPLAY);
-			Expression exp = parseExpression();
-			Terminal dot = new TokenDot(currentToken);
+			Expression expression = parseExpression();
 			accept(GrammarSymbols.DOT);
 
-			sta = new StatementDisplay(dis, exp, dot);
+			statement = new StatementDisplay(expression);
 		}
 
-		return sta;
+		return statement;
 	}
 
 	private While parseWhile() throws SyntacticException
 	{
-		While whi = null;
-		Terminal until = new TokenUntil(currentToken);
+		While meuWhile = null;
 		acceptIt();
-		Condition con = parseCondition();
-		Command comand = parseCommand();
+		Condition condition = parseCondition();
+		Command command = parseCommand();
 
-		whi = new While(until, con, comand);
+		meuWhile = new While(condition, command);
 
-		return whi;
+		return meuWhile;
 	}
 
 	private Expression parseExpression() throws SyntacticException
 	{
-		Expression e = null;
-		Terminal tcomp = null;
-		Operator op2 = null;
-
-		Operator op1 = parseOperator();
+		Expression expression = null;
+		Terminal tokenComparator = null;
+		Operator possibleOperator = null;
+		
+		Operator operator = parseOperator();
+		
 		if (currentToken.getKind() == GrammarSymbols.COMP)
 		{
-			tcomp = new TokenComp(currentToken);
+			tokenComparator = new TokenComp(currentToken);
 			acceptIt();
-			op2 = parseOperator();
+			possibleOperator = parseOperator();
 		}
 
-		e = new Expression(op1, tcomp, op2);
+		expression = new Expression(operator, tokenComparator, possibleOperator);
 
-		return e;
+		return expression;
 	}
 
 	private Operator parseOperator() throws SyntacticException
@@ -627,55 +557,53 @@ public class Parser
 
 	private Fator parseFator() throws SyntacticException
 	{
-		Fator f = null;
+		Fator fator = null;
 
 		if (currentToken.getKind() == GrammarSymbols.BOOL)
 		{
-			Terminal tbool = new TokenBool(currentToken);
+			Terminal tokenBool = new TokenBool(currentToken);
 			acceptIt();
-			f = new FatorBool(tbool);
+			fator = new FatorBool(tokenBool);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.ID)
 		{
-			Terminal tid = new TokenId(currentToken);
+			Terminal tokenId = new TokenId(currentToken);
 			acceptIt();
 
-			f = new FatorId(tid);
+			fator = new FatorId(tokenId);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.NUMBER)
 		{
-			Terminal tnum = new TokenNumber(currentToken);
+			Terminal tokenNumber = new TokenNumber(currentToken);
 			acceptIt();
-			f = new FatorNumber(tnum);
+			fator = new FatorNumber(tokenNumber);
 		}
 		else if (currentToken.getKind() == GrammarSymbols.LP)
 		{
-			Terminal tlp = new TokenLP(currentToken);
 			acceptIt();
-			Expression e = parseExpression();
-			Terminal trp = new TokenRP(currentToken);
+			Expression expression = parseExpression();
 			accept(GrammarSymbols.RP);
 
-			f = new FatorExpression(tlp, e, trp);
+			fator = new FatorExpression(expression);
 		}
 		else
 		{
-			CallProcedure cp = parseCallProcedure();
+			CallProcedure callProcedure = parseCallProcedure();
 
-			f = new FatorCallProcedure(cp);
+			fator = new FatorCallProcedure(callProcedure);
 		}
 
-		return f;
+		return fator;
 	}
 
 	private Condition parseCondition() throws SyntacticException
 	{
-		Condition c = null;
-		Expression e = parseExpression();
+		Condition condition = null;
+		Expression expression = parseExpression();
 
-		c = new Condition(e);
+		condition = new Condition(expression);
 
-		return c;
+		return condition;
 	}
 
 	private void initializeToken()

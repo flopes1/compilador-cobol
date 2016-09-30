@@ -2,16 +2,32 @@ package model;
 
 public class FatorId extends Fator {
 	
-	Terminal tid;
+	private Terminal tokenId;
 	
-	public FatorId(Terminal tid) {
-		this.tid = tid;
+	public FatorId(Terminal tokenId) {
+		this.setTokenId(tokenId);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return this.tokenId.toString() + "\n";
 	}
 	
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Terminal getTokenId()
+	{
+		return tokenId;
+	}
+
+	public void setTokenId(Terminal tokenId)
+	{
+		this.tokenId = tokenId;
 	}
 
 }

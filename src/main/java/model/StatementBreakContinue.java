@@ -2,10 +2,16 @@ package model;
 
 public class StatementBreakContinue extends Statement {
 
-	Terminal boolid;
 	
-	public StatementBreakContinue(Terminal boolid) {
-		this.boolid=boolid;
+	public StatementBreakContinue() {
+	}
+	
+	@Override
+	public String toString()
+	{
+		String string = "";
+		
+		return string;
 	}
 	
 	@Override

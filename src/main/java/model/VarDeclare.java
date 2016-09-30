@@ -5,20 +5,21 @@ import util.AST.AST;
 public class VarDeclare extends AST{
 	
 	
-	Terminal id,pic,intOrBool,dot;
+	private Terminal tokenId, tokenBoolOrInt;
 	
-	public VarDeclare(Terminal id, Terminal pic, Terminal intOrBool, Terminal dot) {
-		this.id=id;
-		this.pic=pic;
-		this.intOrBool = intOrBool;
-		this.dot=dot;
+	public VarDeclare(Terminal id, Terminal intOrBool) {
+		this.tokenId=id;
+		this.tokenBoolOrInt = intOrBool;
 	}
 	
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		
+		String string = "";
+		string += this.tokenId.toString() + "\n" + this.tokenBoolOrInt.toString() + "\n";
+		
+		return string;
 	}
 
 	@Override

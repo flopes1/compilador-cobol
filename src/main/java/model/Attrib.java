@@ -4,22 +4,53 @@ import util.AST.AST;
 
 public class Attrib extends AST{
 	
-	Expression e;
-	Terminal tm, tto, tid, tdot;
+	private Expression expression;
+	private Terminal tokenId;
 	
-	public Attrib(Terminal tm, Expression e, Terminal tto, Terminal tid, Terminal tdot) {
-		this.tm = tm;
-		this.e = e;
-		this.tto = tto;
-		this.tid = tid;
-		this.tdot = tdot;
+	public Attrib(Expression expression, Terminal tokenId) {
+		this.setExpression(expression);
+		this.setTokenId(tokenId);
 	}
 	
+	@Override
+	public String toString()
+	{
+		String string = "";
+		
+		string += this.expression.toString() +"\n"
+				+ this.tokenId.toString() + "\n";
+		
+		return string;
+	}
 	
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public Expression getExpression()
+	{
+		return expression;
+	}
+
+
+	public void setExpression(Expression expression)
+	{
+		this.expression = expression;
+	}
+
+
+	public Terminal getTokenId()
+	{
+		return tokenId;
+	}
+
+
+	public void setTokenId(Terminal tokenId)
+	{
+		this.tokenId = tokenId;
 	}
 
 }

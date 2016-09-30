@@ -4,30 +4,29 @@ import util.AST.AST;;
 
 public class Program extends AST
 {
-	Terminal iddiv,dot,progid,dot2,id,dot3,datdiv,dot4,procdiv,dot5;
-	DataDivisionScope dds;
-	ProcedureDivisionScope pds;
+	private Terminal tokenId;
+	private DataDivisionScope dataDivisionScope;
+	private ProcedureDivisionScope procedureDivisionScope;
 	
-	
-	public Program(Terminal iddiv,Terminal dot,Terminal progid,Terminal dot2,
-			Terminal id,Terminal dot3,Terminal datdiv,Terminal dot4,DataDivisionScope d,Terminal procdiv,Terminal dot5,
-			ProcedureDivisionScope p) {
-		
-		this.iddiv = iddiv;
-		this.dot = dot;
-		this.progid = progid;
-		this.dot2 = dot2;
-		this.id = id;
-		this.dot3 = dot3;
-		this.datdiv = datdiv;
-		this.dot4 = dot4;
-		this.procdiv = procdiv;
-		this.dot5 = dot5;
-		this.dds = d;
-		this.pds = p;
+	public Program(Terminal tokenId, DataDivisionScope dataDivisionScope, ProcedureDivisionScope procedureDivisionScope)
+	{
+		this.tokenId = tokenId;
+		this.dataDivisionScope = dataDivisionScope;
+		this.procedureDivisionScope = procedureDivisionScope;
 	}
-	
-	
+
+	@Override
+	public String toString()
+	{
+		String string = "";
+		
+		string += this.tokenId.toString() + "\n" +
+		          this.dataDivisionScope.toString() + "\n" +
+		          this.procedureDivisionScope.toString() + "\n";
+		
+		return string;
+	}
+
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub
