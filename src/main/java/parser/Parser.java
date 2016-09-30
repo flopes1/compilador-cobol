@@ -102,7 +102,7 @@ public class Parser
 	 * 
 	 * @param kind
 	 * @throws SyntacticException
-	 */ // TODO
+	 */
 	private void accept(int kind) throws SyntacticException
 	{
 		// If the current token kind is equal to the expected
@@ -122,7 +122,7 @@ public class Parser
 
 	/**
 	 * Gets next token
-	 */ // TODO
+	 */
 	private void acceptIt()
 	{
 		try
@@ -139,7 +139,7 @@ public class Parser
 	 * Verifies if the source program is syntactically correct
 	 * 
 	 * @throws SyntacticException
-	 */ // TODO
+	 */
 	public AST parse() throws SyntacticException
 	{
 
@@ -151,28 +151,6 @@ public class Parser
 
 		return abstractSintaticTree;
 	}
-
-	/*
-	 * private Program parseProgram() { Program program = null;
-	 * 
-	 * List<Command> commandList = new ArrayList<Command>();
-	 * 
-	 * do { Command command = parseCommand(); commandList.add(command);
-	 * 
-	 * } while (this.currentToken.getKind() != GrammarSymbols.EOT);
-	 * 
-	 * program = new Program(commandList);
-	 * 
-	 * return program; }
-	 */
-
-	/*
-	 * private Command parseCommand() { return null; // TODO Auto-generated
-	 * method stub
-	 * 
-	 * }
-	 * 
-	 */
 
 	private Program parseProgram() throws SyntacticException
 	{
@@ -222,7 +200,7 @@ public class Parser
 				accept(GrammarSymbols.DOT);
 				p = parseProcedureDivisionScope();
 			}
-			prog = new Program(iddiv, dot3, progid, dot2, id, dot3, datdiv, dot4, d, procdiv, dot5, p);
+			prog = new Program(iddiv, dot, progid, dot2, id, dot3, datdiv, dot4, d, procdiv, dot5, p);
 		}
 		else
 		{
@@ -231,8 +209,6 @@ public class Parser
 
 		return prog;
 	}
-
-	// TODO fazer v�rios parseISSO, parseAQUILO
 
 	private VarDeclare parseVarDeclare() throws SyntacticException
 	{
@@ -264,7 +240,6 @@ public class Parser
 
 	}
 
-	@SuppressWarnings("null")
 	private DataDivisionScope parseDataDivisionScope() throws SyntacticException
 	{
 		DataDivisionScope datdiv = null;
@@ -289,7 +264,6 @@ public class Parser
 		return datdiv;
 	}
 
-	@SuppressWarnings("null")
 	private Procedure parseProcedure() throws SyntacticException
 	{
 		Procedure pro = null;
@@ -316,13 +290,13 @@ public class Parser
 			}
 
 			acceptIt();
+
 			id2 = new TokenId(currentToken);
 			accept(GrammarSymbols.ID);
+
 			terminalList.add(boolOrInt);
 			terminalList.add(id2);
 		}
-
-		// lt.add(dupla);
 
 		List<VarDeclare> lvd = new ArrayList<VarDeclare>();
 
@@ -578,72 +552,77 @@ public class Parser
 
 	private Operator parseOperator() throws SyntacticException
 	{
-		Operator op = null;
-		Term t = parseTerm();
-		Terminal tplusorminus = null;
-		Term t2 = null;
+		Operator operator = null;
+		Term mandatoryTerm = parseTerm();
+
+		List<Term> operatorTermList = new ArrayList<Term>();
+		List<Terminal> operatorTerminalList = new ArrayList<Terminal>();
+
+		operatorTermList.add(mandatoryTerm);
+
 		while (currentToken.getKind() == GrammarSymbols.PLUS || currentToken.getKind() == GrammarSymbols.MINUS)
 		{
+			Terminal terminalPlusOrMinus = null;
+			Term nextTerm = null;
+
 			if (currentToken.getKind() == GrammarSymbols.PLUS)
 			{
-				tplusorminus = new TokenPlus(currentToken);
+				terminalPlusOrMinus = new TokenPlus(currentToken);
 			}
 			else
 			{
-				tplusorminus = new TokenMinus(currentToken);
+				terminalPlusOrMinus = new TokenMinus(currentToken);
 			}
 
+			operatorTerminalList.add(terminalPlusOrMinus);
+
 			acceptIt();
-			t2 = parseTerm();
+
+			nextTerm = parseTerm();
+			operatorTermList.add(nextTerm);
 		}
 
-		// Object[] dupla = new Object[2];
-		// List<Object[]> listOpAndTerm = new ArrayList<Object[]>();
-		//
-		// dupla[0] = tplusorminus;
-		// dupla[1] = t2;
-		//
-		// listOpAndTerm.add(dupla);
+		operator = new Operator(operatorTerminalList, operatorTermList);
 
-		op = new Operator(t);
-
-		return op;
+		return operator;
 	}
 
 	private Term parseTerm() throws SyntacticException
 	{
-		Term t = null;
-		Fator f = parseFator();
-		Terminal tmultordiv = null;
-		Fator f2 = null;
+		Term term = null;
+		Fator mandatoryFator = parseFator();
+		List<Terminal> multiOrDivOperatorList = new ArrayList<Terminal>();
+		List<Fator> fatorList = new ArrayList<Fator>();
+
+		fatorList.add(mandatoryFator);
 
 		while (currentToken.getKind() == GrammarSymbols.MULTIPLICATION
 				|| currentToken.getKind() == GrammarSymbols.DIVISION)
 		{
+			Fator nextFator = null;
+			Terminal terminal = null;
+
 			if (currentToken.getKind() == GrammarSymbols.PLUS)
 			{
-				tmultordiv = new TokenMult(currentToken);
+				terminal = new TokenMult(currentToken);
 			}
 			else
 			{
-				tmultordiv = new TokenDiv(currentToken);
+				terminal = new TokenDiv(currentToken);
 			}
 
+			multiOrDivOperatorList.add(terminal);
+
 			acceptIt();
-			f2 = parseFator();
+
+			nextFator = parseFator();
+			fatorList.add(nextFator);
+
 		}
 
-		// Object[] dupla = new Object[2];
-		// List<Object[]> listOpAndFator = new ArrayList<Object[]>();
-		//
-		// dupla[0] = tmultordiv;
-		// dupla[1] = f2;
-		//
-		// listOpAndFator.add(dupla);
+		term = new Term(fatorList, multiOrDivOperatorList);
 
-		t = new Term(f);
-
-		return t;
+		return term;
 	}
 
 	private Fator parseFator() throws SyntacticException

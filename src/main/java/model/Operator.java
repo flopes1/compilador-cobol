@@ -1,15 +1,62 @@
 package model;
 
+import java.util.List;
+
 import util.AST.AST;
 
 public class Operator extends AST
 {
 
-	Term termo;
+	private List<Term> operatorTermList = null;
+	private List<Terminal> operatorTerminalList = null;
 
-	public Operator(Term term)
+	public Operator(List<Terminal> operatorTerminalList, List<Term> operatorTermList)
 	{
-		this.termo = term;
+		this.operatorTermList = operatorTermList;
+		this.operatorTerminalList = operatorTerminalList;
+	}
+	
+	
+	public List<Term> getOperatorTermList()
+	{
+		return operatorTermList;
+	}
+
+
+	public void setOperatorTermList(List<Term> operatorTermList)
+	{
+		this.operatorTermList = operatorTermList;
+	}
+
+
+	public List<Terminal> getOperatorTerminalList()
+	{
+		return operatorTerminalList;
+	}
+
+
+	public void setOperatorTerminalList(List<Terminal> operatorTerminalList)
+	{
+		this.operatorTerminalList = operatorTerminalList;
+	}
+
+
+	@Override
+	public String toString()
+	{
+		String string = "";
+
+		for (Term term : this.operatorTermList)
+		{
+			string += term.toString() + "\n";
+		}
+
+		for (Terminal terminal : this.operatorTerminalList)
+		{
+			string += terminal.toString() + "\n";
+		}
+
+		return string;
 	}
 
 	@Override
