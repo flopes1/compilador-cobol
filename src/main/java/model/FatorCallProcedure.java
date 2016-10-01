@@ -11,7 +11,7 @@ public class FatorCallProcedure extends Fator {
 	@Override
 	public String toString()
 	{
-		return this.callProcedure.toString() + "\n";
+		return this.callProcedure.toString();
 	}
 	
 	

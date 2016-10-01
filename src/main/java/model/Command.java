@@ -8,26 +8,30 @@ import util.AST.AST;
 public class Command extends AST
 {
 	private List<Statement> statementList = new ArrayList<Statement>();
-	
-	public Command(List<Statement> statementList) {
+
+	public Command(List<Statement> statementList)
+	{
 		this.setStatementList(statementList);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		String string = "";
-		
-		for (Statement statement : statementList)
+
+		if (statementList != null)
 		{
-			string += statement.toString() + "\n";
+			for (Statement statement : statementList)
+			{
+				string += statement.toString() + "\n";
+			}
 		}
-		
 		return string;
 	}
-	
+
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -41,5 +45,5 @@ public class Command extends AST
 	{
 		this.statementList = statementList;
 	}
-	
+
 }

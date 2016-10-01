@@ -5,13 +5,13 @@ import scanner.Token;
 public class TokenId extends Terminal {
 	
 	public TokenId (Token t){
-		super.setT(t);
+		super.setToken(t);
 	}
 	
 	@Override
 	public String toString()
 	{
-		return super.getT().getSpelling().toString() + "\n";
+		return super.toString();
 	}
 	
 	@Override

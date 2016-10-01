@@ -11,7 +11,7 @@ public class FatorId extends Fator {
 	@Override
 	public String toString()
 	{
-		return this.tokenId.toString() + "\n";
+		return this.tokenId.toString();
 	}
 	
 	@Override

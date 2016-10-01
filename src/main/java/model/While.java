@@ -18,7 +18,7 @@ public class While extends AST{
 		String string = "";
 		
 		string += this.condition.toString() + "\n"
-				+ this.command.toString() + "\n";
+				+ this.command.toString();
 		
 		return string;
 	}

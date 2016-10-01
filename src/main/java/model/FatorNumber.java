@@ -11,7 +11,7 @@ public class FatorNumber extends Fator {
 	@Override
 	public String toString()
 	{
-		return this.tokenNumber.toString() + "\n";
+		return this.tokenNumber.toString();
 	}
 	
 	@Override

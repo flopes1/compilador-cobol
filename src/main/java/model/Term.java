@@ -41,16 +41,20 @@ public class Term extends AST
 	{
 		String string = "";
 
-		for (Terminal terminal : termOperatorList)
+		if (termOperatorList != null)
 		{
-			string += terminal.toString() + "\n";
+			for (Terminal terminal : termOperatorList)
+			{
+				string += terminal.toString() + "\n";
+			}
 		}
-
-		for (Fator fator : this.termfatorList)
+		if (this.termfatorList != null)
 		{
-			string += fator.toString() + "\n";
+			for (Fator fator : this.termfatorList)
+			{
+				string += fator.toString() + "\n";
+			}
 		}
-
 		return string;
 	}
 

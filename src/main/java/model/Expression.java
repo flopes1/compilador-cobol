@@ -18,9 +18,9 @@ public class Expression extends AST{
 	{
 		String string = "";
 		
-		string += this.mandatoryOperator.toString() + "\n"
-				+ this.tokenComparator.toString() + "\n"
-				+ this.optionalOperator.toString() + "\n";
+		string += this.mandatoryOperator != null ? this.mandatoryOperator.toString() : "" + "\n"
+				+ this.tokenComparator != null ? this.tokenComparator.toString() : "" + "\n"
+				+ this.optionalOperator != null ? this.optionalOperator.toString() : "";
 		
 		return string;
 	}

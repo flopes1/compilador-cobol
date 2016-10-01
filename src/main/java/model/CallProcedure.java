@@ -4,29 +4,34 @@ import java.util.List;
 
 import util.AST.AST;
 
-public class CallProcedure extends AST{
-	
+public class CallProcedure extends AST
+{
+
 	private List<Terminal> terminalList;
-	
-	public CallProcedure(List<Terminal> terminalList) {
+
+	public CallProcedure(List<Terminal> terminalList)
+	{
 		this.setTerminalList(terminalList);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		String string = "";
-		
-		for (Terminal terminal : this.terminalList)
+
+		if (this.terminalList != null)
 		{
-			string += terminal.toString() + "\n";
+			for (Terminal terminal : this.terminalList)
+			{
+				string += terminal.toString() + "\n";
+			}
 		}
-		
 		return string;
 	}
-	
+
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

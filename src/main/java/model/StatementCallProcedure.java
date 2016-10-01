@@ -13,7 +13,7 @@ public class StatementCallProcedure extends Statement {
 	{
 		String string = "";
 		
-		string += this.callProcedure.toString() + "\n";
+		string += this.callProcedure.toString();
 		
 		return string;
 	}

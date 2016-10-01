@@ -2,34 +2,37 @@ package model;
 
 import java.util.List;
 
-public class StatementIf extends Statement{
+public class StatementIf extends Statement
+{
 
 	private Condition condition;
 	private List<Command> commandList = null;
-	
-	public StatementIf(Condition condition, List<Command> commandList) {
+
+	public StatementIf(Condition condition, List<Command> commandList)
+	{
 		this.setCond(condition);
 		this.setCommandList(commandList);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		String string = "";
-		
+
 		string += this.condition.toString() + "\n";
-		
-		for (Command command : commandList)
+		if (commandList != null)
 		{
-			string += command.toString() + "\n";
+			for (Command command : commandList)
+			{
+				string += command.toString() + "\n";
+			}
 		}
-		
 		return string;
 	}
-	
-	
+
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

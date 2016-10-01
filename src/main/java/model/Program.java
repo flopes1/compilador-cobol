@@ -20,9 +20,9 @@ public class Program extends AST
 	{
 		String string = "";
 		
-		string += this.tokenId.toString() + "\n" +
-		          this.dataDivisionScope.toString() + "\n" +
-		          this.procedureDivisionScope.toString() + "\n";
+		string += this.tokenId != null ? this.tokenId.toString() : "" + "\n" +
+				  this.dataDivisionScope != null ? this.dataDivisionScope.toString() : "" + "\n" +
+				  this.procedureDivisionScope != null ? this.procedureDivisionScope.toString() : "";
 		
 		return string;
 	}

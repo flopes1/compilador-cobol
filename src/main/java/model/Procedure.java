@@ -5,13 +5,14 @@ import java.util.List;
 
 import util.AST.AST;
 
-public class Procedure extends AST{
-	
+public class Procedure extends AST
+{
+
 	private Terminal tokenId;
 	private List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
 	private List<Terminal> terminalList;
 	private Command command;
-	
+
 	public Procedure(Terminal tokenId, List<Terminal> terminalList, List<VarDeclare> varDeclareList, Command command)
 	{
 		this.setTokenId(tokenId);
@@ -21,39 +22,43 @@ public class Procedure extends AST{
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String string = "";
-		
+
 		string += this.tokenId.toString() + "\n";
-		
-		for (Terminal terminal : this.terminalList)
+
+		if (terminalList != null)
 		{
-			string += terminal.toString() + "\n";
+			for (Terminal terminal : this.terminalList)
+			{
+				string += terminal.toString() + "\n";
+			}
 		}
-		
-		for (VarDeclare varDeclare : this.varDeclareList)
+		if (varDeclareList != null)
 		{
-			string += varDeclare.toString() + "\n";
+			for (VarDeclare varDeclare : this.varDeclareList)
+			{
+				string += varDeclare.toString() + "\n";
+			}
 		}
-		
-		string += this.command.toString() + "\n";
-		
+		string += this.command != null ? this.command.toString() : "";
+
 		return string;
 	}
 
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
 	public Command getCommand()
 	{
 		return command;
 	}
 
-	
 	public void setCommand(Command command)
 	{
 		this.command = command;

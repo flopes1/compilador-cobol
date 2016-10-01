@@ -20,7 +20,7 @@ public class Attrib extends AST{
 		String string = "";
 		
 		string += this.expression.toString() +"\n"
-				+ this.tokenId.toString() + "\n";
+				+ this.tokenId.toString();
 		
 		return string;
 	}

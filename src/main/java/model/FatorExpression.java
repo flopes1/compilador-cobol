@@ -11,7 +11,7 @@ public class FatorExpression extends Fator {
 	@Override
 	public String toString()
 	{
-		return this.expression.toString() + "\n";
+		return this.expression.toString();
 	}
 	
 	@Override

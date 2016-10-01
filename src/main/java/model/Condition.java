@@ -13,7 +13,7 @@ public class Condition extends AST{
 	@Override
 	public String toString()
 	{
-		return this.expression.toString() + "\n";
+		return this.expression.toString();
 	}
 	
 	@Override

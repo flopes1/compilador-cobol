@@ -20,5 +20,11 @@ public class StatementAttrib extends Statement {
 	{
 		this.attrib = at;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.attrib.toString();
+	}
 
 }

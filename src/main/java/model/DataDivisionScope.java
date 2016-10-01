@@ -14,17 +14,19 @@ public class DataDivisionScope extends AST
 	{
 		this.varDeclareList = varDeclareList;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		String string = "";
-		
-		for (VarDeclare varDeclare : this.varDeclareList)
+
+		if (varDeclareList != null)
 		{
-			string += varDeclare.toString() + "\n";
+			for (VarDeclare varDeclare : this.varDeclareList)
+			{
+				string += varDeclare.toString() + "\n";
+			}
 		}
-		
 		return string;
 	}
 

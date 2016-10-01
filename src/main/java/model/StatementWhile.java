@@ -13,7 +13,7 @@ public class StatementWhile extends Statement{
 	{
 		String string = "";
 		
-		string += this.meuWhile.toString() + "\n";
+		string += this.meuWhile.toString();
 		
 		return string;
 	}

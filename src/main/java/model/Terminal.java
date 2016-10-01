@@ -6,14 +6,26 @@ import util.AST.AST;
 public abstract class Terminal extends AST {
 	
 	
-	private Token t;
+	private Token token;
 
-	public Token getT() {
-		return t;
+	public Token getToken() {
+		return token;
 	}
 
-	public void setT(Token t) {
-		this.t = t;
+	public void setToken(Token token) {
+		this.token = token;
+	}
+	
+	@Override
+	public String toString(int level)
+	{
+		return null;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return this.token != null ? this.token.getSpelling().toString() : "";
 	}
 	
 	

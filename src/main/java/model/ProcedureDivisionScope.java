@@ -5,28 +5,33 @@ import java.util.List;
 
 import util.AST.AST;
 
-public class ProcedureDivisionScope extends AST{
-	
+public class ProcedureDivisionScope extends AST
+{
+
 	private List<Procedure> procedureList = new ArrayList<Procedure>();
-	
-	public ProcedureDivisionScope(List<Procedure> procedureList) {
+
+	public ProcedureDivisionScope(List<Procedure> procedureList)
+	{
 		this.setProcedureList(procedureList);
 	}
-	
+
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String string = "";
-		
-		for (Procedure procedure : procedureList)
+		if (procedureList != null)
 		{
-			string += procedure.toString() + "\n";
+			for (Procedure procedure : procedureList)
+			{
+				string += procedure.toString() + "\n";
+			}
 		}
-		
 		return string;
 	}
 
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

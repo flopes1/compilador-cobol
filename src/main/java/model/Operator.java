@@ -15,47 +15,46 @@ public class Operator extends AST
 		this.operatorTermList = operatorTermList;
 		this.operatorTerminalList = operatorTerminalList;
 	}
-	
-	
+
 	public List<Term> getOperatorTermList()
 	{
 		return operatorTermList;
 	}
-
 
 	public void setOperatorTermList(List<Term> operatorTermList)
 	{
 		this.operatorTermList = operatorTermList;
 	}
 
-
 	public List<Terminal> getOperatorTerminalList()
 	{
 		return operatorTerminalList;
 	}
-
 
 	public void setOperatorTerminalList(List<Terminal> operatorTerminalList)
 	{
 		this.operatorTerminalList = operatorTerminalList;
 	}
 
-
 	@Override
 	public String toString()
 	{
 		String string = "";
 
-		for (Term term : this.operatorTermList)
+		if (this.operatorTermList != null)
 		{
-			string += term.toString() + "\n";
+			for (Term term : this.operatorTermList)
+			{
+				string += term.toString() + "\n";
+			}
 		}
-
-		for (Terminal terminal : this.operatorTerminalList)
+		if (this.operatorTerminalList != null)
 		{
-			string += terminal.toString() + "\n";
+			for (Terminal terminal : this.operatorTerminalList)
+			{
+				string += terminal.toString() + "\n";
+			}
 		}
-
 		return string;
 	}
 

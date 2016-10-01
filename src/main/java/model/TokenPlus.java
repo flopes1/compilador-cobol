@@ -4,14 +4,14 @@ import scanner.Token;
 
 public class TokenPlus extends Terminal {
 	
-	public TokenPlus (Token t){
-		super.setT(t);
+	public TokenPlus (Token tokenPlus){
+		super.setToken(tokenPlus);
 	}
 	
 	@Override
 	public String toString()
 	{
-		return super.getT().getSpelling().toString() + "\n";
+		return super.toString();
 	}
 	
 	@Override

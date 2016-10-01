@@ -11,7 +11,7 @@ public class FatorBool extends Fator {
 	@Override
 	public String toString()
 	{
-		return this.tokenBool.toString() + "\n";
+		return this.tokenBool.toString();
 	}
 	
 	@Override

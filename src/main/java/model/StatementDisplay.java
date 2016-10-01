@@ -14,7 +14,7 @@ public class StatementDisplay extends Statement{
 	{
 		String string = "";
 		
-		string += this.expression.toString() + "\n";
+		string += this.expression.toString();
 		
 		return string;
 	}
