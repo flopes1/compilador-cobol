@@ -230,6 +230,22 @@ public class Parser
 	private Procedure parseProcedure() throws SyntacticException
 	{
 		Procedure procedure = null;
+		Terminal procedureType = null;
+		
+		if(currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
+		{
+			if(currentToken.getKind() == GrammarSymbols.BOOLEAN)
+			{
+				procedureType = new TokenBoolean(currentToken);
+				accept(GrammarSymbols.BOOLEAN);
+			}
+			else
+			{
+				procedureType = new TokenInteger(currentToken);
+				accept(GrammarSymbols.INTEGER);
+			}
+		}
+		
 		Terminal tokenId = new TokenId(currentToken);
 		
 		accept(GrammarSymbols.ID);
@@ -281,7 +297,7 @@ public class Parser
 		accept(GrammarSymbols.END_PROC);
 		accept(GrammarSymbols.DOT);
 		
-		procedure = new Procedure(tokenId, terminalList, varDeclareList, command);
+		procedure = new Procedure(procedureType, tokenId, terminalList, varDeclareList, command);
 
 		return procedure;
 	}
