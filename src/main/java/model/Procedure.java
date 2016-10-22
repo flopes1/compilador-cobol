@@ -8,13 +8,14 @@ import util.AST.AST;
 public class Procedure extends AST
 {
 
-	private Terminal tokenId;
+	private Terminal tokenId, procedureType;
 	private List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
 	private List<Terminal> terminalList;
 	private Command command;
 
-	public Procedure(Terminal tokenId, List<Terminal> terminalList, List<VarDeclare> varDeclareList, Command command)
+	public Procedure(Terminal procedureType, Terminal tokenId, List<Terminal> terminalList, List<VarDeclare> varDeclareList, Command command)
 	{
+		this.setProcedureType(procedureType);
 		this.setTokenId(tokenId);
 		this.setVarDeclareList(varDeclareList);
 		this.setTerminalList(terminalList);
@@ -93,4 +94,16 @@ public class Procedure extends AST
 	{
 		this.tokenId = tokenId;
 	}
+
+	public Terminal getProcedureType()
+	{
+		return procedureType;
+	}
+
+	public void setProcedureType(Terminal procedureType)
+	{
+		this.procedureType = procedureType;
+	}
+	
+	
 }
