@@ -54,9 +54,6 @@ import util.AST.AST;
  * @author Gustavo H P Carvalho
  * @email gustavohpcarvalho@ecomp.poli.br
  */
-
-//qqr coisa
-// mais outra coisa
 public class Parser
 {
 
