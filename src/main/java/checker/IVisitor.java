@@ -1,0 +1,100 @@
+package checker;
+
+import model.Attrib;
+import model.CallProcedure;
+import model.Command;
+import model.Condition;
+import model.DataDivisionScope;
+import model.Expression;
+import model.FatorBool;
+import model.FatorCallProcedure;
+import model.FatorExpression;
+import model.FatorId;
+import model.FatorNumber;
+import model.Operator;
+import model.Procedure;
+import model.ProcedureDivisionScope;
+import model.Program;
+import model.StatementAttrib;
+import model.StatementBreakContinue;
+import model.StatementCallProcedure;
+import model.StatementDisplay;
+import model.StatementIf;
+import model.StatementReturn;
+import model.StatementWhile;
+import model.Term;
+import model.TerminalBool;
+import model.TerminalBoolean;
+import model.TerminalId;
+import model.TerminalInteger;
+import model.TerminalNumber;
+import model.VarDeclare;
+import model.While;
+
+public interface IVisitor
+{
+
+	Object visitProgram(Program program, Object object);
+
+	Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object);
+
+	Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object);
+
+	Object visitVariablesDeclare(VarDeclare varDeclare, Object object);
+
+	Object visitProcedure(Procedure procedure, Object object);
+
+	Object visitCommand(Command command, Object object);
+
+	Object visitStatementIf(StatementIf statementIf, Object object);
+
+	Object visitStatementWhile(StatementWhile statementWhile, Object object);
+
+	Object visitStatementDisplay(StatementDisplay statementDisplay, Object object);
+
+	Object visitStatementReturn(StatementReturn statementReturn, Object object);
+
+	Object visitStatementAttribution(StatementAttrib statementAttrib, Object object);
+
+	Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object);
+
+	Object visitStatementBreak(StatementBreakContinue statementBreakContinue, Object object);
+	
+	//Duvida um visit para cada comando
+	Object visitStatementContinue(StatementBreakContinue statementBreakContinue, Object object);
+
+	Object visitCondition(Condition condition, Object object);
+
+	Object visitWhile(While whileCommand, Object object);
+
+	Object visitAttrib(Attrib attrib, Object object);
+
+	Object visitCallProcedure(CallProcedure callProcedure, Object object);
+	//Duvida 2 visit exp
+	Object visitExpressionSimple(Expression expressionSimple, Object object);
+
+	Object visitExpressionComparation(Expression expressionComparation, Object object);
+
+	Object visitOperatorSimple(Operator operator, Object object);
+
+	Object visitOperatorComposite(Operator operator, Object object);
+
+	Object visitTermSimple(Term termSimple, Object object);
+
+	Object visitTermComposite(Term termSimple, Object object);
+
+	Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object);
+
+	Object visitFatorBool(FatorBool fatorBool, Object object);
+
+	Object visitFatorIdentificator(FatorId fatorId, Object object);
+
+	Object visitFatorNumber(FatorNumber fatorNumber, Object object);
+
+	Object visitFatorExpression(FatorExpression fatorExpression, Object object);
+	
+	Object visitFatorTypeBoolean(TerminalBoolean tokenBoolean, Object object);
+
+	Object visitFatorTypeInteger(TerminalInteger tokenInteger, Object object);
+
+}
