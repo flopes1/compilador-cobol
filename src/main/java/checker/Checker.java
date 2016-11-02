@@ -60,16 +60,16 @@ public class Checker implements IVisitor
 
 	public Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException
 	{
-		if (this.identificationTable.retrieve(varDeclare.getTokenId().getToken().getSpelling()) != null)
+		if (this.identificationTable.retrieve(varDeclare.getTerminalId().getToken().getSpelling()) != null)
 		{
 			throw new SemanticException(
-					"Identifier " + varDeclare.getTokenId().getToken().getSpelling() + " already defined.");
+					"Identifier " + varDeclare.getTerminalId().getToken().getSpelling() + " already defined.");
 		}
 
-		this.identificationTable.enter(varDeclare.getTokenId().getToken().getSpelling(), varDeclare);
-		varDeclare.getTokenBoolOrInt().visit(this, object);
-		varDeclare.getTokenId().visit(this, object);
-		
+		this.identificationTable.enter(varDeclare.getTerminalId().getToken().getSpelling(), varDeclare);
+		varDeclare.getTerminalBooleanOrInteger().visit(this, object);
+		varDeclare.getTerminalId().visit(this, object);
+
 		return null;
 	}
 
@@ -187,10 +187,9 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitFatorIdentificator(FatorId fatorId, Object object)
+	public Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return fatorId.getTokenId().visit(this, object);
 	}
 
 	public Object visitFatorNumber(FatorNumber fatorNumber, Object object)
@@ -229,10 +228,19 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitTerminalIdentificator(TerminalId terminalId, Object object)
+	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		Object varDeclaration = this.identificationTable.retrieve(terminalId.getToken().getSpelling());
+		
+		if(varDeclaration == null)
+		{
+			throw new SemanticException(
+					"The Identifier " + terminalId.getToken().getSpelling() + " is not defined.");
+		}
+		
+		VarDeclare declarationCommand = (VarDeclare) varDeclaration;
+		return declarationCommand.getTerminalBooleanOrInteger().getToken().getSpelling();
 	}
 
 	public Object visitTerminalComparation(TerminalComp terminalComp, Object object)
