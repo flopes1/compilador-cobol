@@ -16,8 +16,9 @@ import model.Procedure;
 import model.ProcedureDivisionScope;
 import model.Program;
 import model.StatementAttrib;
-import model.StatementBreakContinue;
+import model.StatementBreak;
 import model.StatementCallProcedure;
+import model.StatementContinue;
 import model.StatementDisplay;
 import model.StatementIf;
 import model.StatementReturn;
@@ -60,9 +61,9 @@ public interface IVisitor
 
 	Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object);
 
-	Object visitStatementBreak(StatementBreakContinue statementBreakContinue, Object object);
-	//Duvida um visit para cada comando
-	Object visitStatementContinue(StatementBreakContinue statementBreakContinue, Object object);
+	Object visitStatementBreak(StatementBreak statementBreak, Object object);
+	
+	Object visitStatementContinue(StatementContinue statementContinue, Object object);
 
 	Object visitCondition(Condition condition, Object object);
 
@@ -71,18 +72,12 @@ public interface IVisitor
 	Object visitAttrib(Attrib attrib, Object object);
 
 	Object visitCallProcedure(CallProcedure callProcedure, Object object);
-	//Duvida 2 visit exp
-	Object visitExpressionSimple(Expression expressionSimple, Object object);
 
-	Object visitExpressionComparation(Expression expressionComparation, Object object);
+	Object visitExpression(Expression expression, Object object);
 
-	Object visitOperatorSimple(Operator operator, Object object);
+	Object visitOperator(Operator operator, Object object);
 
-	Object visitOperatorComposite(Operator operator, Object object);
-
-	Object visitTermSimple(Term termSimple, Object object);
-
-	Object visitTermComposite(Term termSimple, Object object);
+	Object visitTerm(Term term, Object object);
 
 	Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object);
 
