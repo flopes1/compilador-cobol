@@ -16,8 +16,9 @@ import model.Procedure;
 import model.ProcedureDivisionScope;
 import model.Program;
 import model.StatementAttrib;
-import model.StatementBreakContinue;
+import model.StatementBreak;
 import model.StatementCallProcedure;
+import model.StatementContinue;
 import model.StatementDisplay;
 import model.StatementIf;
 import model.StatementReturn;
@@ -32,18 +33,12 @@ import model.TerminalNumber;
 import model.TerminalOperations;
 import model.VarDeclare;
 import model.While;
-import util.AST.AST;
 import util.symbolsTable.IdentificationTable;
 
 public class Checker implements IVisitor
 {
 
 	private IdentificationTable identificationTable = new IdentificationTable();
-
-	public Object check(AST sintaticAbstractTree)
-	{
-		return sintaticAbstractTree.visit(this, null);
-	}
 
 	public Object visitProgram(Program program, Object object)
 	{
@@ -117,13 +112,13 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitStatementBreak(StatementBreakContinue statementBreakContinue, Object object)
+	public Object visitStatementBreak(StatementBreak statementBreak, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitStatementContinue(StatementBreakContinue statementBreakContinue, Object object)
+	public Object visitStatementContinue(StatementContinue statementContinue, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -153,37 +148,19 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitExpressionSimple(Expression expressionSimple, Object object)
+	public Object visitExpression(Expression expression, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitExpressionComparation(Expression expressionComparation, Object object)
+	public Object visitOperator(Operator operator, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitOperatorSimple(Operator operator, Object object)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitOperatorComposite(Operator operator, Object object)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitTermSimple(Term termSimple, Object object)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitTermComposite(Term termSimple, Object object)
+	public Object visitTerm(Term term, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -219,7 +196,7 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitTerminalTypeBoolean(TerminalBoolean tokenBoolean, Object object)
+	public Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -231,19 +208,19 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitTerminalTypeInteger(TerminalInteger tokenInteger, Object object)
+	public Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitTerminalNumber(TerminalNumber tokenNumber, Object object)
+	public Object visitTerminalNumber(TerminalNumber terminalNumber, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitTerminalIdentificator(TerminalId tokenId, Object object)
+	public Object visitTerminalIdentificator(TerminalId terminalId, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
