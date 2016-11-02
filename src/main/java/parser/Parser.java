@@ -32,13 +32,10 @@ import model.Terminal;
 import model.TerminalBool;
 import model.TerminalBoolean;
 import model.TerminalComp;
-import model.TerminalDiv;
 import model.TerminalId;
 import model.TerminalInteger;
-import model.TerminalMinus;
-import model.TerminalMult;
 import model.TerminalNumber;
-import model.TerminalPlus;
+import model.TerminalOperations;
 import model.VarDeclare;
 import model.While;
 import scanner.LexicalException;
@@ -143,7 +140,7 @@ public class Parser
 			accept(GrammarSymbols.DOT);
 
 			Terminal id = new TerminalId(currentToken);
-			
+
 			accept(GrammarSymbols.ID);
 
 			accept(GrammarSymbols.DOT);
@@ -164,7 +161,7 @@ public class Parser
 				accept(GrammarSymbols.DOT);
 				procedureDivisionScope = parseProcedureDivisionScope();
 			}
-			
+
 			program = new Program(id, dataDivisionScope, procedureDivisionScope);
 		}
 		else
@@ -199,7 +196,7 @@ public class Parser
 
 		accept(GrammarSymbols.DOT);
 		varDeclare = new VarDeclare(id, intOrBoolTerminal);
-		
+
 		return varDeclare;
 
 	}
@@ -208,7 +205,7 @@ public class Parser
 	{
 		DataDivisionScope dataDivisionScope = null;
 		List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
-		
+
 		while (true)
 		{
 			if (currentToken.getKind() == GrammarSymbols.EXIT)
@@ -231,10 +228,10 @@ public class Parser
 	{
 		Procedure procedure = null;
 		Terminal procedureType = null;
-		
-		if(currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
+
+		if (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
 		{
-			if(currentToken.getKind() == GrammarSymbols.BOOLEAN)
+			if (currentToken.getKind() == GrammarSymbols.BOOLEAN)
 			{
 				procedureType = new TerminalBoolean(currentToken);
 				accept(GrammarSymbols.BOOLEAN);
@@ -245,9 +242,9 @@ public class Parser
 				accept(GrammarSymbols.INTEGER);
 			}
 		}
-		
+
 		Terminal tokenId = new TerminalId(currentToken);
-		
+
 		accept(GrammarSymbols.ID);
 		accept(GrammarSymbols.SECTION);
 		accept(GrammarSymbols.DOT);
@@ -296,12 +293,12 @@ public class Parser
 		Command command = parseCommand();
 		accept(GrammarSymbols.END_PROC);
 		accept(GrammarSymbols.DOT);
-		
+
 		procedure = new Procedure(procedureType, tokenId, terminalList, varDeclareList, command);
 
 		return procedure;
 	}
-	
+
 	private ProcedureDivisionScope parseProcedureDivisionScope() throws SyntacticException
 	{
 		ProcedureDivisionScope procedureDivisionScope = null;
@@ -324,7 +321,9 @@ public class Parser
 		return procedureDivisionScope;
 
 	}
-	// TODO Refactor, toString, modificadores de acesso, construtores, corrigir nomenclatura de atributos
+
+	// TODO Refactor, toString, modificadores de acesso, construtores, corrigir
+	// nomenclatura de atributos
 	private Command parseCommand() throws SyntacticException
 	{
 		Command command = null;
@@ -373,7 +372,7 @@ public class Parser
 		accept(GrammarSymbols.ID);
 
 		List<Terminal> terminalIdList = new ArrayList<Terminal>();
-		
+
 		terminalIdList.add(tokenId);
 
 		while (currentToken.getKind() == GrammarSymbols.USING)
@@ -384,9 +383,9 @@ public class Parser
 
 			terminalIdList.add(possibleTokenId);
 		}
-		
+
 		callProcedure = new CallProcedure(terminalIdList);
-		
+
 		return callProcedure;
 	}
 
@@ -394,15 +393,15 @@ public class Parser
 	{
 		Statement statement = null;
 
-		List<Command> commandList = new ArrayList<Command>();	
-		
+		List<Command> commandList = new ArrayList<Command>();
+
 		if (currentToken.getKind() == GrammarSymbols.IF)
 		{
 			acceptIt();
 			Condition condition = parseCondition();
 			accept(GrammarSymbols.THEN);
 			Command command = parseCommand();
-			
+
 			commandList.add(command);
 
 			Command possibleElseCommand = null;
@@ -449,7 +448,7 @@ public class Parser
 		else if (currentToken.getKind() == GrammarSymbols.BREAK || currentToken.getKind() == GrammarSymbols.CONTINUE)
 		{
 			acceptIt();
-			
+
 			statement = new StatementBreakContinue();
 		}
 		else
@@ -481,9 +480,9 @@ public class Parser
 		Expression expression = null;
 		Terminal tokenComparator = null;
 		Operator possibleOperator = null;
-		
+
 		Operator operator = parseOperator();
-		
+
 		if (currentToken.getKind() == GrammarSymbols.COMP)
 		{
 			tokenComparator = new TerminalComp(currentToken);
@@ -511,15 +510,7 @@ public class Parser
 			Terminal terminalPlusOrMinus = null;
 			Term nextTerm = null;
 
-			if (currentToken.getKind() == GrammarSymbols.PLUS)
-			{
-				terminalPlusOrMinus = new TerminalPlus(currentToken);
-			}
-			else
-			{
-				terminalPlusOrMinus = new TerminalMinus(currentToken);
-			}
-
+			terminalPlusOrMinus = new TerminalOperations(currentToken);
 			operatorTerminalList.add(terminalPlusOrMinus);
 
 			acceptIt();
@@ -546,18 +537,11 @@ public class Parser
 				|| currentToken.getKind() == GrammarSymbols.DIVISION)
 		{
 			Fator nextFator = null;
-			Terminal terminal = null;
+			Terminal terminalMultiOrDiv = null;
 
-			if (currentToken.getKind() == GrammarSymbols.PLUS)
-			{
-				terminal = new TerminalMult(currentToken);
-			}
-			else
-			{
-				terminal = new TerminalDiv(currentToken);
-			}
+			terminalMultiOrDiv = new TerminalOperations(currentToken);
 
-			multiOrDivOperatorList.add(terminal);
+			multiOrDivOperatorList.add(terminalMultiOrDiv);
 
 			acceptIt();
 
