@@ -21,8 +21,9 @@ import model.ProcedureDivisionScope;
 import model.Program;
 import model.Statement;
 import model.StatementAttrib;
-import model.StatementBreakContinue;
+import model.StatementBreak;
 import model.StatementCallProcedure;
+import model.StatementContinue;
 import model.StatementDisplay;
 import model.StatementIf;
 import model.StatementReturn;
@@ -445,11 +446,18 @@ public class Parser
 
 			statement = new StatementCallProcedure(callProcedure);
 		}
-		else if (currentToken.getKind() == GrammarSymbols.BREAK || currentToken.getKind() == GrammarSymbols.CONTINUE)
+		else if (currentToken.getKind() == GrammarSymbols.BREAK)
 		{
 			acceptIt();
 
-			statement = new StatementBreakContinue();
+			statement = new StatementBreak();
+		}
+		else if (currentToken.getKind() == GrammarSymbols.CONTINUE)
+		{
+			acceptIt();
+
+			statement = new StatementContinue();
+
 		}
 		else
 		{
