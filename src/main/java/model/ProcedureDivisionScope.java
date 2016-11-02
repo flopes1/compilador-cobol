@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class ProcedureDivisionScope extends AST
@@ -44,5 +45,11 @@ public class ProcedureDivisionScope extends AST
 	public void setProcedureList(List<Procedure> procedureList)
 	{
 		this.procedureList = procedureList;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitProcedureDivisionScope(this, object);
 	}
 }

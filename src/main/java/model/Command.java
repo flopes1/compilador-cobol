@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class Command extends AST
@@ -44,6 +45,12 @@ public class Command extends AST
 	public void setStatementList(List<Statement> statementList)
 	{
 		this.statementList = statementList;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitCommand(this, object);
 	}
 
 }

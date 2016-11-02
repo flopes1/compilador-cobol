@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class DataDivisionScope extends AST
@@ -35,5 +36,11 @@ public class DataDivisionScope extends AST
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitDataDivisionScope(this, object);
 	}
 }

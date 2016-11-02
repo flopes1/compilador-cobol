@@ -1,5 +1,6 @@
 package model;
 
+import checker.IVisitor;
 import scanner.Token;
 
 public class TerminalOperations extends Terminal
@@ -9,17 +10,24 @@ public class TerminalOperations extends Terminal
 	{
 		super.setToken(token);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return super.toString();
 	}
-	
+
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitTerminalOperations(this, object);
+	}
+
 }

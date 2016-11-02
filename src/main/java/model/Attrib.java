@@ -1,5 +1,6 @@
 package model;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class Attrib extends AST{
@@ -53,6 +54,12 @@ public class Attrib extends AST{
 	public void setTokenId(Terminal tokenId)
 	{
 		this.tokenId = tokenId;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitAttrib(this, object);
 	}
 
 }

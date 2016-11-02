@@ -1,22 +1,26 @@
 package model;
 
-public class FatorCallProcedure extends Fator {
-	
+import checker.IVisitor;
+
+public class FatorCallProcedure extends Fator
+{
+
 	private CallProcedure callProcedure;
-	
-	public FatorCallProcedure(CallProcedure callProcedure) {
+
+	public FatorCallProcedure(CallProcedure callProcedure)
+	{
 		this.setCallProcedure(callProcedure);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.callProcedure.toString();
 	}
-	
-	
+
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -29,6 +33,12 @@ public class FatorCallProcedure extends Fator {
 	public void setCallProcedure(CallProcedure callProcedure)
 	{
 		this.callProcedure = callProcedure;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitFatorCallProcedure(this, object);
 	}
 
 }

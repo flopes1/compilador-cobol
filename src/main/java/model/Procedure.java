@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class Procedure extends AST
@@ -13,7 +14,8 @@ public class Procedure extends AST
 	private List<Terminal> terminalList;
 	private Command command;
 
-	public Procedure(Terminal procedureType, Terminal tokenId, List<Terminal> terminalList, List<VarDeclare> varDeclareList, Command command)
+	public Procedure(Terminal procedureType, Terminal tokenId, List<Terminal> terminalList,
+			List<VarDeclare> varDeclareList, Command command)
 	{
 		this.setProcedureType(procedureType);
 		this.setTokenId(tokenId);
@@ -104,6 +106,11 @@ public class Procedure extends AST
 	{
 		this.procedureType = procedureType;
 	}
-	
-	
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitProcedure(this, object);
+	}
+
 }

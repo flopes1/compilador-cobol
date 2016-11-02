@@ -1,5 +1,6 @@
 package model;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class Expression extends AST{
@@ -59,6 +60,12 @@ public class Expression extends AST{
 	public void setTokenComparator(Terminal tokenComparator)
 	{
 		this.tokenComparator = tokenComparator;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitExpression(this, object);
 	}
 
 }

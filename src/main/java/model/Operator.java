@@ -2,6 +2,7 @@ package model;
 
 import java.util.List;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class Operator extends AST
@@ -63,6 +64,12 @@ public class Operator extends AST
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitOperator(this, object);
 	}
 
 }

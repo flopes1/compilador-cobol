@@ -1,5 +1,6 @@
 package model;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class VarDeclare extends AST
@@ -18,7 +19,7 @@ public class VarDeclare extends AST
 	{
 
 		String string = "";
-		string += this.tokenId.getToken().getSpelling().toString() + "\n" 
+		string += this.tokenId.getToken().getSpelling().toString() + "\n"
 				+ this.tokenBoolOrInt.getToken().getSpelling().toString();
 
 		return string;
@@ -29,5 +30,11 @@ public class VarDeclare extends AST
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitVariablesDeclare(this, object);
 	}
 }

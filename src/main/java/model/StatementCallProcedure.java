@@ -1,25 +1,30 @@
 package model;
 
-public class StatementCallProcedure extends Statement {
+import checker.IVisitor;
+
+public class StatementCallProcedure extends Statement
+{
 
 	private CallProcedure callProcedure;
-	
-	public StatementCallProcedure(CallProcedure cal) {
+
+	public StatementCallProcedure(CallProcedure cal)
+	{
 		this.setCallProcedure(cal);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		String string = "";
-		
+
 		string += this.callProcedure.toString();
-		
+
 		return string;
 	}
-	
+
 	@Override
-	public String toString(int level) {
+	public String toString(int level)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -32,6 +37,12 @@ public class StatementCallProcedure extends Statement {
 	public void setCallProcedure(CallProcedure callProcedure)
 	{
 		this.callProcedure = callProcedure;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitStatementCallProcedure(this, object);
 	}
 
 }

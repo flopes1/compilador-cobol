@@ -2,6 +2,7 @@ package model;
 
 import java.util.List;
 
+import checker.IVisitor;
 import util.AST.AST;
 
 public class CallProcedure extends AST
@@ -44,6 +45,12 @@ public class CallProcedure extends AST
 	public void setTerminalList(List<Terminal> terminalList)
 	{
 		this.terminalList = terminalList;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitCallProcedure(this, object);
 	}
 
 }

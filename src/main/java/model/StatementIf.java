@@ -2,6 +2,8 @@ package model;
 
 import java.util.List;
 
+import checker.IVisitor;
+
 public class StatementIf extends Statement
 {
 
@@ -55,6 +57,12 @@ public class StatementIf extends Statement
 	public void setCommandList(List<Command> commandList)
 	{
 		this.commandList = commandList;
+	}
+
+	@Override
+	public Object visit(IVisitor visitor, Object object)
+	{
+		return visitor.visitStatementIf(this, object);
 	}
 
 }
