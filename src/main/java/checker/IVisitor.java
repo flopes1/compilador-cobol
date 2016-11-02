@@ -25,9 +25,11 @@ import model.StatementWhile;
 import model.Term;
 import model.TerminalBool;
 import model.TerminalBoolean;
+import model.TerminalComp;
 import model.TerminalId;
 import model.TerminalInteger;
 import model.TerminalNumber;
+import model.TerminalOperations;
 import model.VarDeclare;
 import model.While;
 
@@ -59,7 +61,6 @@ public interface IVisitor
 	Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object);
 
 	Object visitStatementBreak(StatementBreakContinue statementBreakContinue, Object object);
-	
 	//Duvida um visit para cada comando
 	Object visitStatementContinue(StatementBreakContinue statementBreakContinue, Object object);
 
@@ -93,8 +94,19 @@ public interface IVisitor
 
 	Object visitFatorExpression(FatorExpression fatorExpression, Object object);
 	
-	Object visitFatorTypeBoolean(TerminalBoolean tokenBoolean, Object object);
+	Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object);
+	
+	Object visitTerminalBool(TerminalBool terminalBool, Object object);
 
-	Object visitFatorTypeInteger(TerminalInteger tokenInteger, Object object);
+	Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object);
+	
+	Object visitTerminalNumber(TerminalNumber terminalNumber, Object object);
 
+	Object visitTerminalIdentificator(TerminalId terminalId, Object object);
+	
+	Object visitTerminalComparation(TerminalComp terminalComp, Object object);
+	
+	Object visitTerminalOperations(TerminalOperations terminalOperations, Object object);
+
+	// terminal x fator
 }

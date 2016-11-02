@@ -25,14 +25,25 @@ import model.StatementWhile;
 import model.Term;
 import model.TerminalBool;
 import model.TerminalBoolean;
+import model.TerminalComp;
 import model.TerminalId;
 import model.TerminalInteger;
 import model.TerminalNumber;
+import model.TerminalOperations;
 import model.VarDeclare;
 import model.While;
+import util.AST.AST;
+import util.symbolsTable.IdentificationTable;
 
 public class Checker implements IVisitor
 {
+
+	private IdentificationTable identificationTable = new IdentificationTable();
+
+	public Object check(AST sintaticAbstractTree)
+	{
+		return sintaticAbstractTree.visit(this, null);
+	}
 
 	public Object visitProgram(Program program, Object object)
 	{
@@ -208,16 +219,46 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitFatorTypeBoolean(TerminalBoolean tokenBoolean, Object object)
+	public Object visitTerminalTypeBoolean(TerminalBoolean tokenBoolean, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitFatorTypeInteger(TerminalInteger tokenInteger, Object object)
+	public Object visitTerminalBool(TerminalBool terminalBool, Object object)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	public Object visitTerminalTypeInteger(TerminalInteger tokenInteger, Object object)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitTerminalNumber(TerminalNumber tokenNumber, Object object)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitTerminalIdentificator(TerminalId tokenId, Object object)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitTerminalComparation(TerminalComp terminalComp, Object object)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitTerminalOperations(TerminalOperations terminalOperations, Object object)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
