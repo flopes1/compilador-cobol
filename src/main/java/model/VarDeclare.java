@@ -1,6 +1,7 @@
 package model;
 
 import checker.IVisitor;
+import checker.SemanticException;
 import util.AST.AST;
 
 public class VarDeclare extends AST
@@ -12,6 +13,16 @@ public class VarDeclare extends AST
 	{
 		this.tokenId = id;
 		this.tokenBoolOrInt = intOrBool;
+	}
+	
+	public Terminal getTokenId()
+	{
+		return tokenId;
+	}
+
+	public Terminal getTokenBoolOrInt()
+	{
+		return tokenBoolOrInt;
 	}
 
 	@Override
@@ -33,7 +44,7 @@ public class VarDeclare extends AST
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitVariablesDeclare(this, object);
 	}
