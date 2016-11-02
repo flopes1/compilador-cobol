@@ -83,7 +83,7 @@ public interface IVisitor
 
 	Object visitFatorBool(FatorBool fatorBool, Object object);
 
-	Object visitFatorIdentificator(FatorId fatorId, Object object);
+	Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException;
 
 	Object visitFatorNumber(FatorNumber fatorNumber, Object object);
 
@@ -97,7 +97,7 @@ public interface IVisitor
 	
 	Object visitTerminalNumber(TerminalNumber terminalNumber, Object object);
 
-	Object visitTerminalIdentificator(TerminalId terminalId, Object object);
+	Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException;
 	
 	Object visitTerminalComparation(TerminalComp terminalComp, Object object);
 	
