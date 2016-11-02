@@ -1,6 +1,7 @@
 package util.AST;
 
 import checker.IVisitor;
+import checker.SemanticException;
 
 /**
  * AST class
@@ -26,6 +27,6 @@ public abstract class AST
 
 	public abstract String toString(int level);
 
-	public abstract Object visit(IVisitor visitor, Object object);
+	public abstract Object visit(IVisitor visitor, Object object) throws SemanticException;
 
 }

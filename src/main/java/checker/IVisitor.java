@@ -43,7 +43,7 @@ public interface IVisitor
 
 	Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object);
 
-	Object visitVariablesDeclare(VarDeclare varDeclare, Object object);
+	Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException;
 
 	Object visitProcedure(Procedure procedure, Object object);
 
