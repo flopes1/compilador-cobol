@@ -7,22 +7,22 @@ import util.AST.AST;
 public class VarDeclare extends AST
 {
 
-	private Terminal tokenId, tokenBoolOrInt;
+	private Terminal terminalId, terminalBooleanOrInteger;
 
 	public VarDeclare(Terminal id, Terminal intOrBool)
 	{
-		this.tokenId = id;
-		this.tokenBoolOrInt = intOrBool;
-	}
-	
-	public Terminal getTokenId()
-	{
-		return tokenId;
+		this.terminalId = id;
+		this.terminalBooleanOrInteger = intOrBool;
 	}
 
-	public Terminal getTokenBoolOrInt()
+	public Terminal getTerminalId()
 	{
-		return tokenBoolOrInt;
+		return terminalId;
+	}
+
+	public Terminal getTerminalBooleanOrInteger()
+	{
+		return terminalBooleanOrInteger;
 	}
 
 	@Override
@@ -30,8 +30,8 @@ public class VarDeclare extends AST
 	{
 
 		String string = "";
-		string += this.tokenId.getToken().getSpelling().toString() + "\n"
-				+ this.tokenBoolOrInt.getToken().getSpelling().toString();
+		string += this.terminalId.getToken().getSpelling().toString() + "\n"
+				+ this.terminalBooleanOrInteger.getToken().getSpelling().toString();
 
 		return string;
 	}
