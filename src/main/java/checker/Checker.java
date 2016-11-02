@@ -58,9 +58,18 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitVariablesDeclare(VarDeclare varDeclare, Object object)
+	public Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		if (this.identificationTable.retrieve(varDeclare.getTokenId().getToken().getSpelling()) != null)
+		{
+			throw new SemanticException(
+					"Identifier " + varDeclare.getTokenId().getToken().getSpelling() + " already defined.");
+		}
+
+		this.identificationTable.enter(varDeclare.getTokenId().getToken().getSpelling(), varDeclare);
+		varDeclare.getTokenBoolOrInt().visit(this, object);
+		varDeclare.getTokenId().visit(this, object);
+		
 		return null;
 	}
 
