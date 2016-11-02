@@ -1,8 +1,6 @@
 package scanner;
 
 import compiler.Properties;
-import compiler.Compiler;
-
 import parser.GrammarSymbols;
 import util.Arquivo;
 
@@ -276,10 +274,24 @@ public class Scanner
 						state = 5;
 						this.getNextChar();
 					}
-					else if (this.currentChar == '+' || this.currentChar == '-' ||
-							 this.currentChar == '*' || this.currentChar == '/')
+					else if (this.currentChar == '+')
 					{
 						state = 7;
+						this.getNextChar();
+					}
+					else if (this.currentChar == '-')
+					{
+						state = 8;
+						this.getNextChar();
+					}
+					else if (this.currentChar == '*')
+					{
+						state = 9;
+						this.getNextChar();
+					}
+					else if (this.currentChar == '/')
+					{
+						state = 10;
 						this.getNextChar();
 					}
 					else if (this.currentChar == '(')
@@ -336,7 +348,13 @@ public class Scanner
 					}
 				}
 				case 7:
-					return GrammarSymbols.OPERATIONS;
+					return GrammarSymbols.PLUS;
+				case 8:
+					return GrammarSymbols.MINUS;
+				case 9:
+					return GrammarSymbols.MULTIPLICATION;
+				case 10:
+					return GrammarSymbols.DIVISION;
 				case 11:
 					return GrammarSymbols.LP;
 				case 12:

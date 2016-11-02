@@ -54,7 +54,13 @@ public class GrammarSymbols
 
 	public static final int DISPLAY = 21;
 
-	public static final int OPERATIONS = 22;
+	public static final int PLUS = 22;
+
+	public static final int MINUS = 23;
+
+	public static final int MULTIPLICATION = 24;
+
+	public static final int DIVISION = 25;
 
 	public static final int IF = 26;
 
