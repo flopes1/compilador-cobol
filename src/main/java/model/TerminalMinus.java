@@ -2,9 +2,9 @@ package model;
 
 import scanner.Token;
 
-public class TokenMinus extends Terminal {
+public class TerminalMinus extends Terminal {
 	
-	public TokenMinus (Token t){
+	public TerminalMinus (Token t){
 		super.setToken(t);
 	}
 	
