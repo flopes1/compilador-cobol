@@ -1,11 +1,14 @@
 package checker;
 
+import java.util.List;
+
 import model.Attrib;
 import model.CallProcedure;
 import model.Command;
 import model.Condition;
 import model.DataDivisionScope;
 import model.Expression;
+import model.Fator;
 import model.FatorBool;
 import model.FatorCallProcedure;
 import model.FatorExpression;
@@ -40,21 +43,54 @@ public class Checker implements IVisitor
 
 	private IdentificationTable identificationTable = new IdentificationTable();
 
-	public Object visitProgram(Program program, Object object)
+	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		program.getDataDivisionScope().visit(this, object);
+		program.getProcedureDivisionScope().visit(this, object);
+		
+		
+		boolean main = false;
+		
+		
+		if(identificationTable.retrieve("main") instanceof Procedure)
+		{
+			main = true;
+		}
+		
+		
+		if(main == false){
+			throw new SemanticException("main not found");
+		}
+		
 		return null;
 	}
 
-	public Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object)
+	public Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		
+		List<VarDeclare> varDeclareList = dataDivisionScope.getVarDeclareList();
+		
+		for (VarDeclare varDeclare : varDeclareList)
+		{
+			varDeclare.visit(this, object);
+			
+			
+		}
+		
 		return null;
 	}
 
-	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object)
+	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+
+		List<Procedure> procedureList = procedureDivisionScope.getProcedureList();
+		
+		for (Procedure procedure : procedureList)
+		{
+			procedure.visit(this, object);
+//			identificationTable.enter(procedure.getTokenId().getToken().getSpelling(), procedure);
+		}
+		
 		return null;
 	}
 
@@ -145,9 +181,12 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitAttrib(Attrib attrib, Object object)
+	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		if (!attrib.getExpression().visit(this, object).equals(attrib.getTokenId().visit(this, object)))
+		{
+			throw new SemanticException("Expression is not same type of ID");
+		}
 		return null;
 	}
 
@@ -157,34 +196,98 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitExpression(Expression expression, Object object)
+	public Object visitExpression(Expression expression, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		if(expression.getOptionalOperator() == null)
+		{
+			if (!expression.getMandatoryOperator().visit(this, object).equals("BOOLEAN"))
+			{
+				throw new SemanticException("Type of Expression is invalid");
+			}
+			return "BOOLEAN";
+		}else{
+			
+			if (expression.getMandatoryOperator().visit(this, object).equals("INTEGER") && expression.getOptionalOperator().visit(this, object).equals("INTEGER"))
+			{
+				if (expression.getTokenComparator().getToken().getSpelling().equals("=") || expression.getTokenComparator().getToken().getSpelling().equals("!=")|| 
+					expression.getTokenComparator().getToken().getSpelling().equals(">")|| expression.getTokenComparator().getToken().getSpelling().equals("<")||
+					expression.getTokenComparator().getToken().getSpelling().equals(">=")|| expression.getTokenComparator().getToken().getSpelling().equals("<=") )
+				{
+					return "BOOLEAN";
+				}else{
+					throw new SemanticException("Type of Expression is invalid");
+				}
+			}else if(expression.getMandatoryOperator().visit(this, object).equals("BOOLEAN") && expression.getOptionalOperator().visit(this, object).equals("BOOLEAN"))
+			{
+				if (expression.getTokenComparator().getToken().getSpelling().equals("=") || expression.getTokenComparator().getToken().getSpelling().equals("!="))
+				{
+					return "BOOLEAN";
+				}
+			}
+			
+			throw new SemanticException("Type of Expression is invalid");
+		}
 	}
 
-	public Object visitOperator(Operator operator, Object object)
+	public Object visitOperator(Operator operator, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<Term> termList = operator.getOperatorTermList();
+		boolean error = false;
+
+		for (Term term : termList)
+		{
+			if(termList.size()==1 && term.visit(this, object).equals("BOOLEAN")){
+				return "BOOLEAN";
+			}
+			
+			if( !term.visit(this, object).equals("INTEGER")){
+				error = true;
+				break;
+			}
+		}
+		
+		if(error){
+			throw new SemanticException("Type of Operator is invalid");
+		}
+		
+		return "INTEGER";
 	}
 
-	public Object visitTerm(Term term, Object object)
+	public Object visitTerm(Term term, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		List<Fator> fatorList = term.getTermfatorList();
+		boolean error = false;
+		for (Fator fator : fatorList)
+		{
+			if(fatorList.size()==1 && fator.visit(this, object).equals("BOOLEAN")){
+				return "BOOLEAN";
+			}
+			
+			if( !fator.visit(this, object).equals("INTEGER")){
+				error = true;
+				break;
+			}
+		}
+		
+		if(error){
+			throw new SemanticException("Type of Fator is invalid");
+		}
+		
+		return "INTEGER";
+		
+		
 	}
 
 	public Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return fatorCallProcedure.getCallProcedure().visit(this, object);
 	}
 
-	public Object visitFatorBool(FatorBool fatorBool, Object object)
+	public Object visitFatorBool(FatorBool fatorBool, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return fatorBool.getTokenBool().visit(this, object);
 	}
 
 	public Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException
@@ -192,40 +295,36 @@ public class Checker implements IVisitor
 		return fatorId.getTokenId().visit(this, object);
 	}
 
-	public Object visitFatorNumber(FatorNumber fatorNumber, Object object)
+	public Object visitFatorNumber(FatorNumber fatorNumber, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return fatorNumber.getTokenNumber().visit(this, object);
 	}
 
-	public Object visitFatorExpression(FatorExpression fatorExpression, Object object)
+	public Object visitFatorExpression(FatorExpression fatorExpression, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return fatorExpression.getExpression().visit(this, object);
 	}
 
 	public Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "BOOLEAN";
 	}
 
 	public Object visitTerminalBool(TerminalBool terminalBool, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+//		return terminalBool.getToken().getSpelling();
+		return "BOOLEAN";
 	}
 
 	public Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "INTEGER";
 	}
 
 	public Object visitTerminalNumber(TerminalNumber terminalNumber, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+//		return terminalNumber.getToken().getSpelling();
+		return "INTEGER";
 	}
 
 	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
@@ -245,14 +344,14 @@ public class Checker implements IVisitor
 
 	public Object visitTerminalComparation(TerminalComp terminalComp, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		
+		return terminalComp.getToken().getSpelling();
 	}
 
 	public Object visitTerminalOperations(TerminalOperations terminalOperations, Object object)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		
+		return terminalOperations.getToken().getSpelling();
 	}
 
 }

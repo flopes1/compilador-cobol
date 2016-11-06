@@ -1,6 +1,7 @@
 package model;
 
 import checker.IVisitor;
+import checker.SemanticException;
 
 public class FatorNumber extends Fator
 {
@@ -36,7 +37,7 @@ public class FatorNumber extends Fator
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitFatorNumber(this, object);
 	}

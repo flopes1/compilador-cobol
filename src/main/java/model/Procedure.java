@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import checker.IVisitor;
+import checker.SemanticException;
 import util.AST.AST;
 
 public class Procedure extends AST
@@ -108,7 +109,7 @@ public class Procedure extends AST
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitProcedure(this, object);
 	}

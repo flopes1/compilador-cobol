@@ -30,9 +30,9 @@ public class IdentificationTable {
 
 		// Puts in the table each language reserved word
 		this.table.put(new Key(0, "void"), null);
-		this.table.put(new Key(0, "int"), null);
+		this.table.put(new Key(0, "INTEGER"), null);
 		this.table.put(new Key(0, "double"), null);
-		this.table.put(new Key(0, "boolean"), null);
+		this.table.put(new Key(0, "BOOLEAN"), null);
 		this.table.put(new Key(0, "if"), null);
 		this.table.put(new Key(0, "else"), null);
 		this.table.put(new Key(0, "while"), null);

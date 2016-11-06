@@ -37,15 +37,15 @@ import model.While;
 public interface IVisitor
 {
 
-	Object visitProgram(Program program, Object object);
+	Object visitProgram(Program program, Object object) throws SemanticException;
 
-	Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object);
+	Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object) throws SemanticException;
 
-	Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object);
+	Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object) throws SemanticException;
 
 	Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException;
 
-	Object visitProcedure(Procedure procedure, Object object);
+	Object visitProcedure(Procedure procedure, Object object) throws SemanticException;
 
 	Object visitCommand(Command command, Object object);
 
@@ -69,25 +69,25 @@ public interface IVisitor
 
 	Object visitWhile(While whileCommand, Object object);
 
-	Object visitAttrib(Attrib attrib, Object object);
+	Object visitAttrib(Attrib attrib, Object object) throws SemanticException;
 
 	Object visitCallProcedure(CallProcedure callProcedure, Object object);
 
-	Object visitExpression(Expression expression, Object object);
+	Object visitExpression(Expression expression, Object object) throws SemanticException;
 
-	Object visitOperator(Operator operator, Object object);
+	Object visitOperator(Operator operator, Object object) throws SemanticException;
 
-	Object visitTerm(Term term, Object object);
+	Object visitTerm(Term term, Object object) throws SemanticException;
 
 	Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object);
 
-	Object visitFatorBool(FatorBool fatorBool, Object object);
+	Object visitFatorBool(FatorBool fatorBool, Object object) throws SemanticException;
 
 	Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException;
 
-	Object visitFatorNumber(FatorNumber fatorNumber, Object object);
+	Object visitFatorNumber(FatorNumber fatorNumber, Object object) throws SemanticException;
 
-	Object visitFatorExpression(FatorExpression fatorExpression, Object object);
+	Object visitFatorExpression(FatorExpression fatorExpression, Object object) throws SemanticException;
 	
 	Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object);
 	
