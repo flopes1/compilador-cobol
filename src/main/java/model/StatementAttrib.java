@@ -1,6 +1,7 @@
 package model;
 
 import checker.IVisitor;
+import checker.SemanticException;
 
 public class StatementAttrib extends Statement
 {
@@ -36,7 +37,7 @@ public class StatementAttrib extends Statement
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitStatementAttribution(this, object);
 	}

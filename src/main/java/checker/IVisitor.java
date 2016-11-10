@@ -47,27 +47,27 @@ public interface IVisitor
 
 	Object visitProcedure(Procedure procedure, Object object) throws SemanticException;
 
-	Object visitCommand(Command command, Object object);
+	Object visitCommand(Command command, Object object) throws SemanticException;
 
-	Object visitStatementIf(StatementIf statementIf, Object object);
+	Object visitStatementIf(StatementIf statementIf, Object object) throws SemanticException;
 
-	Object visitStatementWhile(StatementWhile statementWhile, Object object);
+	Object visitStatementWhile(StatementWhile statementWhile, Object object) throws SemanticException;
 
-	Object visitStatementDisplay(StatementDisplay statementDisplay, Object object);
+	Object visitStatementDisplay(StatementDisplay statementDisplay, Object object) throws SemanticException;
 
-	Object visitStatementReturn(StatementReturn statementReturn, Object object);
+	Object visitStatementReturn(StatementReturn statementReturn, Object object) throws SemanticException;
 
-	Object visitStatementAttribution(StatementAttrib statementAttrib, Object object);
+	Object visitStatementAttribution(StatementAttrib statementAttrib, Object object) throws SemanticException;
 
 	Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object) throws SemanticException;
 
-	Object visitStatementBreak(StatementBreak statementBreak, Object object);
+	Object visitStatementBreak(StatementBreak statementBreak, Object object) throws SemanticException;
 
-	Object visitStatementContinue(StatementContinue statementContinue, Object object);
+	Object visitStatementContinue(StatementContinue statementContinue, Object object) throws SemanticException;
 
-	Object visitCondition(Condition condition, Object object);
+	Object visitCondition(Condition condition, Object object) throws SemanticException;
 
-	Object visitWhile(While whileCommand, Object object);
+	Object visitWhile(While whileCommand, Object object) throws SemanticException;
 
 	Object visitAttrib(Attrib attrib, Object object) throws SemanticException;
 

@@ -3,6 +3,7 @@ package model;
 import java.util.List;
 
 import checker.IVisitor;
+import checker.SemanticException;
 
 public class StatementIf extends Statement
 {
@@ -60,7 +61,7 @@ public class StatementIf extends Statement
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitStatementIf(this, object);
 	}

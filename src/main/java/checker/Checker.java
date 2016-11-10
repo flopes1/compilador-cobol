@@ -19,6 +19,7 @@ import model.Operator;
 import model.Procedure;
 import model.ProcedureDivisionScope;
 import model.Program;
+import model.Statement;
 import model.StatementAttrib;
 import model.StatementBreak;
 import model.StatementCallProcedure;
@@ -110,73 +111,170 @@ public class Checker implements IVisitor
 
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
+		Terminal tokenId = procedure.getTokenId();
+		Terminal procedureType = procedure.getProcedureType();
+		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
+		List<Terminal> terminalList = procedure.getTerminalList();
+		Command command = procedure.getCommand();
+		
+		String procedureIdentificator = procedure.getTokenId().getToken().getSpelling();
 
+		Procedure procedureStored = (Procedure) this.identificationTable.retrieve(procedureIdentificator);
+
+		if (procedureStored != null)
+		{
+			throw new SemanticException("The Procedure "
+					+ procedureStored.getTokenId().getToken().getSpelling() + " already defined.");
+		}
+		
+		this.identificationTable.enter(tokenId.getToken().getSpelling(), procedure);
+		
+		//abre o escopo
+		this.identificationTable.openScope();
+		
+		if (terminalList != null) {
+			for (Terminal terminal : terminalList) {
+				if (!terminal.getToken().getSpelling().equals("INTEGER")
+						&& !terminal.getToken().getSpelling().equals("BOOLEAN")) {
+					identificationTable.enter(terminal.getToken().getSpelling(), terminal);
+				}
+			} 
+		}
+		
+		if (varDeclareList != null) {
+			for (VarDeclare varDeclare : varDeclareList) {
+				varDeclare.visit(this, object);
+			} 
+		}
+		
+		if (!(command.visit(this, object) == procedureType.getToken().getSpelling())) {
+			throw new SemanticException("Incompatible type of return!");
+		}
+		
+		//fecha o escopo
+		this.identificationTable.closeScope();
+		
 		return null;
 	}
 
-	public Object visitCommand(Command command, Object object)
+	public Object visitCommand(Command command, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		List<Statement> statementList = command.getStatementList();
+		
+		for (Statement statement : statementList) {
+			statement.visit(this, object);
+		}
 		return null;
 	}
 
-	public Object visitStatementIf(StatementIf statementIf, Object object)
+	public Object visitStatementIf(StatementIf statementIf, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		Condition condition = statementIf.getCond();
+		List<Command> commandList = statementIf.getCommandList();
+		
+		condition.visit(this, object);
+		
+		this.identificationTable.openScope();
+		
+		for (Command command : commandList) {
+			command.visit(this, object);
+		}
+		
+		this.identificationTable.closeScope();
+		
 		return null;
 	}
 
-	public Object visitStatementWhile(StatementWhile statementWhile, Object object)
+	public Object visitStatementWhile(StatementWhile statementWhile, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		While myWhile = statementWhile.getMeuWhile();
+		
+		this.identificationTable.openScope();
+		
+		myWhile.visit(this, object);
+		
+		this.identificationTable.closeScope();
+		
 		return null;
 	}
 
-	public Object visitStatementDisplay(StatementDisplay statementDisplay, Object object)
+	public Object visitStatementDisplay(StatementDisplay statementDisplay, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		Expression expression = statementDisplay.getExpression();
+		
+		expression.visit(this, object);
+		
 		return null;
 	}
 
-	public Object visitStatementReturn(StatementReturn statementReturn, Object object)
+	public Object visitStatementReturn(StatementReturn statementReturn, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		Expression expression = statementReturn.getExpression();
+		
+		return expression.visit(this, object);
+	}
+
+	public Object visitStatementAttribution(StatementAttrib statementAttrib, Object object) throws SemanticException
+	{
+		Attrib attribute = statementAttrib.getAttrib();
+		
+		attribute.visit(this, object);
 		return null;
 	}
 
-	public Object visitStatementAttribution(StatementAttrib statementAttrib, Object object)
+	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		CallProcedure callProcedure = statementCallProcedure.getCallProcedure();
+		
+		callProcedure.visit(this, object);
+		
 		return null;
 	}
 
-	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object)
-			throws SemanticException
+	public Object visitStatementBreak(StatementBreak statementBreak, Object object) throws SemanticException
 	{
-		return statementCallProcedure.getCallProcedure().visit(this, object);
-	}
-
-	public Object visitStatementBreak(StatementBreak statementBreak, Object object)
-	{
-		// TODO Auto-generated method stub
+		if (object != null) {
+			if (!(object instanceof While)) {
+				throw new SemanticException("Break command must be inside a While!");
+			} 
+		}
 		return null;
 	}
 
-	public Object visitStatementContinue(StatementContinue statementContinue, Object object)
+	public Object visitStatementContinue(StatementContinue statementContinue, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		if (object != null) {
+			if (!(object instanceof While)) {
+				throw new SemanticException("Continue command must be inside a While!");
+			} 
+		}
 		return null;
 	}
 
-	public Object visitCondition(Condition condition, Object object)
+	public Object visitCondition(Condition condition, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		Expression expression = condition.getExpression();
+		
+		if(!expression.visit(this, object).equals("BOOLEAN")){
+			throw new SemanticException("Condition must be boolean type!");
+		}
+		
 		return null;
 	}
 
-	public Object visitWhile(While whileCommand, Object object)
+	public Object visitWhile(While whileCommand, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+		Condition contidion = whileCommand.getCondition();
+		Command command = whileCommand.getCommand();
+		
+		contidion.visit(this, object);
+		
+		this.identificationTable.openScope();
+		
+		command.visit(this, whileCommand);
+		
+		this.identificationTable.closeScope();
+		
 		return null;
 	}
 
