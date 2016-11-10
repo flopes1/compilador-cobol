@@ -211,6 +211,15 @@ public class Checker implements IVisitor
 	{
 		Expression expression = statementReturn.getExpression();
 		
+		//Este If representa a decima restrição. Consideramos que não pode haver um retorno dentro
+		//de um while, para que esse comando não se comporte como um If.
+		
+		if (object != null) {
+			if (!(object instanceof While)) {
+				throw new SemanticException("Return command can not be inside a While!");
+			} 
+		}
+		
 		return expression.visit(this, object);
 	}
 
