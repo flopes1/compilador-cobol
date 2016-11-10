@@ -29,19 +29,17 @@ public class IdentificationTable {
 		this.table = new HashMap<Key, Attribute>();
 
 		// Puts in the table each language reserved word
-		this.table.put(new Key(0, "void"), null);
 		this.table.put(new Key(0, "INTEGER"), null);
-		this.table.put(new Key(0, "double"), null);
 		this.table.put(new Key(0, "BOOLEAN"), null);
-		this.table.put(new Key(0, "if"), null);
-		this.table.put(new Key(0, "else"), null);
-		this.table.put(new Key(0, "while"), null);
-		this.table.put(new Key(0, "return"), null);
-		this.table.put(new Key(0, "break"), null);
-		this.table.put(new Key(0, "continue"), null);
-		this.table.put(new Key(0, "println"), null);
-		this.table.put(new Key(0, "false"), null);
-		this.table.put(new Key(0, "true"), null);
+		this.table.put(new Key(0, "IF"), null);
+		this.table.put(new Key(0, "ELSE"), null);
+		this.table.put(new Key(0, "WHILE"), null);
+		this.table.put(new Key(0, "RETURN"), null);
+		this.table.put(new Key(0, "BREAK"), null);
+		this.table.put(new Key(0, "CONTINUE"), null);
+		this.table.put(new Key(0, "DISPLAY"), null);
+		this.table.put(new Key(0, "FALSE"), null);
+		this.table.put(new Key(0, "TRUE"), null);
 
 		// Initializes currentScope to 0 (global)
 		this.currentScope = 0;

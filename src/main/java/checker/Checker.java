@@ -63,11 +63,16 @@ public class Checker implements IVisitor
 
 		List<VarDeclare> varDeclareList = dataDivisionScope.getVarDeclareList();
 
-		for (VarDeclare varDeclare : varDeclareList)
+		if (varDeclareList != null)
 		{
-			varDeclare.visit(this, object);
+			for (VarDeclare varDeclare : varDeclareList)
+			{
+				varDeclare.visit(this, object);
 
+			}
 		}
+		
+		
 
 		return null;
 	}
