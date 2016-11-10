@@ -1,5 +1,8 @@
 package checker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Attrib;
 import model.CallProcedure;
 import model.Command;
@@ -24,6 +27,7 @@ import model.StatementIf;
 import model.StatementReturn;
 import model.StatementWhile;
 import model.Term;
+import model.Terminal;
 import model.TerminalBool;
 import model.TerminalBoolean;
 import model.TerminalComp;
@@ -53,8 +57,19 @@ public class Checker implements IVisitor
 	}
 
 	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object)
+			throws SemanticException
 	{
-		// TODO Auto-generated method stub
+
+		List<Procedure> allExistingProcedures = procedureDivisionScope.getProcedureList();
+
+		if (allExistingProcedures != null && allExistingProcedures.size() > 0)
+		{
+			for (Procedure procedure : allExistingProcedures)
+			{
+				procedure.visit(this, object);
+			}
+		}
+
 		return null;
 	}
 
@@ -73,9 +88,9 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitProcedure(Procedure procedure, Object object)
+	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -116,9 +131,9 @@ public class Checker implements IVisitor
 	}
 
 	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object)
+			throws SemanticException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return statementCallProcedure.getCallProcedure().visit(this, object);
 	}
 
 	public Object visitStatementBreak(StatementBreak statementBreak, Object object)
@@ -151,10 +166,66 @@ public class Checker implements IVisitor
 		return null;
 	}
 
-	public Object visitCallProcedure(CallProcedure callProcedure, Object object)
+	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub
+
+		List<Terminal> callProcedureTerminalItens = callProcedure.getTerminalList();
+
+		if (callProcedureTerminalItens != null)
+		{
+			TerminalId procedureIdentificator = (TerminalId) callProcedureTerminalItens.get(0);
+
+			Procedure storedProcedure = (Procedure) this.identificationTable
+					.retrieve(procedureIdentificator.getToken().getSpelling());
+
+			if (storedProcedure == null)
+			{
+				throw new SemanticException("The Procedure " + procedureIdentificator + " is not defined.");
+			}
+
+			List<Terminal> calledProcedureArguments = storedProcedure.getTerminalList();
+
+			calledProcedureArguments = this.refatArgumentsList(calledProcedureArguments);
+			
+			if ((callProcedureTerminalItens.size() - 1) != calledProcedureArguments.size())
+			{
+				throw new SemanticException(
+						"The number of parameters must be equal to the number of arguments of the procedure.");
+			}
+
+			if (callProcedureTerminalItens.size() > 1)
+			{
+				for (int i = 1; i < callProcedureTerminalItens.size(); i++)
+				{
+					String typeOfCurrentArgumentPassed = (String) ((TerminalId) callProcedureTerminalItens.get(i))
+							.visit(this, object);
+					String typeOfCurrentArgumentOfProcedure = calledProcedureArguments.get(i - 1).getToken().getSpelling();
+
+					if (!typeOfCurrentArgumentPassed.equals(typeOfCurrentArgumentOfProcedure))
+					{
+						throw new SemanticException("The type of argument "
+								+ ((TerminalId) callProcedureTerminalItens.get(i)).getToken().getSpelling()
+								+ "must be equal to the procedure parameter. Check the type at index "+ i);
+					}
+
+				}
+			}
+		}
+
 		return null;
+	}
+
+	private List<Terminal> refatArgumentsList(List<Terminal> calledProcedureArguments)
+	{
+		List<Terminal> newArgumentList = new ArrayList<Terminal>();
+		if(calledProcedureArguments != null && calledProcedureArguments.size() > 0)
+		{
+			for (int i = 0; i < calledProcedureArguments.size(); i+=2)
+			{
+				newArgumentList.add(calledProcedureArguments.get(i));
+			}
+		}
+		return newArgumentList;
 	}
 
 	public Object visitExpression(Expression expression, Object object)
@@ -232,13 +303,12 @@ public class Checker implements IVisitor
 	{
 
 		Object varDeclaration = this.identificationTable.retrieve(terminalId.getToken().getSpelling());
-		
-		if(varDeclaration == null)
+
+		if (varDeclaration == null)
 		{
-			throw new SemanticException(
-					"The Identifier " + terminalId.getToken().getSpelling() + " is not defined.");
+			throw new SemanticException("The Identifier " + terminalId.getToken().getSpelling() + " is not defined.");
 		}
-		
+
 		VarDeclare declarationCommand = (VarDeclare) varDeclaration;
 		return declarationCommand.getTerminalBooleanOrInteger().getToken().getSpelling();
 	}
