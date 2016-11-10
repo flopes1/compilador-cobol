@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import checker.IVisitor;
+import checker.SemanticException;
 import util.AST.AST;
 
 public class DataDivisionScope extends AST
@@ -39,8 +40,18 @@ public class DataDivisionScope extends AST
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitDataDivisionScope(this, object);
 	}
+	public List<VarDeclare> getVarDeclareList()
+	{
+		return varDeclareList;
+	}
+	
+	public void setVarDeclareList(List<VarDeclare> varDeclareList)
+	{
+		this.varDeclareList = varDeclareList;
+	}
+	
 }

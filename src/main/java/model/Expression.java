@@ -1,6 +1,7 @@
 package model;
 
 import checker.IVisitor;
+import checker.SemanticException;
 import util.AST.AST;
 
 public class Expression extends AST{
@@ -63,7 +64,7 @@ public class Expression extends AST{
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitExpression(this, object);
 	}
