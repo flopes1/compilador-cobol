@@ -41,11 +41,11 @@ public interface IVisitor
 
 	Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object);
 
-	Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object);
+	Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object) throws SemanticException;
 
 	Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException;
 
-	Object visitProcedure(Procedure procedure, Object object);
+	Object visitProcedure(Procedure procedure, Object object) throws SemanticException;
 
 	Object visitCommand(Command command, Object object);
 
@@ -59,10 +59,10 @@ public interface IVisitor
 
 	Object visitStatementAttribution(StatementAttrib statementAttrib, Object object);
 
-	Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object);
+	Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object) throws SemanticException;
 
 	Object visitStatementBreak(StatementBreak statementBreak, Object object);
-	
+
 	Object visitStatementContinue(StatementContinue statementContinue, Object object);
 
 	Object visitCondition(Condition condition, Object object);
@@ -71,7 +71,7 @@ public interface IVisitor
 
 	Object visitAttrib(Attrib attrib, Object object);
 
-	Object visitCallProcedure(CallProcedure callProcedure, Object object);
+	Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException;
 
 	Object visitExpression(Expression expression, Object object);
 
@@ -88,20 +88,19 @@ public interface IVisitor
 	Object visitFatorNumber(FatorNumber fatorNumber, Object object);
 
 	Object visitFatorExpression(FatorExpression fatorExpression, Object object);
-	
+
 	Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object);
-	
+
 	Object visitTerminalBool(TerminalBool terminalBool, Object object);
 
 	Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object);
-	
+
 	Object visitTerminalNumber(TerminalNumber terminalNumber, Object object);
 
 	Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException;
-	
+
 	Object visitTerminalComparation(TerminalComp terminalComp, Object object);
-	
+
 	Object visitTerminalOperations(TerminalOperations terminalOperations, Object object);
 
-	// terminal x fator
 }

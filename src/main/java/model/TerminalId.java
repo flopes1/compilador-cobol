@@ -1,6 +1,7 @@
 package model;
 
 import checker.IVisitor;
+import checker.SemanticException;
 import scanner.Token;
 
 public class TerminalId extends Terminal
@@ -25,7 +26,7 @@ public class TerminalId extends Terminal
 	}
 
 	@Override
-	public Object visit(IVisitor visitor, Object object)
+	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitTerminalIdentificator(this, object);
 	}
