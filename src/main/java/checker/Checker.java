@@ -39,12 +39,18 @@ import model.TerminalNumber;
 import model.TerminalOperations;
 import model.VarDeclare;
 import model.While;
+import util.AST.AST;
 import util.symbolsTable.IdentificationTable;
 
 public class Checker implements IVisitor
 {
 
 	private IdentificationTable identificationTable = new IdentificationTable();
+
+	public void check(AST sintaticAbstractTree) throws SemanticException
+	{
+		sintaticAbstractTree.visit(this, null);
+	}
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
@@ -53,7 +59,7 @@ public class Checker implements IVisitor
 
 		if (!(identificationTable.retrieve("MAIN") instanceof Procedure))
 		{
-			throw new SemanticException("main not found");
+			throw new SemanticException("The Procedure main function is not defined");
 		}
 
 		return null;
@@ -104,6 +110,9 @@ public class Checker implements IVisitor
 		varDeclare.getTerminalBooleanOrInteger().visit(this, object);
 		varDeclare.getTerminalId().visit(this, object);
 
+		TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+		terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+
 		return null;
 	}
 
@@ -127,6 +136,8 @@ public class Checker implements IVisitor
 		}
 
 		this.identificationTable.enter(tokenId.getToken().getSpelling(), procedure);
+
+		((TerminalId) tokenId).setDeclaredTerminalIdNode(procedure);
 
 		// abre o escopo
 		this.identificationTable.openScope();
