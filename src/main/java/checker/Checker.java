@@ -53,9 +53,16 @@ public class Checker implements IVisitor
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
-		program.getDataDivisionScope().visit(this, object);
-		program.getProcedureDivisionScope().visit(this, object);
-
+		if(program.getDataDivisionScope() != null)
+		{
+			program.getDataDivisionScope().visit(this, object);
+		}
+		
+		if(program.getProcedureDivisionScope() != null)
+		{
+			program.getProcedureDivisionScope().visit(this, object);
+		}
+		
 		if (!(identificationTable.retrieve("MAIN") instanceof Procedure))
 		{
 			throw new SemanticException("The Procedure main function is not defined");
