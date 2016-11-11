@@ -6,11 +6,11 @@ import checker.SemanticException;
 public class StatementWhile extends Statement
 {
 
-	private While meuWhile;
+	private While attributeWhile;
 
-	public StatementWhile(While meuWhile)
+	public StatementWhile(While attributeWhile)
 	{
-		this.setMeuWhile(meuWhile);
+		this.setAttributeWhile(attributeWhile);
 	}
 
 	@Override
@@ -18,7 +18,7 @@ public class StatementWhile extends Statement
 	{
 		String string = "";
 
-		string += this.meuWhile.toString();
+		string += this.attributeWhile.toString();
 
 		return string;
 	}
@@ -30,14 +30,14 @@ public class StatementWhile extends Statement
 		return null;
 	}
 
-	public While getMeuWhile()
+	public While getAttributeWhile()
 	{
-		return meuWhile;
+		return attributeWhile;
 	}
 
-	public void setMeuWhile(While meuWhile)
+	public void setAttributeWhile(While attributeWhile)
 	{
-		this.meuWhile = meuWhile;
+		this.attributeWhile = attributeWhile;
 	}
 
 	@Override
