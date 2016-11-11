@@ -14,6 +14,7 @@ public class Procedure extends AST
 	private List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
 	private List<VarDeclare> parametersList;
 	private Command command;
+	private Boolean hasReturn;
 
 	public Procedure(Terminal procedureType, Terminal tokenId, List<VarDeclare> parametersList,
 			List<VarDeclare> varDeclareList, Command command)
@@ -23,6 +24,16 @@ public class Procedure extends AST
 		this.setVarDeclareList(varDeclareList);
 		this.setTerminalList(parametersList);
 		this.setCommand(command);
+	}
+
+	public Boolean getHasReturn()
+	{
+		return hasReturn;
+	}
+
+	public void setHasReturn(Boolean hasReturn)
+	{
+		this.hasReturn = hasReturn;
 	}
 
 	@Override
