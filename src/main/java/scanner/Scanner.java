@@ -273,6 +273,11 @@ public class Scanner
 					{
 						state = 5;
 						this.getNextChar();
+						
+						if (this.currentChar == '=')
+						{
+							this.getNextChar();
+						}
 					}
 					else if (this.currentChar == '+')
 					{
