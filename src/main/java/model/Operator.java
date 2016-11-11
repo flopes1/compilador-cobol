@@ -11,6 +11,7 @@ public class Operator extends AST
 
 	private List<Term> operatorTermList = null;
 	private List<Terminal> operatorTerminalList = null;
+	private String type;
 
 	public Operator(List<Terminal> operatorTerminalList, List<Term> operatorTermList)
 	{
@@ -36,6 +37,16 @@ public class Operator extends AST
 	public void setOperatorTerminalList(List<Terminal> operatorTerminalList)
 	{
 		this.operatorTerminalList = operatorTerminalList;
+	}
+	
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 
 	@Override

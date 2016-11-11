@@ -11,6 +11,7 @@ public class Term extends AST
 
 	private List<Fator> termfatorList = null;
 	private List<Terminal> termOperatorList = null;
+	private String type;
 
 	public Term(List<Fator> fatorList, List<Terminal> multiOrDivOperatorList)
 	{
@@ -36,6 +37,16 @@ public class Term extends AST
 	public void setTermOperatorList(List<Terminal> termOperatorList)
 	{
 		this.termOperatorList = termOperatorList;
+	}
+	
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ public class Expression extends AST{
 	
 	private Operator mandatoryOperator, optionalOperator;
 	private Terminal tokenComparator;
+	private String type;
 	
 	public Expression(Operator mandatoryOperator, Terminal tokenComparator, Operator optionalOperator) {
 		this.setMandatoryOperator(mandatoryOperator);
@@ -41,6 +42,16 @@ public class Expression extends AST{
 	public void setMandatoryOperator(Operator mandatoryOperator)
 	{
 		this.mandatoryOperator = mandatoryOperator;
+	}
+	
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 
 	public Operator getOptionalOperator()
