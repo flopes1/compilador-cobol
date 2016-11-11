@@ -129,16 +129,14 @@ public class Checker implements IVisitor
 		Object procedureStoredInTable = this.identificationTable.retrieve(procedureIdentificator);
 
 		if (procedureStoredInTable != null)
-		{	
-			throw new SemanticException(
-					"The Procedure " + procedureIdentificator + " is already defined.");
+		{
+			throw new SemanticException("The Procedure " + procedureIdentificator + " is already defined.");
 		}
 
 		this.identificationTable.enter(tokenId.getToken().getSpelling(), procedure);
 
 		((TerminalId) tokenId).setDeclaredTerminalIdNode(procedure);
 
-		// abre o escopo
 		this.identificationTable.openScope();
 
 		if (terminalList != null)
@@ -161,30 +159,29 @@ public class Checker implements IVisitor
 			}
 		}
 
-		// nao funciona--morre
-		/*if (!(command.visit(this, object) == procedureType.getToken().getSpelling()))
-		{
-			throw new SemanticException("Incompatible type of return!");
-		}*/
-		
-		if (procedureType != null) { 			//tem retorno
-			
+		if (procedureType != null)
+		{ 
+
 			List<Statement> statementList = command.getStatementList();
-			
-			for (Statement statement : statementList) {
-				if(statement instanceof StatementReturn){
-					if(!(((StatementReturn) statement).getExpression()
-							.visit(this, object).equals(procedureType.getToken().getSpelling()))){
+
+			for (Statement statement : statementList)
+			{
+				if (statement instanceof StatementReturn)
+				{
+					if (!(((StatementReturn) statement).getExpression().visit(this, object)
+							.equals(procedureType.getToken().getSpelling())))
+					{
 						throw new SemanticException("Incompatible return");
 					}
 				}
 			}
-			
-		} else{ 								//nao tem retorno
+
+		}
+		else
+		{ 
 			command.visit(this, object);
 		}
 
-		// fecha o escopo
 		this.identificationTable.closeScope();
 
 		return null;
