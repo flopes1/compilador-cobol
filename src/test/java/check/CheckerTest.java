@@ -23,7 +23,7 @@ public class CheckerTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("nome do seu teste.cobol")
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program13.cobol")
 				.getFile();
 		this.parser = new Parser();
 		this.checker = new Checker();
