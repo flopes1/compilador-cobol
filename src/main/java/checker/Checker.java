@@ -143,7 +143,7 @@ public class Checker implements IVisitor
 			// iteracao para colocar as variaveis parametros no escopo
 			for (VarDeclare parameter : parametersList)
 			{
-				identificationTable.enter(parameter.getTerminalId().getToken().getSpelling(), parameter);
+				parameter.visit(this, object);
 			}
 		}
 
