@@ -126,13 +126,12 @@ public class Checker implements IVisitor
 
 		String procedureIdentificator = procedure.getTokenId().getToken().getSpelling();
 
-		// remover cast
-		Procedure procedureStored = (Procedure) this.identificationTable.retrieve(procedureIdentificator);
+		Object procedureStoredInTable = this.identificationTable.retrieve(procedureIdentificator);
 
-		if (procedureStored != null)
-		{
+		if (procedureStoredInTable != null)
+		{	
 			throw new SemanticException(
-					"The Procedure " + procedureStored.getTokenId().getToken().getSpelling() + " already defined.");
+					"The Procedure " + procedureIdentificator + " is already defined.");
 		}
 
 		this.identificationTable.enter(tokenId.getToken().getSpelling(), procedure);
@@ -163,9 +162,26 @@ public class Checker implements IVisitor
 		}
 
 		// nao funciona--morre
-		if (!(command.visit(this, object) == procedureType.getToken().getSpelling()))
+		/*if (!(command.visit(this, object) == procedureType.getToken().getSpelling()))
 		{
 			throw new SemanticException("Incompatible type of return!");
+		}*/
+		
+		if (procedureType != null) { 			//tem retorno
+			
+			List<Statement> statementList = command.getStatementList();
+			
+			for (Statement statement : statementList) {
+				if(statement instanceof StatementReturn){
+					if(!(((StatementReturn) statement).getExpression()
+							.visit(this, object).equals(procedureType.getToken().getSpelling()))){
+						throw new SemanticException("Incompatible return");
+					}
+				}
+			}
+			
+		} else{ 								//nao tem retorno
+			command.visit(this, object);
 		}
 
 		// fecha o escopo
@@ -206,7 +222,7 @@ public class Checker implements IVisitor
 
 	public Object visitStatementWhile(StatementWhile statementWhile, Object object) throws SemanticException
 	{
-		While myWhile = statementWhile.getMeuWhile();
+		While myWhile = statementWhile.getAttributeWhile();
 
 		this.identificationTable.openScope();
 
