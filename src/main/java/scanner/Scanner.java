@@ -268,7 +268,6 @@ public class Scanner
 							this.getNextChar();
 						}
 					}
-
 					else if (this.currentChar == '=')
 					{
 						state = 5;
@@ -351,6 +350,7 @@ public class Scanner
 					{
 						state = 13;
 					}
+					break;
 				}
 				case 7:
 					return GrammarSymbols.PLUS;
