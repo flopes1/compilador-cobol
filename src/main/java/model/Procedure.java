@@ -10,18 +10,18 @@ import util.AST.AST;
 public class Procedure extends AST
 {
 
-	private Terminal tokenId, procedureType;
+	private Terminal procedureIdentificator, procedureType;
 	private List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
-	private List<Terminal> terminalList;
+	private List<VarDeclare> parametersList;
 	private Command command;
 
-	public Procedure(Terminal procedureType, Terminal tokenId, List<Terminal> terminalList,
+	public Procedure(Terminal procedureType, Terminal tokenId, List<VarDeclare> parametersList,
 			List<VarDeclare> varDeclareList, Command command)
 	{
 		this.setProcedureType(procedureType);
 		this.setTokenId(tokenId);
 		this.setVarDeclareList(varDeclareList);
-		this.setTerminalList(terminalList);
+		this.setTerminalList(parametersList);
 		this.setCommand(command);
 	}
 
@@ -30,11 +30,11 @@ public class Procedure extends AST
 	{
 		String string = "";
 
-		string += this.tokenId.toString() + "\n";
+		string += this.procedureIdentificator.toString() + "\n";
 
-		if (terminalList != null)
+		if (parametersList != null)
 		{
-			for (Terminal terminal : this.terminalList)
+			for (VarDeclare terminal : this.parametersList)
 			{
 				string += terminal.toString() + "\n";
 			}
@@ -68,14 +68,14 @@ public class Procedure extends AST
 		this.command = command;
 	}
 
-	public List<Terminal> getTerminalList()
+	public List<VarDeclare> getProcedureParametersList()
 	{
-		return terminalList;
+		return parametersList;
 	}
 
-	public void setTerminalList(List<Terminal> terminalList)
+	public void setTerminalList(List<VarDeclare> procedureParameterList)
 	{
-		this.terminalList = terminalList;
+		this.parametersList = procedureParameterList;
 	}
 
 	public List<VarDeclare> getVarDeclareList()
@@ -90,12 +90,12 @@ public class Procedure extends AST
 
 	public Terminal getTokenId()
 	{
-		return tokenId;
+		return procedureIdentificator;
 	}
 
 	public void setTokenId(Terminal tokenId)
 	{
-		this.tokenId = tokenId;
+		this.procedureIdentificator = tokenId;
 	}
 
 	public Terminal getProcedureType()

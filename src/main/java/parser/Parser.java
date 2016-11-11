@@ -252,7 +252,7 @@ public class Parser
 
 		Terminal boolOrIntTerminal = null;
 		Terminal varTypeTokenId = null;
-		List<Terminal> terminalParametersList = new ArrayList<Terminal>();
+		List<VarDeclare> procedureParameterList = new ArrayList<VarDeclare>();
 
 		while (currentToken.getKind() == GrammarSymbols.BOOLEAN || currentToken.getKind() == GrammarSymbols.INTEGER)
 		{
@@ -270,8 +270,8 @@ public class Parser
 			varTypeTokenId = new TerminalId(currentToken);
 			accept(GrammarSymbols.ID);
 
-			terminalParametersList.add(boolOrIntTerminal);
-			terminalParametersList.add(varTypeTokenId);
+			VarDeclare varDeclare = new VarDeclare(varTypeTokenId, boolOrIntTerminal);
+			procedureParameterList.add(varDeclare);
 		}
 
 		List<VarDeclare> varDeclareList = new ArrayList<VarDeclare>();
@@ -295,7 +295,7 @@ public class Parser
 		accept(GrammarSymbols.END_PROC);
 		accept(GrammarSymbols.DOT);
 
-		procedure = new Procedure(procedureType, tokenId, terminalParametersList, varDeclareList, command);
+		procedure = new Procedure(procedureType, tokenId, procedureParameterList, varDeclareList, command);
 
 		return procedure;
 	}
