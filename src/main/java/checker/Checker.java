@@ -399,7 +399,7 @@ public class Checker implements IVisitor
 
 		if (expression.getOptionalOperator() == null)
 		{
-
+			expression.setType(mandatoryOperator);
 			return mandatoryOperator;
 		}
 		else
@@ -408,7 +408,7 @@ public class Checker implements IVisitor
 
 			if (mandatoryOperator.equals("INTEGER") && opitionalOperator.equals("INTEGER"))
 			{
-
+				expression.setType("BOOLEAN");
 				return "BOOLEAN";
 
 			}
@@ -417,6 +417,7 @@ public class Checker implements IVisitor
 				if (expression.getTokenComparator().getToken().getSpelling().equals("==")
 						|| expression.getTokenComparator().getToken().getSpelling().equals("!="))
 				{
+					expression.setType("BOOLEAN");
 					return "BOOLEAN";
 				}
 			}
@@ -433,6 +434,7 @@ public class Checker implements IVisitor
 		{
 			if (termList.size() == 1 && term.visit(this, object).equals("BOOLEAN"))
 			{
+				operator.setType("BOOLEAN");
 				return "BOOLEAN";
 			}
 
@@ -441,7 +443,7 @@ public class Checker implements IVisitor
 				throw new SemanticException("Type of Operator is invalid");
 			}
 		}
-
+		operator.setType("INTEGER");
 		return "INTEGER";
 	}
 
@@ -454,6 +456,7 @@ public class Checker implements IVisitor
 		{
 			if (fatorList.size() == 1 && fator.visit(this, object).equals("BOOLEAN"))
 			{
+				term.setType("BOOLEAN");
 				return "BOOLEAN";
 			}
 
@@ -462,7 +465,7 @@ public class Checker implements IVisitor
 				throw new SemanticException("Type of Fator is invalid");
 			}
 		}
-
+		term.setType("INTEGER");
 		return "INTEGER";
 
 	}
