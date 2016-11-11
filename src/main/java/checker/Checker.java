@@ -407,7 +407,7 @@ public class Checker implements IVisitor
 			}
 			else if (mandatoryOperator.equals("BOOLEAN") && opitionalOperator.equals("BOOLEAN"))
 			{
-				if (expression.getTokenComparator().getToken().getSpelling().equals("=")
+				if (expression.getTokenComparator().getToken().getSpelling().equals("==")
 						|| expression.getTokenComparator().getToken().getSpelling().equals("!="))
 				{
 					return "BOOLEAN";
