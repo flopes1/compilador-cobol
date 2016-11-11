@@ -72,8 +72,6 @@ public class Checker implements IVisitor
 
 			}
 		}
-		
-		
 
 		return null;
 	}
@@ -116,54 +114,61 @@ public class Checker implements IVisitor
 		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
 		List<Terminal> terminalList = procedure.getTerminalList();
 		Command command = procedure.getCommand();
-		
+
 		String procedureIdentificator = procedure.getTokenId().getToken().getSpelling();
-		
-		//remover cast
+
+		// remover cast
 		Procedure procedureStored = (Procedure) this.identificationTable.retrieve(procedureIdentificator);
 
 		if (procedureStored != null)
 		{
-			throw new SemanticException("The Procedure "
-					+ procedureStored.getTokenId().getToken().getSpelling() + " already defined.");
+			throw new SemanticException(
+					"The Procedure " + procedureStored.getTokenId().getToken().getSpelling() + " already defined.");
 		}
-		
+
 		this.identificationTable.enter(tokenId.getToken().getSpelling(), procedure);
-		
-		//abre o escopo
+
+		// abre o escopo
 		this.identificationTable.openScope();
-		
-		if (terminalList != null) {
-			for (Terminal terminal : terminalList) {
+
+		if (terminalList != null)
+		{
+			for (Terminal terminal : terminalList)
+			{
 				if (!terminal.getToken().getSpelling().equals("INTEGER")
-						&& !terminal.getToken().getSpelling().equals("BOOLEAN")) {
+						&& !terminal.getToken().getSpelling().equals("BOOLEAN"))
+				{
 					identificationTable.enter(terminal.getToken().getSpelling(), terminal);
 				}
-			} 
+			}
 		}
-		
-		if (varDeclareList != null) {
-			for (VarDeclare varDeclare : varDeclareList) {
+
+		if (varDeclareList != null)
+		{
+			for (VarDeclare varDeclare : varDeclareList)
+			{
 				varDeclare.visit(this, object);
-			} 
+			}
 		}
-		
-		//nao funciona--morre
-		if (!(command.visit(this, object) == procedureType.getToken().getSpelling())) {
+
+		// nao funciona--morre
+		if (!(command.visit(this, object) == procedureType.getToken().getSpelling()))
+		{
 			throw new SemanticException("Incompatible type of return!");
 		}
-		
-		//fecha o escopo
+
+		// fecha o escopo
 		this.identificationTable.closeScope();
-		
+
 		return null;
 	}
 
 	public Object visitCommand(Command command, Object object) throws SemanticException
 	{
 		List<Statement> statementList = command.getStatementList();
-		
-		for (Statement statement : statementList) {
+
+		for (Statement statement : statementList)
+		{
 			statement.visit(this, object);
 		}
 		return null;
@@ -173,91 +178,100 @@ public class Checker implements IVisitor
 	{
 		Condition condition = statementIf.getCond();
 		List<Command> commandList = statementIf.getCommandList();
-		
+
 		condition.visit(this, object);
-		
+
 		this.identificationTable.openScope();
-		
-		for (Command command : commandList) {
+
+		for (Command command : commandList)
+		{
 			command.visit(this, object);
 		}
-		
+
 		this.identificationTable.closeScope();
-		
+
 		return null;
 	}
 
 	public Object visitStatementWhile(StatementWhile statementWhile, Object object) throws SemanticException
 	{
 		While myWhile = statementWhile.getMeuWhile();
-		
+
 		this.identificationTable.openScope();
-		
+
 		myWhile.visit(this, object);
-		
+
 		this.identificationTable.closeScope();
-		
+
 		return null;
 	}
 
 	public Object visitStatementDisplay(StatementDisplay statementDisplay, Object object) throws SemanticException
 	{
 		Expression expression = statementDisplay.getExpression();
-		
+
 		expression.visit(this, object);
-		
+
 		return null;
 	}
 
 	public Object visitStatementReturn(StatementReturn statementReturn, Object object) throws SemanticException
 	{
 		Expression expression = statementReturn.getExpression();
-		
-		//Este If representa a decima restrição. Consideramos que não pode haver um retorno dentro
-		//de um while, para que esse comando não se comporte como um If.
-		
-		if (object != null) {
-			if (!(object instanceof While)) {
+
+		// Este If representa a decima restrição. Consideramos que não pode
+		// haver um retorno dentro
+		// de um while, para que esse comando não se comporte como um If.
+
+		if (object != null)
+		{
+			if (!(object instanceof While))
+			{
 				throw new SemanticException("Return command can not be inside a While!");
-			} 
+			}
 		}
-		
+
 		return expression.visit(this, object);
 	}
 
 	public Object visitStatementAttribution(StatementAttrib statementAttrib, Object object) throws SemanticException
 	{
 		Attrib attribute = statementAttrib.getAttrib();
-		
+
 		attribute.visit(this, object);
 		return null;
 	}
 
-	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object) throws SemanticException
+	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object)
+			throws SemanticException
 	{
 		CallProcedure callProcedure = statementCallProcedure.getCallProcedure();
-		
+
 		callProcedure.visit(this, object);
-		
+
 		return null;
 	}
 
 	public Object visitStatementBreak(StatementBreak statementBreak, Object object) throws SemanticException
 	{
-		if (object != null) {
-			if (!(object instanceof While)) {
+		if (object != null)
+		{
+			if (!(object instanceof While))
+			{
 				throw new SemanticException("Break command must be inside a While!");
-			} 
+			}
 		}
 		return null;
 	}
 
 	public Object visitStatementContinue(StatementContinue statementContinue, Object object) throws SemanticException
 	{
-		if (object != null) {
-			if (!(object instanceof While)) {
+		if (object != null)
+		{
+			if (!(object instanceof While))
+			{
 				throw new SemanticException("Continue command must be inside a While!");
-			} 
+			}
 		}
 		return null;
 	}
@@ -265,11 +279,12 @@ public class Checker implements IVisitor
 	public Object visitCondition(Condition condition, Object object) throws SemanticException
 	{
 		Expression expression = condition.getExpression();
-		
-		if(!expression.visit(this, object).equals("BOOLEAN")){
+
+		if (!expression.visit(this, object).equals("BOOLEAN"))
+		{
 			throw new SemanticException("Condition must be boolean type!");
 		}
-		
+
 		return null;
 	}
 
@@ -277,15 +292,15 @@ public class Checker implements IVisitor
 	{
 		Condition contidion = whileCommand.getCondition();
 		Command command = whileCommand.getCommand();
-		
+
 		contidion.visit(this, object);
-		
+
 		this.identificationTable.openScope();
-		
+
 		command.visit(this, whileCommand);
-		
+
 		this.identificationTable.closeScope();
-		
+
 		return null;
 	}
 
@@ -307,13 +322,15 @@ public class Checker implements IVisitor
 		{
 			TerminalId procedureIdentificator = (TerminalId) callProcedureTerminalItens.get(0);
 
-			Procedure storedProcedure = (Procedure) this.identificationTable
+			Object storedProcedureInTable = this.identificationTable
 					.retrieve(procedureIdentificator.getToken().getSpelling());
 
-			if (storedProcedure == null)
+			if (storedProcedureInTable == null || !(storedProcedureInTable instanceof Procedure))
 			{
 				throw new SemanticException("The Procedure " + procedureIdentificator + " is not defined.");
 			}
+
+			Procedure storedProcedure = (Procedure) storedProcedureInTable;
 
 			List<Terminal> calledProcedureArguments = storedProcedure.getTerminalList();
 
@@ -343,6 +360,7 @@ public class Checker implements IVisitor
 
 				}
 			}
+
 		}
 
 		return null;
@@ -365,25 +383,23 @@ public class Checker implements IVisitor
 	{
 
 		String mandatoryOperator = (String) expression.getMandatoryOperator().visit(this, object);
-		
+
 		if (expression.getOptionalOperator() == null)
 		{
-			
+
 			return mandatoryOperator;
 		}
 		else
 		{
 			String opitionalOperator = (String) expression.getOptionalOperator().visit(this, object);
 
-			if (mandatoryOperator.equals("INTEGER")
-					&& opitionalOperator.equals("INTEGER"))
+			if (mandatoryOperator.equals("INTEGER") && opitionalOperator.equals("INTEGER"))
 			{
 
 				return "BOOLEAN";
-			
+
 			}
-			else if (mandatoryOperator.equals("BOOLEAN")
-					&& opitionalOperator.equals("BOOLEAN"))
+			else if (mandatoryOperator.equals("BOOLEAN") && opitionalOperator.equals("BOOLEAN"))
 			{
 				if (expression.getTokenComparator().getToken().getSpelling().equals("=")
 						|| expression.getTokenComparator().getToken().getSpelling().equals("!="))
@@ -494,9 +510,14 @@ public class Checker implements IVisitor
 		{
 			throw new SemanticException("The Identifier " + terminalId.getToken().getSpelling() + " is not defined.");
 		}
+		String varType = null;
+		if (varDeclaration instanceof VarDeclare)
+		{
+			VarDeclare declarationCommand = (VarDeclare) varDeclaration;
+			varType = declarationCommand.getTerminalBooleanOrInteger().getToken().getSpelling();
+		}
 
-		VarDeclare declarationCommand = (VarDeclare) varDeclaration;
-		return declarationCommand.getTerminalBooleanOrInteger().getToken().getSpelling();
+		return varType;
 	}
 
 	public Object visitTerminalComparation(TerminalComp terminalComp, Object object)
