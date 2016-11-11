@@ -118,7 +118,8 @@ public class Checker implements IVisitor
 		Command command = procedure.getCommand();
 		
 		String procedureIdentificator = procedure.getTokenId().getToken().getSpelling();
-
+		
+		//remover cast
 		Procedure procedureStored = (Procedure) this.identificationTable.retrieve(procedureIdentificator);
 
 		if (procedureStored != null)
@@ -147,6 +148,7 @@ public class Checker implements IVisitor
 			} 
 		}
 		
+		//nao funciona--morre
 		if (!(command.visit(this, object) == procedureType.getToken().getSpelling())) {
 			throw new SemanticException("Incompatible type of return!");
 		}
@@ -362,36 +364,26 @@ public class Checker implements IVisitor
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
 	{
 
+		String mandatoryOperator = (String) expression.getMandatoryOperator().visit(this, object);
+		
 		if (expression.getOptionalOperator() == null)
 		{
-			if (!expression.getMandatoryOperator().visit(this, object).equals("BOOLEAN"))
-			{
-				throw new SemanticException("Type of Expression is invalid");
-			}
-			return "BOOLEAN";
+			
+			return mandatoryOperator;
 		}
 		else
 		{
+			String opitionalOperator = (String) expression.getOptionalOperator().visit(this, object);
 
-			if (expression.getMandatoryOperator().visit(this, object).equals("INTEGER")
-					&& expression.getOptionalOperator().visit(this, object).equals("INTEGER"))
+			if (mandatoryOperator.equals("INTEGER")
+					&& opitionalOperator.equals("INTEGER"))
 			{
-				if (expression.getTokenComparator().getToken().getSpelling().equals("=")
-						|| expression.getTokenComparator().getToken().getSpelling().equals("!=")
-						|| expression.getTokenComparator().getToken().getSpelling().equals(">")
-						|| expression.getTokenComparator().getToken().getSpelling().equals("<")
-						|| expression.getTokenComparator().getToken().getSpelling().equals(">=")
-						|| expression.getTokenComparator().getToken().getSpelling().equals("<="))
-				{
-					return "BOOLEAN";
-				}
-				else
-				{
-					throw new SemanticException("Type of Expression is invalid");
-				}
+
+				return "BOOLEAN";
+			
 			}
-			else if (expression.getMandatoryOperator().visit(this, object).equals("BOOLEAN")
-					&& expression.getOptionalOperator().visit(this, object).equals("BOOLEAN"))
+			else if (mandatoryOperator.equals("BOOLEAN")
+					&& opitionalOperator.equals("BOOLEAN"))
 			{
 				if (expression.getTokenComparator().getToken().getSpelling().equals("=")
 						|| expression.getTokenComparator().getToken().getSpelling().equals("!="))
