@@ -138,11 +138,14 @@ public class Checker implements IVisitor
 		((TerminalId) tokenId).setDeclaredTerminalIdNode(procedure);
 
 		this.identificationTable.openScope();
-		
-		// Essa parte está certa nesse metodo mas está errada no sentido do escopo da linguagem
-		// os atributos da assinatura da procedure deveriam ser do tipo VarDeclare, pois são declarações
-		// de variaveis de qualquer forma, e para entrarem na tabela precisam ser desse tipo, erro nosso de modelagem
-		
+
+		// Essa parte está certa nesse metodo mas está errada no sentido do
+		// escopo da linguagem
+		// os atributos da assinatura da procedure deveriam ser do tipo
+		// VarDeclare, pois são declarações
+		// de variaveis de qualquer forma, e para entrarem na tabela precisam
+		// ser desse tipo, erro nosso de modelagem
+
 		if (terminalList != null)
 		{
 			// for (VarDeclare terminal : terminalList)
@@ -165,7 +168,7 @@ public class Checker implements IVisitor
 		}
 
 		if (procedureType != null)
-		{ 
+		{
 
 			List<Statement> statementList = command.getStatementList();
 
@@ -183,7 +186,7 @@ public class Checker implements IVisitor
 
 		}
 		else
-		{ 
+		{
 			command.visit(this, object);
 		}
 
@@ -361,9 +364,7 @@ public class Checker implements IVisitor
 
 			Procedure storedProcedure = (Procedure) storedProcedureInTable;
 
-			List<Terminal> calledProcedureArguments = storedProcedure.getProcedureParametersList();
-
-			calledProcedureArguments = this.refatArgumentsList(calledProcedureArguments);
+			List<VarDeclare> calledProcedureArguments = storedProcedure.getProcedureParametersList();
 
 			if ((callProcedureTerminalItens.size() - 1) != calledProcedureArguments.size())
 			{
@@ -377,8 +378,8 @@ public class Checker implements IVisitor
 				{
 					String typeOfCurrentArgumentPassed = (String) ((TerminalId) callProcedureTerminalItens.get(i))
 							.visit(this, object);
-					String typeOfCurrentArgumentOfProcedure = calledProcedureArguments.get(i - 1).getToken()
-							.getSpelling();
+					String typeOfCurrentArgumentOfProcedure = calledProcedureArguments.get(i - 1)
+							.getTerminalBooleanOrInteger().getToken().getSpelling();
 
 					if (!typeOfCurrentArgumentPassed.equals(typeOfCurrentArgumentOfProcedure))
 					{
@@ -393,19 +394,6 @@ public class Checker implements IVisitor
 		}
 
 		return null;
-	}
-
-	private List<Terminal> refatArgumentsList(List<Terminal> calledProcedureArguments)
-	{
-		List<Terminal> newArgumentList = new ArrayList<Terminal>();
-		if (calledProcedureArguments != null && calledProcedureArguments.size() > 0)
-		{
-			for (int i = 0; i < calledProcedureArguments.size(); i += 2)
-			{
-				newArgumentList.add(calledProcedureArguments.get(i));
-			}
-		}
-		return newArgumentList;
 	}
 
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
