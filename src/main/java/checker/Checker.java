@@ -1,6 +1,5 @@
 package checker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import model.Attrib;
@@ -119,14 +118,8 @@ public class Checker implements IVisitor
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
 		Terminal procedureName = procedure.getTokenId();
-		Terminal procedureType = procedure.getProcedureType(); // tipo de
-																// retorno da
-																// funcao, pode
-																// ser void
-		List<VarDeclare> varDeclareList = procedure.getVarDeclareList(); // decl
-																			// de
-																			// variaves
-																			// locais
+		Terminal procedureType = procedure.getProcedureType(); // tipo de retorno da funcao, pode ser void
+		List<VarDeclare> varDeclareList = procedure.getVarDeclareList(); // decl de variaves locais
 		List<VarDeclare> parametersList = procedure.getProcedureParametersList(); // parametros
 		Command command = procedure.getCommand();
 
