@@ -121,7 +121,7 @@ public class Checker implements IVisitor
 		Terminal tokenId = procedure.getTokenId();
 		Terminal procedureType = procedure.getProcedureType();
 		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
-		List<Terminal> terminalList = procedure.getTerminalList();
+		List<VarDeclare> terminalList = procedure.getProcedureParametersList();
 		Command command = procedure.getCommand();
 
 		String procedureIdentificator = procedure.getTokenId().getToken().getSpelling();
@@ -138,17 +138,22 @@ public class Checker implements IVisitor
 		((TerminalId) tokenId).setDeclaredTerminalIdNode(procedure);
 
 		this.identificationTable.openScope();
-
+		
+		// Essa parte está certa nesse metodo mas está errada no sentido do escopo da linguagem
+		// os atributos da assinatura da procedure deveriam ser do tipo VarDeclare, pois são declarações
+		// de variaveis de qualquer forma, e para entrarem na tabela precisam ser desse tipo, erro nosso de modelagem
+		
 		if (terminalList != null)
 		{
-			for (Terminal terminal : terminalList)
-			{
-				if (!terminal.getToken().getSpelling().equals("INTEGER")
-						&& !terminal.getToken().getSpelling().equals("BOOLEAN"))
-				{
-					identificationTable.enter(terminal.getToken().getSpelling(), terminal);
-				}
-			}
+			// for (VarDeclare terminal : terminalList)
+			// {
+			// if (!terminal.getToken().getSpelling().equals("INTEGER")
+			// && !terminal.getToken().getSpelling().equals("BOOLEAN"))
+			// {
+			// identificationTable.enter(terminal.getToken().getSpelling(),
+			// terminal);
+			// }
+			// }
 		}
 
 		if (varDeclareList != null)
@@ -356,7 +361,7 @@ public class Checker implements IVisitor
 
 			Procedure storedProcedure = (Procedure) storedProcedureInTable;
 
-			List<Terminal> calledProcedureArguments = storedProcedure.getTerminalList();
+			List<Terminal> calledProcedureArguments = storedProcedure.getProcedureParametersList();
 
 			calledProcedureArguments = this.refatArgumentsList(calledProcedureArguments);
 
