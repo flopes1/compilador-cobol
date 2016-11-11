@@ -118,10 +118,16 @@ public class Checker implements IVisitor
 
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
-		Terminal tokenId = procedure.getTokenId();
-		Terminal procedureType = procedure.getProcedureType();
-		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
-		List<VarDeclare> terminalList = procedure.getProcedureParametersList();
+		Terminal procedureName = procedure.getTokenId();
+		Terminal procedureType = procedure.getProcedureType(); // tipo de
+																// retorno da
+																// funcao, pode
+																// ser void
+		List<VarDeclare> varDeclareList = procedure.getVarDeclareList(); // decl
+																			// de
+																			// variaves
+																			// locais
+		List<VarDeclare> parametersList = procedure.getProcedureParametersList(); // parametros
 		Command command = procedure.getCommand();
 
 		String procedureIdentificator = procedure.getTokenId().getToken().getSpelling();
@@ -133,34 +139,24 @@ public class Checker implements IVisitor
 			throw new SemanticException("The Procedure " + procedureIdentificator + " is already defined.");
 		}
 
-		this.identificationTable.enter(tokenId.getToken().getSpelling(), procedure);
+		this.identificationTable.enter(procedureName.getToken().getSpelling(), procedure);
 
-		((TerminalId) tokenId).setDeclaredTerminalIdNode(procedure);
+		((TerminalId) procedureName).setDeclaredTerminalIdNode(procedure);
 
 		this.identificationTable.openScope();
 
-		// Essa parte está certa nesse metodo mas está errada no sentido do
-		// escopo da linguagem
-		// os atributos da assinatura da procedure deveriam ser do tipo
-		// VarDeclare, pois são declarações
-		// de variaveis de qualquer forma, e para entrarem na tabela precisam
-		// ser desse tipo, erro nosso de modelagem
-
-		if (terminalList != null)
+		if (parametersList != null)
 		{
-			// for (VarDeclare terminal : terminalList)
-			// {
-			// if (!terminal.getToken().getSpelling().equals("INTEGER")
-			// && !terminal.getToken().getSpelling().equals("BOOLEAN"))
-			// {
-			// identificationTable.enter(terminal.getToken().getSpelling(),
-			// terminal);
-			// }
-			// }
+			// iteracao para colocar as variaveis parametros no escopo
+			for (VarDeclare parameter : parametersList)
+			{
+				identificationTable.enter(parameter.getTerminalId().getToken().getSpelling(), parameter);
+			}
 		}
 
 		if (varDeclareList != null)
 		{
+			// iteracao para colocar as variaveis locais no escopo
 			for (VarDeclare varDeclare : varDeclareList)
 			{
 				varDeclare.visit(this, object);
