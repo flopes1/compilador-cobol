@@ -162,27 +162,45 @@ public class Checker implements IVisitor
 				varDeclare.visit(this, object);
 			}
 		}
-
+		
+		List<Statement> statementList = command.getStatementList();
+		
 		if (procedureType != null)
 		{
-
-			List<Statement> statementList = command.getStatementList();
 
 			for (Statement statement : statementList)
 			{
 				if (statement instanceof StatementReturn)
 				{
-					if (!(((StatementReturn) statement).getExpression().visit(this, object)
+					if ((((StatementReturn) statement).getExpression().visit(this, object)
 							.equals(procedureType.getToken().getSpelling())))
 					{
-						throw new SemanticException("Incompatible return");
+						procedure.setHasReturn(true);
+					}
+					else
+					{
+						throw new SemanticException("Incompatible return type");
 					}
 				}
+				else
+				{
+					statement.visit(this, procedure);
+				}
+				
+			}
+			
+			if(!procedure.isHasReturn()){
+				throw new SemanticException("Non-void functions must return something");
 			}
 
 		}
 		else
-		{
+		{	
+			for (Statement statement : statementList) {
+				if(statement instanceof StatementReturn){
+					throw new SemanticException("Void functions can not return");
+				}
+			}
 			command.visit(this, object);
 		}
 
@@ -251,12 +269,16 @@ public class Checker implements IVisitor
 		// haver um retorno dentro
 		// de um while, para que esse comando não se comporte como um If.
 
-		if (object != null)
-		{
-			if (!(object instanceof While))
-			{
-				throw new SemanticException("Return command can not be inside a While!");
-			}
+		//if (object != null)
+		//{
+		//	if (!(object instanceof While))
+		//	{
+		//		throw new SemanticException("Return command can not be inside a While!");
+		//	}
+		//}
+		
+		if(object instanceof Procedure){
+			((Procedure) object).setHasReturn(true);
 		}
 
 		return expression.visit(this, object);
