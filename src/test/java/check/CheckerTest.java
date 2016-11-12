@@ -23,7 +23,7 @@ public class CheckerTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("program13.cobol")
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("semantic-test5.cobol")
 				.getFile();
 		this.parser = new Parser();
 		this.checker = new Checker();
@@ -42,10 +42,12 @@ public class CheckerTest
 		catch (SyntacticException e)
 		{
 			this.syntaticException = e;
+			System.out.println(e.getMessage());
 		}
 		catch (SemanticException e1)
 		{
 			this.semanticException = e1;
+			System.out.println(e1.getMessage());
 		}
 		assertEquals(true, ast != null);
 		assertEquals(true, this.syntaticException == null);
