@@ -175,7 +175,6 @@ public class Checker implements IVisitor
 			{
 				if (statement instanceof StatementReturn)
 				{
-
 					StatementReturn statementReturn = (StatementReturn) statement;
 					String expressionResult = (String) statementReturn.getExpression().visit(this, object);
 
@@ -192,7 +191,6 @@ public class Checker implements IVisitor
 				{
 					statement.visit(this, procedure);
 				}
-
 			}
 
 			if (!procedure.getHasReturn())
@@ -202,7 +200,6 @@ public class Checker implements IVisitor
 
 		}
 		else
-
 		{
 			for (Statement statement : statementList)
 			{
@@ -211,7 +208,7 @@ public class Checker implements IVisitor
 					throw new SemanticException("Void functions can not return");
 				}
 			}
-			command.visit(this, object);
+			command.visit(this, procedure);
 		}
 
 		this.identificationTable.closeScope();
@@ -275,21 +272,18 @@ public class Checker implements IVisitor
 	{
 		Expression expression = statementReturn.getExpression();
 
-		// Este If representa a decima restrição. Consideramos que não pode
-		// haver um retorno dentro
-		// de um while, para que esse comando não se comporte como um If.
-
-		// if (object != null)
-		// {
-		// if (!(object instanceof While))
-		// {
-		// throw new SemanticException("Return command can not be inside a
-		// While!");
-		// }
-		// }
-
 		if (object instanceof Procedure)
 		{
+			if(((Procedure) object).getProcedureType() == null){
+				throw new SemanticException("Can not return inside Void Functions");
+			} else{
+				if(!((Procedure) object).getProcedureType().getToken().getSpelling().
+						equals(expression.visit(this, object))){
+					throw new SemanticException("Incompatible type");
+					
+				}
+			}
+		
 			((Procedure) object).setHasReturn(true);
 		}
 
