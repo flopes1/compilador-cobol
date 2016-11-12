@@ -10,6 +10,7 @@ public class CallProcedure extends AST
 {
 
 	private List<Terminal> terminalList;
+	private List<VarDeclare> parametersValidatedList;
 
 	public CallProcedure(List<Terminal> terminalList)
 	{
@@ -46,6 +47,16 @@ public class CallProcedure extends AST
 	public void setTerminalList(List<Terminal> terminalList)
 	{
 		this.terminalList = terminalList;
+	}
+	
+	public List<VarDeclare> getParametersValidatedList()
+	{
+		return parametersValidatedList;
+	}
+
+	public void setParametersValidatedList(List<VarDeclare> parametersValidatedList)
+	{
+		this.parametersValidatedList = parametersValidatedList;
 	}
 
 	@Override
