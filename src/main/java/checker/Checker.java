@@ -125,14 +125,11 @@ public class Checker implements IVisitor
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
 		Terminal procedureName = procedure.getTokenId();
-		Terminal procedureType = procedure.getProcedureType(); // tipo de
-																// retorno da
-																// funcao, pode
-																// ser void
-		List<VarDeclare> varDeclareList = procedure.getVarDeclareList(); // decl
-																			// de
-																			// variaves
-																			// locais
+
+		// tipo de retorno da funcao, pode ser void
+		Terminal procedureType = procedure.getProcedureType();
+		// decl de variaves locais
+		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
 		List<VarDeclare> parametersList = procedure.getProcedureParametersList(); // parametros
 		Command command = procedure.getCommand();
 
@@ -168,9 +165,9 @@ public class Checker implements IVisitor
 				varDeclare.visit(this, object);
 			}
 		}
-		
+
 		List<Statement> statementList = command.getStatementList();
-		
+
 		if (procedureType != null)
 		{
 
@@ -178,38 +175,39 @@ public class Checker implements IVisitor
 			{
 				if (statement instanceof StatementReturn)
 				{
-					if ((((StatementReturn) statement).getExpression().visit(this, object)
-							.equals(procedureType.getToken().getSpelling())))
+
+					StatementReturn statementReturn = (StatementReturn) statement;
+					String expressionResult = (String) statementReturn.getExpression().visit(this, object);
+
+					if (expressionResult.equals(procedureType.getToken().getSpelling()))
 					{
 						procedure.setHasReturn(true);
 					}
 					else
 					{
-					StatementReturn statementReturn = (StatementReturn) statement;
-					String expressionResult = (String) statementReturn.getExpression().visit(this, object);
-
-					if (!(expressionResult.equals(procedureType.getToken().getSpelling())))
-					{
 						throw new SemanticException("Incompatible return type");
-					}
 					}
 				}
 				else
 				{
 					statement.visit(this, procedure);
 				}
-				
+
 			}
-			
-			if(!procedure.getHasReturn()){
+
+			if (!procedure.getHasReturn())
+			{
 				throw new SemanticException("Non-void functions must return something");
 			}
 
 		}
 		else
-		{	
-			for (Statement statement : statementList) {
-				if(statement instanceof StatementReturn){
+
+		{
+			for (Statement statement : statementList)
+			{
+				if (statement instanceof StatementReturn)
+				{
 					throw new SemanticException("Void functions can not return");
 				}
 			}
@@ -281,15 +279,17 @@ public class Checker implements IVisitor
 		// haver um retorno dentro
 		// de um while, para que esse comando não se comporte como um If.
 
-		//if (object != null)
-		//{
-		//	if (!(object instanceof While))
-		//	{
-		//		throw new SemanticException("Return command can not be inside a While!");
-		//	}
-		//}
-		
-		if(object instanceof Procedure){
+		// if (object != null)
+		// {
+		// if (!(object instanceof While))
+		// {
+		// throw new SemanticException("Return command can not be inside a
+		// While!");
+		// }
+		// }
+
+		if (object instanceof Procedure)
+		{
 			((Procedure) object).setHasReturn(true);
 		}
 
@@ -425,6 +425,9 @@ public class Checker implements IVisitor
 					}
 
 				}
+				// Salvar a lista dos parametros da função chamada na ordem correta e validada
+				// contendo a relação tipo x id
+				callProcedure.setParametersValidatedList(calledProcedureArguments);
 			}
 
 		}
@@ -439,12 +442,9 @@ public class Checker implements IVisitor
 		String mandatoryOperator = (operatorResult != null && operatorResult instanceof String)
 				? (String) operatorResult : "";
 
-	
-				
 		if (expression.getOptionalOperator() == null)
 		{
-			
-			
+
 			expression.setType(mandatoryOperator);
 			return mandatoryOperator;
 		}
@@ -453,8 +453,6 @@ public class Checker implements IVisitor
 			Object optionalOperatorResult = expression.getOptionalOperator().visit(this, object);
 			String opitionalOperator = (optionalOperatorResult != null && optionalOperatorResult instanceof String)
 					? (String) optionalOperatorResult : "";
-					
-						
 
 			if (mandatoryOperator.equals("INTEGER") && opitionalOperator.equals("INTEGER"))
 			{
@@ -491,8 +489,6 @@ public class Checker implements IVisitor
 				return "BOOLEAN";
 			}
 
-	
-			
 			if (!termResultValue.equals("INTEGER"))
 			{
 				throw new SemanticException("Type of Operator is invalid");
@@ -518,7 +514,6 @@ public class Checker implements IVisitor
 				term.setType("BOOLEAN");
 				return "BOOLEAN";
 			}
-			
 
 			if (!fatorResultValue.equals("INTEGER"))
 			{
