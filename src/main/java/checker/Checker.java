@@ -195,7 +195,8 @@ public class Checker implements IVisitor
 
 			if (!procedure.getHasReturn())
 			{
-				throw new SemanticException("Non-void functions must return something");
+				throw new SemanticException(procedure.getTokenId().getToken()
+						.getSpelling() + " is non-void function and must return something");
 			}
 
 		}
@@ -205,7 +206,8 @@ public class Checker implements IVisitor
 			{
 				if (statement instanceof StatementReturn)
 				{
-					throw new SemanticException("Void functions can not return");
+					throw new SemanticException(procedure.getTokenId().getToken()
+							.getSpelling() + " is a void function and can not return");
 				}
 			}
 			command.visit(this, procedure);
@@ -275,11 +277,13 @@ public class Checker implements IVisitor
 		if (object instanceof Procedure)
 		{
 			if(((Procedure) object).getProcedureType() == null){
-				throw new SemanticException("Can not return inside Void Functions");
+				throw new SemanticException(((Procedure) object).getTokenId()
+						.getToken().getSpelling() + " is a void function and can not return anything");
 			} else{
 				if(!((Procedure) object).getProcedureType().getToken().getSpelling().
 						equals(expression.visit(this, object))){
-					throw new SemanticException("Incompatible type");
+					throw new SemanticException("Your return has an incompatible type with "
+							+ ((Procedure) object).getProcedureType().getToken().getSpelling());
 					
 				}
 			}
