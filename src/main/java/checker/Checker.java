@@ -356,6 +356,7 @@ public class Checker implements IVisitor
 	{
 
 		List<Terminal> callProcedureTerminalItens = callProcedure.getTerminalList();
+		String procedureReturnType = "";
 
 		if (callProcedureTerminalItens != null)
 		{
@@ -370,6 +371,8 @@ public class Checker implements IVisitor
 			}
 
 			Procedure storedProcedure = (Procedure) storedProcedureInTable;
+
+			procedureReturnType = storedProcedure.getProcedureType().getToken().getSpelling();
 
 			List<VarDeclare> calledProcedureArguments = storedProcedure.getProcedureParametersList();
 
@@ -400,7 +403,7 @@ public class Checker implements IVisitor
 
 		}
 
-		return null;
+		return procedureReturnType;
 	}
 
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
