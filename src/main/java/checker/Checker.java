@@ -413,10 +413,7 @@ public class Checker implements IVisitor
 		String mandatoryOperator = (operatorResult != null && operatorResult instanceof String)
 				? (String) operatorResult : "";
 
-		if (mandatoryOperator.equals(""))
-		{
-			return "";
-		}
+	
 				
 		if (expression.getOptionalOperator() == null)
 		{
@@ -431,10 +428,7 @@ public class Checker implements IVisitor
 			String opitionalOperator = (optionalOperatorResult != null && optionalOperatorResult instanceof String)
 					? (String) optionalOperatorResult : "";
 					
-			if (opitionalOperator.equals(""))
-			{
-				return "";
-			}					
+						
 
 			if (mandatoryOperator.equals("INTEGER") && opitionalOperator.equals("INTEGER"))
 			{
@@ -471,10 +465,7 @@ public class Checker implements IVisitor
 				return "BOOLEAN";
 			}
 
-			if (termResultValue.equals(""))
-			{
-				return "";
-			}
+	
 			
 			if (!termResultValue.equals("INTEGER"))
 			{
@@ -502,10 +493,6 @@ public class Checker implements IVisitor
 				return "BOOLEAN";
 			}
 			
-			if (fatorResultValue.equals(""))
-			{
-				return "";
-			}
 
 			if (!fatorResultValue.equals("INTEGER"))
 			{
