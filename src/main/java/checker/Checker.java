@@ -413,8 +413,15 @@ public class Checker implements IVisitor
 		String mandatoryOperator = (operatorResult != null && operatorResult instanceof String)
 				? (String) operatorResult : "";
 
+		if (mandatoryOperator.equals(""))
+		{
+			return "";
+		}
+				
 		if (expression.getOptionalOperator() == null)
 		{
+			
+			
 			expression.setType(mandatoryOperator);
 			return mandatoryOperator;
 		}
@@ -423,6 +430,11 @@ public class Checker implements IVisitor
 			Object optionalOperatorResult = expression.getOptionalOperator().visit(this, object);
 			String opitionalOperator = (optionalOperatorResult != null && optionalOperatorResult instanceof String)
 					? (String) optionalOperatorResult : "";
+					
+			if (opitionalOperator.equals(""))
+			{
+				return "";
+			}					
 
 			if (mandatoryOperator.equals("INTEGER") && opitionalOperator.equals("INTEGER"))
 			{
@@ -459,6 +471,11 @@ public class Checker implements IVisitor
 				return "BOOLEAN";
 			}
 
+			if (termResultValue.equals(""))
+			{
+				return "";
+			}
+			
 			if (!termResultValue.equals("INTEGER"))
 			{
 				throw new SemanticException("Type of Operator is invalid");
@@ -483,6 +500,11 @@ public class Checker implements IVisitor
 			{
 				term.setType("BOOLEAN");
 				return "BOOLEAN";
+			}
+			
+			if (fatorResultValue.equals(""))
+			{
+				return "";
 			}
 
 			if (!fatorResultValue.equals("INTEGER"))
