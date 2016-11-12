@@ -11,9 +11,11 @@ IDENTIFICATORDIVISION. PROGRAMID. testeRetorno.
 			MOVE parametroBooleano TO nomevar2.
 			
 			IF parametroBooleano THEN
+				DISPLAY nomevar2.
 				RETURN nomevar2.
 				ENDCOM.
 			ELSE
+				DISPLAY parametroBooleano.
 				RETURN parametroBooleano.
 				ENDCOM.	
 			ENDIF.

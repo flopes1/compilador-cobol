@@ -27,6 +27,16 @@ public class Procedure extends AST
 		this.setHasReturn(false);
 	}
 
+	public Boolean getHasReturn()
+	{
+		return hasReturn;
+	}
+
+	public void setHasReturn(Boolean hasReturn)
+	{
+		this.hasReturn = hasReturn;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -58,14 +68,6 @@ public class Procedure extends AST
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public boolean isHasReturn() {
-		return hasReturn;
-	}
-
-	public void setHasReturn(boolean hasReturn) {
-		this.hasReturn = hasReturn;
 	}
 
 	public Command getCommand()
