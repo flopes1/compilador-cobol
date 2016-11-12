@@ -53,16 +53,16 @@ public class Checker implements IVisitor
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
-		if(program.getDataDivisionScope() != null)
+		if (program.getDataDivisionScope() != null)
 		{
 			program.getDataDivisionScope().visit(this, object);
 		}
-		
-		if(program.getProcedureDivisionScope() != null)
+
+		if (program.getProcedureDivisionScope() != null)
 		{
 			program.getProcedureDivisionScope().visit(this, object);
 		}
-		
+
 		if (!(identificationTable.retrieve("MAIN") instanceof Procedure))
 		{
 			throw new SemanticException("The Procedure main function is not defined");
@@ -125,8 +125,14 @@ public class Checker implements IVisitor
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
 		Terminal procedureName = procedure.getTokenId();
-		Terminal procedureType = procedure.getProcedureType(); // tipo de retorno da funcao, pode ser void
-		List<VarDeclare> varDeclareList = procedure.getVarDeclareList(); // decl de variaves locais
+		Terminal procedureType = procedure.getProcedureType(); // tipo de
+																// retorno da
+																// funcao, pode
+																// ser void
+		List<VarDeclare> varDeclareList = procedure.getVarDeclareList(); // decl
+																			// de
+																			// variaves
+																			// locais
 		List<VarDeclare> parametersList = procedure.getProcedureParametersList(); // parametros
 		Command command = procedure.getCommand();
 
@@ -172,10 +178,12 @@ public class Checker implements IVisitor
 			{
 				if (statement instanceof StatementReturn)
 				{
-					if (!(((StatementReturn) statement).getExpression().visit(this, object)
-							.equals(procedureType.getToken().getSpelling())))
+					StatementReturn statementReturn = (StatementReturn) statement;
+					String expressionResult = (String) statementReturn.getExpression().visit(this, object);
+
+					if (!(expressionResult.equals(procedureType.getToken().getSpelling())))
 					{
-						throw new SemanticException("Incompatible return");
+						throw new SemanticException("Incompatible return type");
 					}
 				}
 			}
@@ -308,7 +316,9 @@ public class Checker implements IVisitor
 	{
 		Expression expression = condition.getExpression();
 
-		if (!expression.visit(this, object).equals("BOOLEAN"))
+		String expressionResult = (String) expression.visit(this, object);
+
+		if (!expressionResult.equals("BOOLEAN"))
 		{
 			throw new SemanticException("Condition must be boolean type!");
 		}
@@ -334,7 +344,8 @@ public class Checker implements IVisitor
 
 	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
-		if (!attrib.getExpression().visit(this, object).equals(attrib.getTokenId().visit(this, object)))
+		String expressionResult = (String) attrib.getExpression().visit(this, object);
+		if (!expressionResult.equals(attrib.getTokenId().visit(this, object)))
 		{
 			throw new SemanticException("Expression is not same type of ID");
 		}
@@ -395,7 +406,9 @@ public class Checker implements IVisitor
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
 	{
 
-		String mandatoryOperator = (String) expression.getMandatoryOperator().visit(this, object);
+		Object operatorResult = expression.getMandatoryOperator().visit(this, object);
+		String mandatoryOperator = (operatorResult != null && operatorResult instanceof String)
+				? (String) operatorResult : "";
 
 		if (expression.getOptionalOperator() == null)
 		{
@@ -404,7 +417,9 @@ public class Checker implements IVisitor
 		}
 		else
 		{
-			String opitionalOperator = (String) expression.getOptionalOperator().visit(this, object);
+			Object optionalOperatorResult = expression.getOptionalOperator().visit(this, object);
+			String opitionalOperator = (optionalOperatorResult != null && optionalOperatorResult instanceof String)
+					? (String) optionalOperatorResult : "";
 
 			if (mandatoryOperator.equals("INTEGER") && opitionalOperator.equals("INTEGER"))
 			{
@@ -432,13 +447,16 @@ public class Checker implements IVisitor
 
 		for (Term term : termList)
 		{
-			if (termList.size() == 1 && term.visit(this, object).equals("BOOLEAN"))
+			Object termResult = term.visit(this, object);
+			String termResultValue = (termResult != null && (termResult instanceof String)) ? (String) termResult : "";
+
+			if (termList.size() == 1 && termResultValue.equals("BOOLEAN"))
 			{
 				operator.setType("BOOLEAN");
 				return "BOOLEAN";
 			}
 
-			if (!term.visit(this, object).equals("INTEGER"))
+			if (!termResultValue.equals("INTEGER"))
 			{
 				throw new SemanticException("Type of Operator is invalid");
 			}
@@ -454,13 +472,17 @@ public class Checker implements IVisitor
 
 		for (Fator fator : fatorList)
 		{
-			if (fatorList.size() == 1 && fator.visit(this, object).equals("BOOLEAN"))
+			Object fatorResult = fator.visit(this, object);
+			String fatorResultValue = (fatorResult != null && (fatorResult instanceof String)) ? (String) fatorResult
+					: "";
+
+			if (fatorList.size() == 1 && fatorResultValue.equals("BOOLEAN"))
 			{
 				term.setType("BOOLEAN");
 				return "BOOLEAN";
 			}
 
-			if (!fator.visit(this, object).equals("INTEGER"))
+			if (!fatorResultValue.equals("INTEGER"))
 			{
 				throw new SemanticException("Type of Fator is invalid");
 			}
