@@ -1,0 +1,40 @@
+# RESTRICAO 9
+
+IDENTIFICATORDIVISION. PROGRAMID. MYPROGRAM.
+	DATADIVISION. 
+		varInteger1 PIC INTEGER.
+		varInteger2 PIC INTEGER.
+		
+		varBoolean1 PIC BOOLEAN.
+		varBoolean2 PIC BOOLEAN.
+	EXIT.
+	
+	PROCEDUREDIVISION.	
+			MAIN SECTION. 
+				BEGINDECLARATIONS
+		
+		
+				ENDDECLARATIONS
+		
+				DISPLAY 10.
+				
+				
+				ENDCOM.
+				
+			ENDPROC.
+			
+			AUX SECTION. 
+				BEGINDECLARATIONS
+		
+		
+				ENDDECLARATIONS
+		
+				DISPLAY 10.
+				
+				
+				ENDCOM.
+				
+			ENDPROC.
+			
+			
+	EXIT.
