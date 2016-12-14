@@ -79,18 +79,18 @@ public class Encoder implements IVisitor
 		emit("text", instruction);
 	}
 
-	public Object visitProgram(Program program, Object object) throws SemanticException
+	public Object visitProgram(Program program, ArrayList<AST> list) throws SemanticException
 	{
 		emit("extern", "extern _printf");
 		
 		if (program.getDataDivisionScope() != null)
 		{
-			program.getDataDivisionScope().visit(this, object);
+			program.getDataDivisionScope().visit(this, list);
 		}
 
 		if (program.getProcedureDivisionScope() != null)
 		{
-			program.getProcedureDivisionScope().visit(this, object);
+			program.getProcedureDivisionScope().visit(this, list);
 		}
 
 		
@@ -98,106 +98,106 @@ public class Encoder implements IVisitor
 		return null;
 	}
 
-	public Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object) throws SemanticException
+	public Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object)
+	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, ArrayList<AST> list)
 			throws SemanticException
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException
+	public Object visitVariablesDeclare(VarDeclare varDeclare, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
+	public Object visitProcedure(Procedure procedure, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitCommand(Command command, Object object) throws SemanticException
+	public Object visitCommand(Command command, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementIf(StatementIf statementIf, Object object) throws SemanticException
+	public Object visitStatementIf(StatementIf statementIf, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementWhile(StatementWhile statementWhile, Object object) throws SemanticException
+	public Object visitStatementWhile(StatementWhile statementWhile, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementDisplay(StatementDisplay statementDisplay, Object object) throws SemanticException
+	public Object visitStatementDisplay(StatementDisplay statementDisplay, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementReturn(StatementReturn statementReturn, Object object) throws SemanticException
+	public Object visitStatementReturn(StatementReturn statementReturn, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementAttribution(StatementAttrib statementAttrib, Object object) throws SemanticException
+	public Object visitStatementAttribution(StatementAttrib statementAttrib, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object)
+	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, ArrayList<AST> list)
 			throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementBreak(StatementBreak statementBreak, Object object) throws SemanticException
+	public Object visitStatementBreak(StatementBreak statementBreak, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitStatementContinue(StatementContinue statementContinue, Object object) throws SemanticException
+	public Object visitStatementContinue(StatementContinue statementContinue, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitCondition(Condition condition, Object object) throws SemanticException
+	public Object visitCondition(Condition condition, ArrayList<AST> list) throws SemanticException
 	{
 		Expression expression = condition.getExpression();
 
-		expression.visit(this, object);
+		expression.visit(this, list);
 		
 		return null;
 	}
 
-	public Object visitWhile(While whileCommand, Object object) throws SemanticException
+	public Object visitWhile(While whileCommand, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
 
-	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
+	public Object visitAttrib(Attrib attrib, ArrayList<AST> list) throws SemanticException
 	{
 		TerminalId terminalId = (TerminalId) attrib.getTokenId();
 		VarDeclare varDeclare = (VarDeclare)terminalId.getDeclaredTerminalIdNode();
-		attrib.getExpression().visit(this, object);
+		attrib.getExpression().visit(this, list);
 		switch (varDeclare.getScope()) {
 		case 0:
 			emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
@@ -212,97 +212,97 @@ public class Encoder implements IVisitor
 		
 	}
 
-	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException
+	public Object visitCallProcedure(CallProcedure callProcedure, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitExpression(Expression expression, Object object) throws SemanticException
+	public Object visitExpression(Expression expression, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitOperator(Operator operator, Object object) throws SemanticException
+	public Object visitOperator(Operator operator, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitTerm(Term term, Object object) throws SemanticException
+	public Object visitTerm(Term term, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object) throws SemanticException
+	public Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitFatorBool(FatorBool fatorBool, Object object) throws SemanticException
+	public Object visitFatorBool(FatorBool fatorBool, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException
+	public Object visitFatorIdentificator(FatorId fatorId, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitFatorNumber(FatorNumber fatorNumber, Object object) throws SemanticException
+	public Object visitFatorNumber(FatorNumber fatorNumber, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitFatorExpression(FatorExpression fatorExpression, Object object) throws SemanticException
+	public Object visitFatorExpression(FatorExpression fatorExpression, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object)
+	public Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, ArrayList<AST> list)
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitTerminalBool(TerminalBool terminalBool, Object object)
+	public Object visitTerminalBool(TerminalBool terminalBool, ArrayList<AST> list)
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object)
+	public Object visitTerminalTypeInteger(TerminalInteger terminalInteger, ArrayList<AST> list)
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitTerminalNumber(TerminalNumber terminalNumber, Object object)
+	public Object visitTerminalNumber(TerminalNumber terminalNumber, ArrayList<AST> list)
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
+	public Object visitTerminalIdentificator(TerminalId terminalId, ArrayList<AST> list) throws SemanticException
 	{
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
 
-	public Object visitTerminalComparation(TerminalComp terminalComp, Object object)
+	public Object visitTerminalComparation(TerminalComp terminalComp, ArrayList<AST> list)
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
 	}
 
-	public Object visitTerminalOperations(TerminalOperations terminalOperations, Object object)
+	public Object visitTerminalOperations(TerminalOperations terminalOperations, ArrayList<AST> list)
 	{
 		// TODO Auto-generated method stub Marcos
 		return null;
