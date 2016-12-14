@@ -138,4 +138,8 @@ public class IdentificationTable {
 		return false;
 	}
 	
+	public int getScope() {
+		return currentScope;
+	}
+	
 }

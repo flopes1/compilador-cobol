@@ -1,6 +1,7 @@
 package encoder;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import checker.IVisitor;
@@ -46,6 +47,9 @@ public class Encoder implements IVisitor
 
 	private List<Instruction> instructionList = null;
 	private int nextInstr = 0;
+	
+	//colocar os puts quando estiver visitando a lista de paramatros e as variaveis locais.
+	private Hashtable<String, Integer> vars;
 
 	public Encoder()
 	{
@@ -77,7 +81,20 @@ public class Encoder implements IVisitor
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		emit("extern", "extern _printf");
+		
+		if (program.getDataDivisionScope() != null)
+		{
+			program.getDataDivisionScope().visit(this, object);
+		}
+
+		if (program.getProcedureDivisionScope() != null)
+		{
+			program.getProcedureDivisionScope().visit(this, object);
+		}
+
+		
+
 		return null;
 	}
 
@@ -163,7 +180,10 @@ public class Encoder implements IVisitor
 
 	public Object visitCondition(Condition condition, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		Expression expression = condition.getExpression();
+
+		expression.visit(this, object);
+		
 		return null;
 	}
 
@@ -175,8 +195,21 @@ public class Encoder implements IVisitor
 
 	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		TerminalId terminalId = (TerminalId) attrib.getTokenId();
+		VarDeclare varDeclare = (VarDeclare)terminalId.getDeclaredTerminalIdNode();
+		attrib.getExpression().visit(this, object);
+		switch (varDeclare.getScope()) {
+		case 0:
+			emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
+			break;
+		case 1:
+			emit("pop dword [ebp+" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+			break;
+		default:
+			emit("pop dword [ebp" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+		}
 		return null;
+		
 	}
 
 	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException

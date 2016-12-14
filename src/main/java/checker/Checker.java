@@ -113,6 +113,7 @@ public class Checker implements IVisitor
 		}
 
 		this.identificationTable.enter(varDeclare.getTerminalId().getToken().getSpelling(), varDeclare);
+		varDeclare.setScope(identificationTable.getScope());
 		varDeclare.getTerminalBooleanOrInteger().visit(this, object);
 		varDeclare.getTerminalId().visit(this, object);
 

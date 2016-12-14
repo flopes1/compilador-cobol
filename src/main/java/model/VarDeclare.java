@@ -8,6 +8,7 @@ public class VarDeclare extends AST
 {
 
 	private Terminal terminalId, terminalBooleanOrInteger;
+	private int scope = 0;
 
 	public VarDeclare(Terminal id, Terminal intOrBool)
 	{
@@ -47,5 +48,15 @@ public class VarDeclare extends AST
 	public Object visit(IVisitor visitor, Object object) throws SemanticException
 	{
 		return visitor.visitVariablesDeclare(this, object);
+	}
+
+	public int getScope()
+	{
+		return scope;
+	}
+
+	public void setScope(int scope)
+	{
+		this.scope = scope;
 	}
 }
