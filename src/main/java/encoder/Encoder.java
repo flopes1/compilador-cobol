@@ -46,16 +46,17 @@ import util.AST.AST;
 public class Encoder implements IVisitor
 {
 
-	private List<Instruction> instructionList = null;
 	private int nextInstr = 0;
 	private int countCmp;
+	private ObjectCode objectCode;
 	
 	//colocar os puts quando estiver visitando a lista de paramatros e as variaveis locais.
 	private Hashtable<String, Integer> vars;
 
 	public Encoder()
 	{
-		this.instructionList = new ArrayList<Instruction>();
+		objectCode = new ObjectCode();
+		
 	}
 
 	public void encode(AST decotaredAST)
@@ -70,14 +71,11 @@ public class Encoder implements IVisitor
 		}
 	}
 
-	private void emit(String instructionSection, String instruction)
-	{
-		Instruction newInstruction = new Instruction(instructionSection, instruction);
-		this.instructionList.add(newInstruction);
+	public void emit(String section, String instruction) {
+		objectCode.addInstruction(section, new Instruction(instruction));
 	}
 
-	private void emit(String instruction)
-	{
+	public void emit(String instruction) {
 		emit("text", instruction);
 	}
 
