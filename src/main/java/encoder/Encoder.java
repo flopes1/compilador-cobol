@@ -1,6 +1,7 @@
 package encoder;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import checker.IVisitor;
@@ -30,6 +31,7 @@ import model.StatementIf;
 import model.StatementReturn;
 import model.StatementWhile;
 import model.Term;
+import model.Terminal;
 import model.TerminalBool;
 import model.TerminalBoolean;
 import model.TerminalComp;
@@ -45,19 +47,25 @@ import util.AST.AST;
 public class Encoder implements IVisitor
 {
 
-	private List<Instruction> instructionList = null;
 	private int nextInstr = 0;
+	private int countCmp;
+	private ObjectCode objectCode;
+
+	// colocar os puts quando estiver visitando a lista de paramatros e as
+	// variaveis locais.
+	private Hashtable<String, Integer> vars;
 
 	public Encoder()
 	{
-		this.instructionList = new ArrayList<Instruction>();
+		objectCode = new ObjectCode();
+
 	}
 
 	public void encode(AST decotaredAST)
 	{
 		try
 		{
-			decotaredAST.visit(this, null);
+			decotaredAST.visit(this, new ArrayList<AST>());
 		}
 		catch (SemanticException ex)
 		{
@@ -65,10 +73,9 @@ public class Encoder implements IVisitor
 		}
 	}
 
-	private void emit(String instructionSection, String instruction)
+	public void emit(String section, String instruction)
 	{
-		Instruction newInstruction = new Instruction(instructionSection, instruction);
-		this.instructionList.add(newInstruction);
+		objectCode.addInstruction(section, new Instruction(instruction));
 	}
 
 	private void emit(String instruction)
@@ -78,7 +85,18 @@ public class Encoder implements IVisitor
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		emit("extern", "extern _printf");
+
+		if (program.getDataDivisionScope() != null)
+		{
+			program.getDataDivisionScope().visit(this, object);
+		}
+
+		if (program.getProcedureDivisionScope() != null)
+		{
+			program.getProcedureDivisionScope().visit(this, object);
+		}
+
 		return null;
 	}
 
@@ -112,7 +130,7 @@ public class Encoder implements IVisitor
 
 			this.savePointersStates();
 
-			procedure.visit(this, null);
+			procedure.visit(this, object);
 
 			this.RestourePointersStates();
 
@@ -142,6 +160,9 @@ public class Encoder implements IVisitor
 
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
+		// manter essa atribuição
+		countCmp = 1;
+
 		// TODO Auto-generated method stub Fernando
 		return null;
 	}
@@ -203,7 +224,10 @@ public class Encoder implements IVisitor
 
 	public Object visitCondition(Condition condition, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		Expression expression = condition.getExpression();
+
+		expression.visit(this, object);
+
 		return null;
 	}
 
@@ -215,8 +239,22 @@ public class Encoder implements IVisitor
 
 	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		TerminalId terminalId = (TerminalId) attrib.getTokenId();
+		VarDeclare varDeclare = (VarDeclare) terminalId.getDeclaredTerminalIdNode();
+		attrib.getExpression().visit(this, object);
+		switch (varDeclare.getScope())
+		{
+			case 0:
+				emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
+				break;
+			case 1:
+				emit("pop dword [ebp+" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+				break;
+			default:
+				emit("pop dword [ebp" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+		}
 		return null;
+
 	}
 
 	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException
@@ -227,13 +265,93 @@ public class Encoder implements IVisitor
 
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		@SuppressWarnings("unchecked")
+		ArrayList<AST> list = (ArrayList<AST>) object;
+		String functionId = "";
+
+		for (AST ast : list)
+		{
+			if (ast instanceof Procedure)
+			{
+				functionId = ((Procedure) ast).getTokenId().getToken().getSpelling();
+				break;
+			}
+		}
+
+		if (expression.getOptionalOperator() == null)
+		{
+			expression.getMandatoryOperator().visit(this, object);
+		}
+		else
+		{
+			expression.getMandatoryOperator().visit(this, list);
+			expression.getTokenComparator().visit(this, object);
+
+			emit("pop ebx");
+			emit("pop eax");
+			emit("cmp eax, ebx");
+			// switch (expression.getTokenComparator().getToken().getSpelling())
+			// {
+			// case "==":
+			// emit(functionId + "jne _false_cmp_" + countCmp);
+			// break;
+			// case "!=":
+			// emit(functionId + "je _false_cmp_" + countCmp);
+			// break;
+			// case "<":
+			// emit(functionId + "jge _false_cmp_" + countCmp);
+			// break;
+			// case "<=":
+			// emit(functionId + "jg _false_cmp_" + countCmp);
+			// break;
+			// case ">":
+			// emit(functionId + "jle _false_cmp_" + countCmp);
+			// break;
+			// case ">=":
+			// emit(functionId + "jl _false_cmp_" + countCmp);
+			// break;
+			// }
+			emit("push dword 1");
+			emit("jmp" + functionId + "_end_cmp_" + countCmp);
+			emit(functionId + "_false_cmp_" + countCmp + ":");
+			emit("push dword 0");
+			emit(functionId + "_end_cmp_" + countCmp + ":");
+			countCmp++;
+		}
 		return null;
 	}
 
 	public Object visitOperator(Operator operator, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		if (operator.getOperatorTerminalList().isEmpty())
+		{
+			operator.getOperatorTermList().get(0).visit(this, object);
+		}
+		else
+		{
+			int i = 0;
+			for (Terminal t : operator.getOperatorTerminalList())
+			{
+				if (i == 0)
+				{
+					operator.getOperatorTermList().get(0).visit(this, object);
+					i++;
+				}
+				t.visit(this, object);
+
+				emit("pop ebx");
+				emit("pop eax");
+				if (t.getToken().getSpelling().equals("+"))
+				{
+					emit("add eax, ebx");
+				}
+				else
+				{
+					emit("sub eax, ebx");
+				}
+				emit("push eax");
+			}
+		}
 		return null;
 	}
 
