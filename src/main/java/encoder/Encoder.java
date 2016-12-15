@@ -39,6 +39,7 @@ import model.TerminalNumber;
 import model.TerminalOperations;
 import model.VarDeclare;
 import model.While;
+import util.InstructionsCommons;
 import util.AST.AST;
 
 public class Encoder implements IVisitor
@@ -72,7 +73,7 @@ public class Encoder implements IVisitor
 
 	private void emit(String instruction)
 	{
-		emit("text", instruction);
+		emit(InstructionsCommons.TEXT_FIELD, instruction);
 	}
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
@@ -83,15 +84,54 @@ public class Encoder implements IVisitor
 
 	public Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Filipe
+
+		List<VarDeclare> varDeclareList = dataDivisionScope.getVarDeclareList();
+
+		for (VarDeclare varDeclare : varDeclareList)
+		{
+			this.emit(InstructionsCommons.DATA_FIELD, varDeclare.getTerminalId().getToken().getSpelling()
+					+ InstructionsCommons.TYPE_BOOLEAN_INTEGER_INIT);
+		}
+
 		return null;
 	}
 
 	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object)
 			throws SemanticException
 	{
-		// TODO Auto-generated method stub Filipe
+		List<Procedure> procedureList = procedureDivisionScope.getProcedureList();
+
+		for (Procedure procedure : procedureList)
+		{
+			String procedureId = procedure.getTokenId().getToken().getSpelling();
+			if (procedureId.equalsIgnoreCase(InstructionsCommons.MAIN))
+			{
+				procedureId = InstructionsCommons.DEFAULT_MAIN;
+			}
+			this.emit("_" + procedureId + ":");
+
+			this.savePointersStates();
+
+			procedure.visit(this, null);
+
+			this.RestourePointersStates();
+
+			this.emit(InstructionsCommons.RETURN);
+		}
+
 		return null;
+	}
+
+	private void savePointersStates()
+	{
+		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.EBP);
+		this.emit(InstructionsCommons.MOV + " " + InstructionsCommons.EBP + "," + InstructionsCommons.ESP);
+	}
+
+	private void RestourePointersStates()
+	{
+		this.emit(InstructionsCommons.MOV + " " + InstructionsCommons.ESP + "," + InstructionsCommons.EBP);
+		this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EBP);
 	}
 
 	public Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException
