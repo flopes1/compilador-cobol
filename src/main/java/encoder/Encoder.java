@@ -57,8 +57,7 @@ public class Encoder implements IVisitor
 
 	public Encoder()
 	{
-		objectCode = new ObjectCode();
-
+		this.objectCode = new ObjectCode();
 	}
 
 	public void encode(AST decotaredAST)
@@ -75,7 +74,7 @@ public class Encoder implements IVisitor
 
 	public void emit(String section, String instruction)
 	{
-		objectCode.addInstruction(section, new Instruction(instruction));
+		this.objectCode.addInstruction(section, new Instruction(instruction));
 	}
 
 	private void emit(String instruction)
