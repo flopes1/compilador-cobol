@@ -101,7 +101,7 @@ public class Encoder implements IVisitor
 
 	public Object visitDataDivisionScope(DataDivisionScope dataDivisionScope, Object object) throws SemanticException
 	{
-
+		// Filipe
 		List<VarDeclare> varDeclareList = dataDivisionScope.getVarDeclareList();
 
 		for (VarDeclare varDeclare : varDeclareList)
@@ -116,6 +116,7 @@ public class Encoder implements IVisitor
 	public Object visitProcedureDivisionScope(ProcedureDivisionScope procedureDivisionScope, Object object)
 			throws SemanticException
 	{
+		// Filipe
 		List<Procedure> procedureList = procedureDivisionScope.getProcedureList();
 
 		for (Procedure procedure : procedureList)
@@ -125,13 +126,13 @@ public class Encoder implements IVisitor
 			{
 				procedureId = InstructionsCommons.DEFAULT_MAIN;
 			}
-			this.emit("_" + procedureId + ":");
+			this.emit("_" + procedureId.toLowerCase() + ":");
 
 			this.savePointersStates();
 
 			procedure.visit(this, object);
 
-			this.RestourePointersStates();
+			this.restourePointersStates();
 
 			this.emit(InstructionsCommons.RETURN);
 		}
@@ -142,18 +143,20 @@ public class Encoder implements IVisitor
 	private void savePointersStates()
 	{
 		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.EBP);
-		this.emit(InstructionsCommons.MOV + " " + InstructionsCommons.EBP + "," + InstructionsCommons.ESP);
+		this.emit(InstructionsCommons.MOV + " " + InstructionsCommons.EBP + ", " + InstructionsCommons.ESP);
 	}
 
-	private void RestourePointersStates()
+	private void restourePointersStates()
 	{
-		this.emit(InstructionsCommons.MOV + " " + InstructionsCommons.ESP + "," + InstructionsCommons.EBP);
+		this.emit(InstructionsCommons.MOV + " " + InstructionsCommons.ESP + ", " + InstructionsCommons.EBP);
 		this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EBP);
 	}
 
 	public Object visitVariablesDeclare(VarDeclare varDeclare, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Filipe
+		// Filipe
+		this.emit(InstructionsCommons.SUB + " " + InstructionsCommons.ESP + ", "
+				+ InstructionsCommons.BOOLEAN_INTEGER_SIZE);
 		return null;
 	}
 
@@ -258,7 +261,16 @@ public class Encoder implements IVisitor
 
 	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Filipe
+		// Filipe
+		String procedureName = callProcedure.getTerminalList().get(0).getToken().getSpelling();
+
+		emit(InstructionsCommons.CALL + " _" + procedureName.toLowerCase());
+
+		List<VarDeclare> procedureParameters = callProcedure.getParametersValidatedList();
+
+		emit(InstructionsCommons.ADD + " " + InstructionsCommons.ESP + ", "
+				+ ((Integer.parseInt(InstructionsCommons.BOOLEAN_INTEGER_SIZE)) * procedureParameters.size()));
+
 		return null;
 	}
 
@@ -392,32 +404,32 @@ public class Encoder implements IVisitor
 
 	public Object visitTerminalTypeBoolean(TerminalBoolean terminalBoolean, Object object)
 	{
-		// TODO Auto-generated method stub Filipe
+		// Filipe nao tem o que fazer
 		return null;
 	}
 
 	public Object visitTerminalBool(TerminalBool terminalBool, Object object)
 	{
-		// TODO Auto-generated method stub Filipe
-		return null;
+		// Filipe
+		return (terminalBool.getToken().getSpelling() == "true") ? 1 : 0;
 	}
 
 	public Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object)
 	{
-		// TODO Auto-generated method stub Filipe
+		// Filipe nao tem o que fazer
 		return null;
 	}
 
 	public Object visitTerminalNumber(TerminalNumber terminalNumber, Object object)
 	{
-		// TODO Auto-generated method stub Filipe
-		return null;
+		// Filipe
+		return terminalNumber.getToken().getSpelling();
 	}
 
 	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Filipe
-		return null;
+		// Filipe
+		return terminalId.getToken().getSpelling();
 	}
 
 	public Object visitTerminalComparation(TerminalComp terminalComp, Object object)
