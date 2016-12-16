@@ -28,6 +28,4 @@ public abstract class Terminal extends AST {
 		return this.token != null ? this.token.getSpelling().toString() : "";
 	}
 	
-	
-
 }
