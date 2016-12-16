@@ -88,6 +88,7 @@ public class Encoder implements IVisitor
 
 	public Object visitProgram(Program program, Object object) throws SemanticException
 	{
+		// Marcos
 		emit("extern", "extern _printf");
 
 		if (program.getDataDivisionScope() != null)
@@ -231,7 +232,7 @@ public class Encoder implements IVisitor
 
 	public Object visitStatementAttribution(StatementAttrib statementAttrib, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
 		statementAttrib.getAttrib().visit(this, object);
 		return null;
 	}
@@ -258,6 +259,7 @@ public class Encoder implements IVisitor
 
 	public Object visitCondition(Condition condition, Object object) throws SemanticException
 	{
+		// Marcos
 		Expression expression = condition.getExpression();
 
 		expression.visit(this, object);
@@ -273,6 +275,7 @@ public class Encoder implements IVisitor
 
 	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
+		// Marcos
 		TerminalId terminalId = (TerminalId) attrib.getTokenId();
 		VarDeclare varDeclare = (VarDeclare) terminalId.getDeclaredTerminalIdNode();
 		attrib.getExpression().visit(this, object);
@@ -346,6 +349,7 @@ public class Encoder implements IVisitor
 
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
 	{
+		// Marcos
 		@SuppressWarnings("unchecked")
 		ArrayList<AST> list = (ArrayList<AST>) object;
 		String functionId = "";
@@ -410,6 +414,7 @@ public class Encoder implements IVisitor
 
 	public Object visitOperator(Operator operator, Object object) throws SemanticException
 	{
+		// Marcos
 		if (operator.getOperatorTerminalList().isEmpty())
 		{
 			operator.getOperatorTermList().get(0).visit(this, object);
@@ -448,6 +453,7 @@ public class Encoder implements IVisitor
 
 	public Object visitTerm(Term term, Object object) throws SemanticException
 	{
+		// Marcos
 		if (term.getTermOperatorList().isEmpty())
 		{
 			term.getTermfatorList().get(0).visit(this, object);
@@ -486,6 +492,7 @@ public class Encoder implements IVisitor
 
 	public Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object) throws SemanticException
 	{
+		// Marcos
 		@SuppressWarnings("unchecked")
 		ArrayList<AST> list = (ArrayList<AST>) object;
 
@@ -497,25 +504,28 @@ public class Encoder implements IVisitor
 
 	public Object visitFatorBool(FatorBool fatorBool, Object object) throws SemanticException
 	{
+		// Marcos
 		fatorBool.getTokenBool().visit(this, object);
 		return null;
 	}
 
 	public Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException
 	{
+		// Marcos
 		fatorId.getTokenId().visit(this, object);
 		return null;
 	}
 
 	public Object visitFatorNumber(FatorNumber fatorNumber, Object object) throws SemanticException
 	{
+		// Marcos
 		fatorNumber.getTokenNumber().visit(this, object);
 		return null;
 	}
 
 	public Object visitFatorExpression(FatorExpression fatorExpression, Object object) throws SemanticException
 	{
-
+		// Marcos
 		fatorExpression.getExpression().visit(this, object);
 
 		return null;
@@ -554,7 +564,6 @@ public class Encoder implements IVisitor
 	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
 	{
 		// Filipe
-
 		String idName = terminalId.getToken().getSpelling();
 
 		if (this.globalVariables.containsKey(idName))
