@@ -423,17 +423,20 @@ public class Encoder implements IVisitor
 
 	public Object visitFatorBool(FatorBool fatorBool, Object object) throws SemanticException
 	{
-		return fatorBool.getTokenBool().visit(this, object);
+		fatorBool.getTokenBool().visit(this, object);
+		return null;
 	}
 
 	public Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException
 	{
-		return fatorId.getTokenId().visit(this, object);
+		fatorId.getTokenId().visit(this, object);
+		return null;
 	}
 
 	public Object visitFatorNumber(FatorNumber fatorNumber, Object object) throws SemanticException
 	{
-		return fatorNumber.getTokenNumber().visit(this, object);
+		fatorNumber.getTokenNumber().visit(this, object);
+		return null;
 	}
 
 	public Object visitFatorExpression(FatorExpression fatorExpression, Object object) throws SemanticException
