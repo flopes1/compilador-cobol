@@ -167,10 +167,10 @@ public class Encoder implements IVisitor
 
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
-		// manter essa atribuição
-		countCmp = 1;
+		// Filipe
 
-		// TODO Auto-generated method stub Fernando
+		this.countCmp = 1;
+
 		return null;
 	}
 
@@ -366,7 +366,7 @@ public class Encoder implements IVisitor
 					break;
 
 			}
-			
+
 			emit("push dword 1");
 			emit("jmp" + functionId + "_end_cmp_" + countCmp);
 			emit(functionId + "_false_cmp_" + countCmp + ":");
@@ -503,7 +503,7 @@ public class Encoder implements IVisitor
 	{
 		// Filipe
 		int valueToPush = (terminalBool.getToken().getSpelling() == "true") ? 1 : 0;
-		this.emit(InstructionsCommons.PUSH + " " + valueToPush);
+		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + valueToPush);
 
 		return null;
 	}
@@ -518,7 +518,7 @@ public class Encoder implements IVisitor
 	{
 		// Filipe
 		String numberToPush = terminalNumber.getToken().getSpelling();
-		this.emit(InstructionsCommons.PUSH + " " + numberToPush);
+		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + numberToPush);
 
 		return null;
 	}
@@ -531,13 +531,14 @@ public class Encoder implements IVisitor
 
 		if (this.globalVariables.containsKey(idName))
 		{
-			this.emit(InstructionsCommons.PUSH + " " + "[" + idName + "]");
+			this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "[" + idName + "]");
 		}
 		else
 		{
 			int ebpLocator = this.localVariables.get(idName);
 
-			this.emit(InstructionsCommons.PUSH + " " + "[" + InstructionsCommons.EBP + ebpLocator + "]");
+			this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "[" + InstructionsCommons.EBP
+					+ ebpLocator + "]");
 		}
 
 		return terminalId.getToken().getSpelling();
