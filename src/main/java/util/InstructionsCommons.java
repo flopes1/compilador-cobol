@@ -19,6 +19,7 @@ public interface InstructionsCommons
 	// Variable constants
 	static final String TYPE_BOOLEAN_INTEGER_INIT = ":dd 0";
 	static final String BOOLEAN_INTEGER_SIZE = "4";
+	static final String DWORD = "dword";
 	static final String EBP = "ebp";
 	static final String ESP = "esp";
 	static final String EAX = "eax";
