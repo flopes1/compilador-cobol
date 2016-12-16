@@ -226,7 +226,7 @@ public class Encoder implements IVisitor
 		Expression expression = condition.getExpression();
 
 		expression.visit(this, object);
-
+		
 		return null;
 	}
 
@@ -239,21 +239,20 @@ public class Encoder implements IVisitor
 	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
 		TerminalId terminalId = (TerminalId) attrib.getTokenId();
-		VarDeclare varDeclare = (VarDeclare) terminalId.getDeclaredTerminalIdNode();
+		VarDeclare varDeclare = (VarDeclare)terminalId.getDeclaredTerminalIdNode();
 		attrib.getExpression().visit(this, object);
-		switch (varDeclare.getScope())
-		{
-			case 0:
-				emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
-				break;
-			case 1:
-				emit("pop dword [ebp+" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
-				break;
-			default:
-				emit("pop dword [ebp" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+		switch (varDeclare.getScope()) {
+		case 0:
+			emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
+			break;
+		case 1:
+			emit("pop dword [ebp+" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+			break;
+		default:
+			emit("pop dword [ebp" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
 		}
 		return null;
-
+		
 	}
 
 	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException
@@ -261,55 +260,67 @@ public class Encoder implements IVisitor
 		// TODO Auto-generated method stub Filipe
 		return null;
 	}
+	
+	private int returnValue(String str){
+		
+		if(str == ">"){
+			return 1;
+		}else if(str == "<"){
+			return 2;
+		}else if(str == ">="){
+			return 3;
+		}else if(str == "<="){
+			return 4;
+		}else if(str == "="){
+			return 5;
+		}else if(str == "!="){
+			return 6;
+		}
+		return 0;
+	}
 
 	public Object visitExpression(Expression expression, Object object) throws SemanticException
 	{
 		@SuppressWarnings("unchecked")
 		ArrayList<AST> list = (ArrayList<AST>) object;
 		String functionId = "";
-
-		for (AST ast : list)
-		{
-			if (ast instanceof Procedure)
-			{
+		
+		for (AST ast : list) {
+			if (ast instanceof Procedure) {
 				functionId = ((Procedure) ast).getTokenId().getToken().getSpelling();
 				break;
 			}
 		}
-
-		if (expression.getOptionalOperator() == null)
-		{
+		
+		if (expression.getOptionalOperator() == null) {
 			expression.getMandatoryOperator().visit(this, object);
-		}
-		else
-		{
+		} else {
 			expression.getMandatoryOperator().visit(this, list);
-			expression.getTokenComparator().visit(this, object);
-
+			expression.getOptionalOperator().visit(this, object);
+			
 			emit("pop ebx");
 			emit("pop eax");
 			emit("cmp eax, ebx");
-			// switch (expression.getTokenComparator().getToken().getSpelling())
-			// {
-			// case "==":
-			// emit(functionId + "jne _false_cmp_" + countCmp);
-			// break;
-			// case "!=":
-			// emit(functionId + "je _false_cmp_" + countCmp);
-			// break;
-			// case "<":
-			// emit(functionId + "jge _false_cmp_" + countCmp);
-			// break;
-			// case "<=":
-			// emit(functionId + "jg _false_cmp_" + countCmp);
-			// break;
-			// case ">":
-			// emit(functionId + "jle _false_cmp_" + countCmp);
-			// break;
-			// case ">=":
-			// emit(functionId + "jl _false_cmp_" + countCmp);
-			// break;
-			// }
+			switch (returnValue(expression.getTokenComparator().getToken().getSpelling())) {
+			case 5:
+				emit(functionId + "jne _false_cmp_" + countCmp);
+				break;
+			case 6:
+				emit(functionId + "je _false_cmp_" + countCmp);
+				break;
+			case 2:
+				emit(functionId + "jge _false_cmp_" + countCmp);
+				break;
+			case 4:
+				emit(functionId + "jg _false_cmp_" + countCmp);
+				break;
+			case 1:
+				emit(functionId + "jle _false_cmp_" + countCmp);
+				break;
+			case 3:
+				emit(functionId + "jl _false_cmp_" + countCmp);
+				break;
+			}
 			emit("push dword 1");
 			emit("jmp" + functionId + "_end_cmp_" + countCmp);
 			emit(functionId + "_false_cmp_" + countCmp + ":");
@@ -322,71 +333,99 @@ public class Encoder implements IVisitor
 
 	public Object visitOperator(Operator operator, Object object) throws SemanticException
 	{
-		if (operator.getOperatorTerminalList().isEmpty())
-		{
+		if (operator.getOperatorTerminalList().isEmpty()) {
 			operator.getOperatorTermList().get(0).visit(this, object);
-		}
-		else
-		{
-			int i = 0;
-			for (Terminal t : operator.getOperatorTerminalList())
+		} else {
+			
+			
+			for (int i = 0; i < operator.getOperatorTermList().size(); i++)
 			{
-				if (i == 0)
-				{
+				if(i==0){
 					operator.getOperatorTermList().get(0).visit(this, object);
-					i++;
+					 i++;
 				}
-				t.visit(this, object);
-
+				operator.getOperatorTermList().get(i).visit(this, object);
+				
 				emit("pop ebx");
 				emit("pop eax");
-				if (t.getToken().getSpelling().equals("+"))
-				{
+				if (operator.getOperatorTerminalList().get(i-1).getToken().getSpelling().equals("+")) {
 					emit("add eax, ebx");
-				}
-				else
-				{
+				} else {
 					emit("sub eax, ebx");
 				}
 				emit("push eax");
+				
+				i++;
+				
 			}
+			
 		}
 		return null;
 	}
 
 	public Object visitTerm(Term term, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		if (term.getTermOperatorList().isEmpty()) {
+			term.getTermfatorList().get(0).visit(this, object);
+		} else {
+			
+			
+			for (int i = 0; i < term.getTermfatorList().size(); i++)
+			{
+				if(i==0){
+					term.getTermfatorList().get(0).visit(this, object);
+					 i++;
+				}
+				term.getTermfatorList().get(i).visit(this, object);
+				
+				emit("pop ebx");
+				emit("pop eax");
+				if (term.getTermOperatorList().get(i-1).getToken().getSpelling().equals("*")) {
+					emit("imul eax, ebx");
+				} else {
+					emit("div eax, ebx");
+				}
+				emit("push eax");
+				
+				i++;
+				
+			}
+			
+		}
 		return null;
 	}
 
 	public Object visitFatorCallProcedure(FatorCallProcedure fatorCallProcedure, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+		@SuppressWarnings("unchecked")
+		ArrayList<AST> list = (ArrayList<AST>) object;
+		
+		list.add(fatorCallProcedure);
+		fatorCallProcedure.getCallProcedure().visit(this, list);
+		list.remove(fatorCallProcedure);
 		return null;
 	}
 
 	public Object visitFatorBool(FatorBool fatorBool, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
-		return null;
+		return fatorBool.getTokenBool().visit(this, object);
 	}
 
 	public Object visitFatorIdentificator(FatorId fatorId, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
-		return null;
+		return fatorId.getTokenId().visit(this, object);
 	}
 
 	public Object visitFatorNumber(FatorNumber fatorNumber, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
-		return null;
+		return fatorNumber.getTokenNumber().visit(this, object);
 	}
 
 	public Object visitFatorExpression(FatorExpression fatorExpression, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Marcos
+
+		fatorExpression.getExpression().visit(this, object);
+		
 		return null;
 	}
 
