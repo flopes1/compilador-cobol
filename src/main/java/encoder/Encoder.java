@@ -47,7 +47,6 @@ import util.AST.AST;
 public class Encoder implements IVisitor
 {
 
-	private int nextInstr = 0;
 	private int countCmp;
 	private CodeGenerator codeGenerator;
 
@@ -111,8 +110,9 @@ public class Encoder implements IVisitor
 
 		for (VarDeclare varDeclare : varDeclareList)
 		{
-			this.emit(InstructionsCommons.DATA_FIELD, varDeclare.getTerminalId().getToken().getSpelling()
-					+ InstructionsCommons.TYPE_BOOLEAN_INTEGER_INIT);
+			String varName = varDeclare.getTerminalId().getToken().getSpelling();
+			this.emit(InstructionsCommons.DATA_FIELD, varName + InstructionsCommons.TYPE_BOOLEAN_INTEGER_INIT);
+			this.globalVariables.put(varName, 0);
 		}
 
 		return null;
@@ -162,14 +162,35 @@ public class Encoder implements IVisitor
 		// Filipe
 		this.emit(InstructionsCommons.SUB + " " + InstructionsCommons.ESP + ", "
 				+ InstructionsCommons.BOOLEAN_INTEGER_SIZE);
+
 		return null;
 	}
 
 	public Object visitProcedure(Procedure procedure, Object object) throws SemanticException
 	{
 		// Filipe
-
 		this.countCmp = 1;
+
+		List<VarDeclare> procedureParametersList = procedure.getProcedureParametersList();
+		int count = 4;
+
+		for (VarDeclare varDeclare : procedureParametersList)
+		{
+			count += 4;
+			this.localVariables.put(varDeclare.getTerminalId().getToken().getSpelling(), count);
+		}
+
+		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
+		count = -1;
+
+		for (VarDeclare varDeclare : varDeclareList)
+		{
+			varDeclare.visit(this, object);
+			count *= 4;
+			this.localVariables.put(varDeclare.getTerminalId().getToken().getSpelling(), count);
+		}
+
+		procedure.getCommand().visit(this, object);
 
 		return null;
 	}
@@ -200,20 +221,26 @@ public class Encoder implements IVisitor
 
 	public Object visitStatementReturn(StatementReturn statementReturn, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+		if (statementReturn != null && statementReturn.getExpression() != null)
+		{
+			this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EAX);
+		}
 		return null;
 	}
 
 	public Object visitStatementAttribution(StatementAttrib statementAttrib, Object object) throws SemanticException
 	{
 		// TODO Auto-generated method stub Fernando
+		statementAttrib.getAttrib().visit(this, object);
 		return null;
 	}
 
 	public Object visitStatementCallProcedure(StatementCallProcedure statementCallProcedure, Object object)
 			throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+		statementCallProcedure.getCallProcedure().visit(this, object);
 		return null;
 	}
 
@@ -273,6 +300,7 @@ public class Encoder implements IVisitor
 
 		for (int i = 1; i < callProcedureTerminals.size(); i++)
 		{
+			// TODO fix-me
 			callProcedureTerminals.get(i).visit(this, object);
 		}
 
