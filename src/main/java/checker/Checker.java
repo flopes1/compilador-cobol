@@ -196,8 +196,8 @@ public class Checker implements IVisitor
 
 			if (!procedure.getHasReturn())
 			{
-				throw new SemanticException(procedure.getTokenId().getToken()
-						.getSpelling() + " is non-void function and must return something");
+				throw new SemanticException(procedure.getTokenId().getToken().getSpelling()
+						+ " is non-void function and must return something");
 			}
 
 		}
@@ -207,8 +207,8 @@ public class Checker implements IVisitor
 			{
 				if (statement instanceof StatementReturn)
 				{
-					throw new SemanticException(procedure.getTokenId().getToken()
-							.getSpelling() + " is a void function and can not return");
+					throw new SemanticException(
+							procedure.getTokenId().getToken().getSpelling() + " is a void function and can not return");
 				}
 			}
 			command.visit(this, procedure);
@@ -277,18 +277,22 @@ public class Checker implements IVisitor
 
 		if (object instanceof Procedure)
 		{
-			if(((Procedure) object).getProcedureType() == null){
-				throw new SemanticException(((Procedure) object).getTokenId()
-						.getToken().getSpelling() + " is a void function and can not return anything");
-			} else{
-				if(!((Procedure) object).getProcedureType().getToken().getSpelling().
-						equals(expression.visit(this, object))){
+			if (((Procedure) object).getProcedureType() == null)
+			{
+				throw new SemanticException(((Procedure) object).getTokenId().getToken().getSpelling()
+						+ " is a void function and can not return anything");
+			}
+			else
+			{
+				if (!((Procedure) object).getProcedureType().getToken().getSpelling()
+						.equals(expression.visit(this, object)))
+				{
 					throw new SemanticException("Your return has an incompatible type with "
 							+ ((Procedure) object).getProcedureType().getToken().getSpelling());
-					
+
 				}
 			}
-		
+
 			((Procedure) object).setHasReturn(true);
 		}
 
@@ -424,7 +428,8 @@ public class Checker implements IVisitor
 					}
 
 				}
-				// Salvar a lista dos parametros da função chamada na ordem correta e validada
+				// Salvar a lista dos parametros da função chamada na ordem
+				// correta e validada
 				// contendo a relação tipo x id
 				callProcedure.setParametersValidatedList(calledProcedureArguments);
 			}
