@@ -315,22 +315,22 @@ public class Encoder implements IVisitor
 			emit("cmp eax, ebx");
 			switch (returnValue(expression.getTokenComparator().getToken().getSpelling())) {
 			case 5:
-				emit(functionId + "jne _false_cmp_" + countCmp);
+				emit( "jne "+ functionId +"_false_cmp_" + countCmp);
 				break;
 			case 6:
-				emit(functionId + "je _false_cmp_" + countCmp);
+				emit("je "+ functionId +"_false_cmp_" + countCmp);
 				break;
 			case 2:
-				emit(functionId + "jge _false_cmp_" + countCmp);
+				emit("jge "+ functionId +"_false_cmp_" + countCmp);
 				break;
 			case 4:
-				emit(functionId + "jg _false_cmp_" + countCmp);
+				emit("jg "+ functionId +"_false_cmp_" + countCmp);
 				break;
 			case 1:
-				emit(functionId + "jle _false_cmp_" + countCmp);
+				emit("jle "+ functionId +"_false_cmp_" + countCmp);
 				break;
 			case 3:
-				emit(functionId + "jl _false_cmp_" + countCmp);
+				emit("jl "+ functionId +"_false_cmp_" + countCmp);
 				break;
 			}
 			emit("push dword 1");
@@ -339,7 +339,10 @@ public class Encoder implements IVisitor
 			emit("push dword 0");
 			emit(functionId + "_end_cmp_" + countCmp + ":");
 			countCmp++;
+			
 		}
+		
+		//dá um push 1 se for verdadeiro e push 0 se for falso
 		return null;
 	}
 
