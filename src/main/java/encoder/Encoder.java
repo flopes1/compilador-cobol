@@ -49,15 +49,18 @@ public class Encoder implements IVisitor
 
 	private int nextInstr = 0;
 	private int countCmp;
-	private ObjectCode objectCode;
+	private CodeGenerator codeGenerator;
 
-	// colocar os puts quando estiver visitando a lista de paramatros e as
-	// variaveis locais.
-	private Hashtable<String, Integer> vars;
+	// parametros e variaveis locais
+	private Hashtable<String, Integer> localVariables;
+	// variaveis globais
+	private Hashtable<String, Integer> globalVariables;
 
 	public Encoder()
 	{
-		this.objectCode = new ObjectCode();
+		this.codeGenerator = new CodeGenerator();
+		this.localVariables = new Hashtable<>();
+		this.globalVariables = new Hashtable<>();
 	}
 
 	public void encode(AST decotaredAST)
@@ -65,6 +68,8 @@ public class Encoder implements IVisitor
 		try
 		{
 			decotaredAST.visit(this, new ArrayList<AST>());
+			this.codeGenerator.generateAssemblyCode();
+			this.codeGenerator.saveAssemblyCode();
 		}
 		catch (SemanticException ex)
 		{
@@ -74,7 +79,7 @@ public class Encoder implements IVisitor
 
 	public void emit(String section, String instruction)
 	{
-		this.objectCode.addInstruction(section, new Instruction(instruction));
+		this.codeGenerator.includeInstruction(section, new Instruction(instruction));
 	}
 
 	private void emit(String instruction)
@@ -229,7 +234,7 @@ public class Encoder implements IVisitor
 		Expression expression = condition.getExpression();
 
 		expression.visit(this, object);
-		
+
 		return null;
 	}
 
@@ -242,26 +247,34 @@ public class Encoder implements IVisitor
 	public Object visitAttrib(Attrib attrib, Object object) throws SemanticException
 	{
 		TerminalId terminalId = (TerminalId) attrib.getTokenId();
-		VarDeclare varDeclare = (VarDeclare)terminalId.getDeclaredTerminalIdNode();
+		VarDeclare varDeclare = (VarDeclare) terminalId.getDeclaredTerminalIdNode();
 		attrib.getExpression().visit(this, object);
-		switch (varDeclare.getScope()) {
-		case 0:
-			emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
-			break;
-		case 1:
-			emit("pop dword [ebp+" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
-			break;
-		default:
-			emit("pop dword [ebp" + vars.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+		switch (varDeclare.getScope())
+		{
+			case 0:
+				emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
+				break;
+			case 1:
+				emit("pop dword [ebp+" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+				break;
+			default:
+				emit("pop dword [ebp" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
 		}
 		return null;
-		
+
 	}
 
 	public Object visitCallProcedure(CallProcedure callProcedure, Object object) throws SemanticException
 	{
 		// Filipe
-		String procedureName = callProcedure.getTerminalList().get(0).getToken().getSpelling();
+
+		List<Terminal> callProcedureTerminals = callProcedure.getTerminalList();
+		String procedureName = callProcedureTerminals.get(0).getToken().getSpelling();
+
+		for (int i = 1; i < callProcedureTerminals.size(); i++)
+		{
+			callProcedureTerminals.get(i).visit(this, object);
+		}
 
 		emit(InstructionsCommons.CALL + " _" + procedureName.toLowerCase());
 
@@ -272,20 +285,32 @@ public class Encoder implements IVisitor
 
 		return null;
 	}
-	
-	private int returnValue(String str){
-		
-		if(str == ">"){
+
+	private int returnValue(String str)
+	{
+
+		if (str == ">")
+		{
 			return 1;
-		}else if(str == "<"){
+		}
+		else if (str == "<")
+		{
 			return 2;
-		}else if(str == ">="){
+		}
+		else if (str == ">=")
+		{
 			return 3;
-		}else if(str == "<="){
+		}
+		else if (str == "<=")
+		{
 			return 4;
-		}else if(str == "="){
+		}
+		else if (str == "=")
+		{
 			return 5;
-		}else if(str == "!="){
+		}
+		else if (str == "!=")
+		{
 			return 6;
 		}
 		return 0;
@@ -296,42 +321,48 @@ public class Encoder implements IVisitor
 		@SuppressWarnings("unchecked")
 		ArrayList<AST> list = (ArrayList<AST>) object;
 		String functionId = "";
-		
-		for (AST ast : list) {
-			if (ast instanceof Procedure) {
+
+		for (AST ast : list)
+		{
+			if (ast instanceof Procedure)
+			{
 				functionId = ((Procedure) ast).getTokenId().getToken().getSpelling();
 				break;
 			}
 		}
-		
-		if (expression.getOptionalOperator() == null) {
+
+		if (expression.getOptionalOperator() == null)
+		{
 			expression.getMandatoryOperator().visit(this, object);
-		} else {
+		}
+		else
+		{
 			expression.getMandatoryOperator().visit(this, list);
 			expression.getOptionalOperator().visit(this, object);
-			
+
 			emit("pop ebx");
 			emit("pop eax");
 			emit("cmp eax, ebx");
-			switch (returnValue(expression.getTokenComparator().getToken().getSpelling())) {
-			case 5:
-				emit(functionId + "jne _false_cmp_" + countCmp);
-				break;
-			case 6:
-				emit(functionId + "je _false_cmp_" + countCmp);
-				break;
-			case 2:
-				emit(functionId + "jge _false_cmp_" + countCmp);
-				break;
-			case 4:
-				emit(functionId + "jg _false_cmp_" + countCmp);
-				break;
-			case 1:
-				emit(functionId + "jle _false_cmp_" + countCmp);
-				break;
-			case 3:
-				emit(functionId + "jl _false_cmp_" + countCmp);
-				break;
+			switch (returnValue(expression.getTokenComparator().getToken().getSpelling()))
+			{
+				case 5:
+					emit(functionId + "jne _false_cmp_" + countCmp);
+					break;
+				case 6:
+					emit(functionId + "je _false_cmp_" + countCmp);
+					break;
+				case 2:
+					emit(functionId + "jge _false_cmp_" + countCmp);
+					break;
+				case 4:
+					emit(functionId + "jg _false_cmp_" + countCmp);
+					break;
+				case 1:
+					emit(functionId + "jle _false_cmp_" + countCmp);
+					break;
+				case 3:
+					emit(functionId + "jl _false_cmp_" + countCmp);
+					break;
 			}
 			emit("push dword 1");
 			emit("jmp" + functionId + "_end_cmp_" + countCmp);
@@ -345,64 +376,76 @@ public class Encoder implements IVisitor
 
 	public Object visitOperator(Operator operator, Object object) throws SemanticException
 	{
-		if (operator.getOperatorTerminalList().isEmpty()) {
+		if (operator.getOperatorTerminalList().isEmpty())
+		{
 			operator.getOperatorTermList().get(0).visit(this, object);
-		} else {
-			
-			
+		}
+		else
+		{
+
 			for (int i = 0; i < operator.getOperatorTermList().size(); i++)
 			{
-				if(i==0){
+				if (i == 0)
+				{
 					operator.getOperatorTermList().get(0).visit(this, object);
-					 i++;
+					i++;
 				}
 				operator.getOperatorTermList().get(i).visit(this, object);
-				
+
 				emit("pop ebx");
 				emit("pop eax");
-				if (operator.getOperatorTerminalList().get(i-1).getToken().getSpelling().equals("+")) {
+				if (operator.getOperatorTerminalList().get(i - 1).getToken().getSpelling().equals("+"))
+				{
 					emit("add eax, ebx");
-				} else {
+				}
+				else
+				{
 					emit("sub eax, ebx");
 				}
 				emit("push eax");
-				
+
 				i++;
-				
+
 			}
-			
+
 		}
 		return null;
 	}
 
 	public Object visitTerm(Term term, Object object) throws SemanticException
 	{
-		if (term.getTermOperatorList().isEmpty()) {
+		if (term.getTermOperatorList().isEmpty())
+		{
 			term.getTermfatorList().get(0).visit(this, object);
-		} else {
-			
-			
+		}
+		else
+		{
+
 			for (int i = 0; i < term.getTermfatorList().size(); i++)
 			{
-				if(i==0){
+				if (i == 0)
+				{
 					term.getTermfatorList().get(0).visit(this, object);
-					 i++;
+					i++;
 				}
 				term.getTermfatorList().get(i).visit(this, object);
-				
+
 				emit("pop ebx");
 				emit("pop eax");
-				if (term.getTermOperatorList().get(i-1).getToken().getSpelling().equals("*")) {
+				if (term.getTermOperatorList().get(i - 1).getToken().getSpelling().equals("*"))
+				{
 					emit("imul eax, ebx");
-				} else {
+				}
+				else
+				{
 					emit("div eax, ebx");
 				}
 				emit("push eax");
-				
+
 				i++;
-				
+
 			}
-			
+
 		}
 		return null;
 	}
@@ -411,7 +454,7 @@ public class Encoder implements IVisitor
 	{
 		@SuppressWarnings("unchecked")
 		ArrayList<AST> list = (ArrayList<AST>) object;
-		
+
 		list.add(fatorCallProcedure);
 		fatorCallProcedure.getCallProcedure().visit(this, list);
 		list.remove(fatorCallProcedure);
@@ -437,7 +480,7 @@ public class Encoder implements IVisitor
 	{
 
 		fatorExpression.getExpression().visit(this, object);
-		
+
 		return null;
 	}
 
@@ -450,7 +493,10 @@ public class Encoder implements IVisitor
 	public Object visitTerminalBool(TerminalBool terminalBool, Object object)
 	{
 		// Filipe
-		return (terminalBool.getToken().getSpelling() == "true") ? 1 : 0;
+		int valueToPush = (terminalBool.getToken().getSpelling() == "true") ? 1 : 0;
+		this.emit(InstructionsCommons.PUSH + " " + valueToPush);
+
+		return null;
 	}
 
 	public Object visitTerminalTypeInteger(TerminalInteger terminalInteger, Object object)
@@ -462,12 +508,29 @@ public class Encoder implements IVisitor
 	public Object visitTerminalNumber(TerminalNumber terminalNumber, Object object)
 	{
 		// Filipe
-		return terminalNumber.getToken().getSpelling();
+		String numberToPush = terminalNumber.getToken().getSpelling();
+		this.emit(InstructionsCommons.PUSH + " " + numberToPush);
+
+		return null;
 	}
 
 	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
 	{
 		// Filipe
+
+		String idName = terminalId.getToken().getSpelling();
+
+		if (this.globalVariables.containsKey(idName))
+		{
+			this.emit(InstructionsCommons.PUSH + " " + "[" + idName + "]");
+		}
+		else
+		{
+			int ebpLocator = this.localVariables.get(idName);
+
+			this.emit(InstructionsCommons.PUSH + " " + "[" + InstructionsCommons.EBP + ebpLocator + "]");
+		}
+
 		return terminalId.getToken().getSpelling();
 	}
 
