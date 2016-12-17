@@ -22,6 +22,7 @@ import model.Operator;
 import model.Procedure;
 import model.ProcedureDivisionScope;
 import model.Program;
+import model.Statement;
 import model.StatementAttrib;
 import model.StatementBreak;
 import model.StatementCallProcedure;
@@ -48,6 +49,9 @@ public class Encoder implements IVisitor
 {
 
 	private int countCmp;
+	private int countIf = 0;
+	private int countElse = 0;
+	private int countWhile = 0;
 	private CodeGenerator codeGenerator;
 
 	// parametros e variaveis locais
@@ -124,6 +128,7 @@ public class Encoder implements IVisitor
 	{
 		// Filipe
 		List<Procedure> procedureList = procedureDivisionScope.getProcedureList();
+		List<AST> astParam = (List<AST>) object;
 
 		for (Procedure procedure : procedureList)
 		{
@@ -136,11 +141,17 @@ public class Encoder implements IVisitor
 
 			this.savePointersStates();
 
-			procedure.visit(this, object);
+			astParam.add(procedure);
+
+			procedure.visit(this, astParam);
+
+			astParam.remove(procedure);
 
 			this.restourePointersStates();
 
 			this.emit(InstructionsCommons.RETURN);
+
+			this.countElse = this.countIf = this.countWhile = 0;
 		}
 
 		return null;
@@ -198,25 +209,84 @@ public class Encoder implements IVisitor
 
 	public Object visitCommand(Command command, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+
+		List<Statement> statementList = command.getStatementList();
+
+		for (Statement currentStatement : statementList)
+		{
+			currentStatement.visit(this, object);
+		}
 		return null;
 	}
 
 	public Object visitStatementIf(StatementIf statementIf, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+		this.countIf++;
+
+		List<AST> astList = (List<AST>) object;
+
+		Object element = astList.get(0);
+		String procedureId = "";
+
+		if (element instanceof Procedure)
+		{
+			Procedure procedure = ((Procedure) astList.get(0));
+			procedureId = procedure.getTokenId().getToken().getSpelling();
+		}
+
+		List<Command> ifCommandList = statementIf.getCommandList();
+
+		// this.emit(InstructionsCommons.IF + this.countIf + ":");
+
+		statementIf.getCond().visit(this, object);
+
+		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "1");
+		this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EBX);
+		this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EAX);
+		this.emit(InstructionsCommons.COMPARE + " " + InstructionsCommons.EAX + ", " + InstructionsCommons.EBX);
+		this.emit(InstructionsCommons.JUMP_NOT_EQUAL + " " + InstructionsCommons.END_IF + procedureId + this.countIf);
+
+		ifCommandList.get(0).visit(this, object);
+
+		if (ifCommandList.size() > 1)
+		{
+			this.emit(InstructionsCommons.JUMP + " " + InstructionsCommons.END_ELSE + procedureId + ++this.countElse);
+		}
+
+		this.emit(InstructionsCommons.END_IF + procedureId + this.countIf + ":");
+		this.countIf++;
+
+		if (ifCommandList.size() > 1)
+		{
+			this.emit(InstructionsCommons.JUMP + " " + procedureId + InstructionsCommons.ELSE + this.countElse);
+			this.emit(InstructionsCommons.ELSE + procedureId + this.countElse + ":");
+			ifCommandList.get(1).visit(this, object);
+			this.emit(InstructionsCommons.END_ELSE + procedureId + this.countElse + ":");
+			this.countElse++;
+		}
+
 		return null;
 	}
 
 	public Object visitStatementWhile(StatementWhile statementWhile, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+		statementWhile.getAttributeWhile().visit(this, object);
 		return null;
 	}
 
 	public Object visitStatementDisplay(StatementDisplay statementDisplay, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+
+		statementDisplay.visit(this, object);
+		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + InstructionsCommons.INT_FORMAT);
+		this.emit(InstructionsCommons.CALL + " " + InstructionsCommons.PRINTF);
+		this.emit(InstructionsCommons.ADD + " " + InstructionsCommons.ESP + ", "
+				+ (Integer.parseInt(InstructionsCommons.BOOLEAN_INTEGER_SIZE) * 2));
+
 		return null;
 	}
 
@@ -247,13 +317,41 @@ public class Encoder implements IVisitor
 
 	public Object visitStatementBreak(StatementBreak statementBreak, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+
+		List<AST> astList = (List<AST>) object;
+
+		Object element = astList.get(0);
+		String procedureId = "";
+
+		if (element instanceof Procedure)
+		{
+			Procedure procedure = ((Procedure) astList.get(0));
+			procedureId = procedure.getTokenId().getToken().getSpelling();
+		}
+
+		this.emit(InstructionsCommons.JUMP + " " + InstructionsCommons.END_WHILE + procedureId + this.countWhile);
+
 		return null;
 	}
 
 	public Object visitStatementContinue(StatementContinue statementContinue, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+
+		List<AST> astList = (List<AST>) object;
+
+		Object element = astList.get(0);
+		String procedureId = "";
+
+		if (element instanceof Procedure)
+		{
+			Procedure procedure = ((Procedure) astList.get(0));
+			procedureId = procedure.getTokenId().getToken().getSpelling();
+		}
+
+		this.emit(InstructionsCommons.JUMP + " " + InstructionsCommons.WHILE + procedureId + this.countWhile);
+
 		return null;
 	}
 
@@ -269,7 +367,38 @@ public class Encoder implements IVisitor
 
 	public Object visitWhile(While whileCommand, Object object) throws SemanticException
 	{
-		// TODO Auto-generated method stub Fernando
+		// Filipe
+
+		this.countWhile++;
+
+		List<AST> astList = (List<AST>) object;
+
+		Object element = astList.get(0);
+		String procedureId = "";
+
+		if (element instanceof Procedure)
+		{
+			Procedure procedure = ((Procedure) astList.get(0));
+			procedureId = procedure.getTokenId().getToken().getSpelling();
+		}
+
+		this.emit(InstructionsCommons.WHILE + procedureId + this.countWhile + ":");
+
+		whileCommand.getCondition().visit(this, object);
+
+		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "1");
+		this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EBX);
+		this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EAX);
+		this.emit(InstructionsCommons.COMPARE + " " + InstructionsCommons.EAX + ", " + InstructionsCommons.EBX);
+		this.emit(InstructionsCommons.JUMP_NOT_EQUAL + " " + InstructionsCommons.END_WHILE + procedureId
+				+ this.countWhile);
+
+		whileCommand.getCommand().visit(this, object);
+
+		this.emit(InstructionsCommons.JUMP + " " + InstructionsCommons.WHILE + procedureId + this.countWhile);
+
+		this.emit(InstructionsCommons.END_WHILE + procedureId + this.countWhile + ":");
+
 		return null;
 	}
 
@@ -303,7 +432,6 @@ public class Encoder implements IVisitor
 
 		for (int i = 1; i < callProcedureTerminals.size(); i++)
 		{
-			// TODO fix-me
 			callProcedureTerminals.get(i).visit(this, object);
 		}
 
