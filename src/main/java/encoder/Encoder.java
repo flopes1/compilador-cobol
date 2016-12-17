@@ -74,7 +74,7 @@ public class Encoder implements IVisitor
 			this.codeGenerator.generateAssemblyCode();
 			this.codeGenerator.saveAssemblyCode();
 		}
-		catch (SemanticException ex)
+		catch (Exception ex)
 		{
 			System.err.println(ex.toString());
 		}
@@ -136,9 +136,13 @@ public class Encoder implements IVisitor
 			if (procedureId.equalsIgnoreCase(InstructionsCommons.MAIN))
 			{
 				procedureId = InstructionsCommons.DEFAULT_MAIN;
+				this.emit("_" + procedureId + ":");
 			}
-			this.emit("_" + procedureId.toLowerCase() + ":");
-
+			else
+			{
+				this.emit("_" + procedureId.toLowerCase() + ":");
+			}
+			
 			this.savePointersStates();
 
 			astParam.add(procedure);
@@ -281,7 +285,7 @@ public class Encoder implements IVisitor
 	{
 		// Filipe
 
-		statementDisplay.visit(this, object);
+		statementDisplay.getExpression().visit(this, object);
 		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + InstructionsCommons.INT_FORMAT);
 		this.emit(InstructionsCommons.CALL + " " + InstructionsCommons.PRINTF);
 		this.emit(InstructionsCommons.ADD + " " + InstructionsCommons.ESP + ", "
