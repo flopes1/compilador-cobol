@@ -2,51 +2,64 @@ extern _printf
 
 SECTION .data
 
-globalIdBool:dd 0
-globalIdInt:dd 0
 intFormat: db "%d", 10, 0
 SECTION .text
 
 global WinMain@16
 
+_funcquad:
+push ebp
+mov ebp, esp
+pop eax
+mov esp, ebp
+pop ebp
+ret
 _WinMain@16:
 push ebp
 mov ebp, esp
 sub esp, 4
 sub esp, 4
 sub esp, 4
+sub esp, 4
 push dword [ebp+8]
-push dword 10
+push dword [ebp+12]
+pop dword [ebp-8]
+push dword 0
+pop dword [ebp-12]
+_while_MAIN1:
+push dword [ebp-12]
+push dword [ebp+12]
+pop ebx
+pop eax
+cmp eax, ebx
+jg MAIN_false_cmp_1
+push dword 1
+jmp MAIN_end_cmp_1
+MAIN_false_cmp_1:
+push dword 0
+MAIN_end_cmp_1:
+push dword 1
+pop ebx
+pop eax
+cmp eax, ebx
+jne _end_while_MAIN1
+push dword [ebp-4]
+call _funcquad
+add esp, 4
+pop dword [ebp-16]
+push dword [ebp-16]
+push dword intFormat
+call _printf
+add esp, 8
+push dword [ebp+12]
+push dword 1
 pop ebx
 pop eax
 add eax, ebx
 push eax
-pop dword [ebp-12]
-push dword 5
-push dword 3
-pop ebx
-pop eax
-cmp eax, ebx
-push dword 1
-jmpMAIN_end_cmp_1
-MAIN_false_cmp_1:
-push dword 0
-MAIN_end_cmp_1:
-push dword intFormat
-call _printf
-add esp, 8
-mov esp, ebp
-pop ebp
-ret
-_function:
-push ebp
-mov ebp, esp
-sub esp, 4
-sub esp, 4
-push dword [ebp-8]
-push dword intFormat
-call _printf
-add esp, 8
+pop dword [ebp+12]
+jmp _while_MAIN1
+_end_while_MAIN1:
 mov esp, ebp
 pop ebp
 ret

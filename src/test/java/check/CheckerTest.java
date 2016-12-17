@@ -23,7 +23,7 @@ public class CheckerTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("encode-test-2.cobol").getFile();
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("encode-test-1.cobol").getFile();
 		this.parser = new Parser();
 		this.checker = new Checker();
 	}

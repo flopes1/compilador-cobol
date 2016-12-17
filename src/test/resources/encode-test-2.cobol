@@ -1,41 +1,58 @@
-IDENTIFICATORDIVISION. PROGRAMID. PROGRAM1.
-
-	DATADIVISION.
-	# Global variables
-		globalIdBool PIC BOOLEAN.
-		globalIdInt PIC INTEGER.
-	EXIT.
+IDENTIFICATORDIVISION. PROGRAMID. PROGRAM2.
 	
 	PROCEDUREDIVISION.	
-
-		MAIN SECTION. INTEGER intParameter BOOLEAN booleanParameter INTEGER intParameter2
-
-			BEGINDECLARATIONS
-			# Local main variables
-				localIdBool PIC BOOLEAN.
-				localIdInt PIC INTEGER.
-				localIdInt2 PIC INTEGER.
-			ENDDECLARATIONS
-			
-			MOVE intParameter + 10 TO localIdInt2.
-			DISPLAY (5>9) .
-			
-			ENDCOM.
 		
-		ENDPROC.
 		
-		FUNCTION SECTION. INTEGER intParameter
+			BOOLEAN NOVA SECTION. INTEGER nomevar10
 		
 			BEGINDECLARATIONS
-			# Local function variables
-				localIdBool PIC BOOLEAN.
-				localIdInt PIC INTEGER.
+				nomevar11 PIC INTEGER.
 			ENDDECLARATIONS
-			
-			DISPLAY localIdInt.
-			
-			ENDCOM.
+					
+			MOVE nomevar10 + 1 TO nomevar11.
+					
+			IF ( nomevar11 = 20 )  THEN 
+				RETURN TRUE.
+				ENDCOM.
+			ELSE
+				RETURN FALSE.
+				ENDCOM.
+			ENDIF.
 		
+			ENDCOM.
+			
 		ENDPROC.
+		
+		
+		MAIN SECTION. INTEGER nomevar1
+
+			BEGINDECLARATIONS
+				nomevar2 PIC INTEGER.
+				cont PIC INTEGER.
+				b PIC BOOLEAN.
+			ENDDECLARATIONS
+		
+			MOVE nomevar1 TO nomevar2.
+			MOVE 0 TO cont.
+					
+			UNTIL  cont <= nomevar2 
+
+				MOVE PERFORM NOVA USING nomevar2 TO b.
+
+				IF ( b )  THEN 
+					DISPLAY 0000000.
+					ENDCOM.
+				ENDIF.
+							
+				MOVE nomevar2 + 1 TO nomevar2.
+						
+				ENDCOM.
+			ENDWHILE.
+		
+			ENDCOM.
+			
+		ENDPROC.
+			
+	
 
 	EXIT.
