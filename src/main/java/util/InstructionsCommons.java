@@ -19,6 +19,19 @@ public interface InstructionsCommons
 	// Variable constants
 	static final String TYPE_BOOLEAN_INTEGER_INIT = ":dd 0";
 	static final String BOOLEAN_INTEGER_SIZE = "4";
+
+	// General constants
+	static final String INT_FORMAT = "intFormat";
+	static final String INT_FORMAT_DEFAULT = "intFormat: db \"%d\", 10, 0";
+	static final String PRINTF = "_printf";
+	static final String IF = "_if_";
+	static final String END_IF = "_end_if_";
+	static final String ELSE = "_else_";
+	static final String END_ELSE = "_end_else_";
+	static final String WHILE = "_while_";
+	static final String END_WHILE = "_end_while_";
+	
+	// Instruction constants
 	static final String DWORD = "dword";
 	static final String EBP = "ebp";
 	static final String ESP = "esp";
@@ -38,5 +51,6 @@ public interface InstructionsCommons
 	static final String JUMP = "jmp";
 	static final String JUMP_NOT_EQUAL = "jne";
 	static final String JUMP_EQUAL = "je";
+	static final String COMPARE = "cmp";
 
 }
