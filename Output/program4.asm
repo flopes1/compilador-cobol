@@ -7,7 +7,7 @@ SECTION .text
 
 global WinMain@16
 
-_sec2:
+_mult10:
 push ebp
 mov ebp, esp
 pop eax
@@ -26,14 +26,13 @@ pop eax
 cmp eax, ebx
 jne _end_if_MAIN1
 push dword [ebp-4]
-call _sec2
+call _mult10
 add esp, 4
 _end_if_MAIN1:
 push dword [ebp-4]
 push dword intFormat
 call _printf
 add esp, 8
-pop eax
 mov esp, ebp
 pop ebp
 ret

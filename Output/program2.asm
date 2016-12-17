@@ -13,6 +13,8 @@ mov ebp, esp
 sub esp, 4
 sub esp, 4
 sub esp, 4
+push dword 10
+pop dword [ebp-4]
 push dword 0
 pop dword [ebp-8]
 push dword 0
@@ -50,17 +52,17 @@ pop ebx
 pop eax
 cmp eax, ebx
 jne _end_while_MAIN1
-push dword [ebp-4]
+push dword [ebp-8]
 push dword intFormat
 call _printf
 add esp, 8
-push dword [ebp-4]
+push dword [ebp-8]
 push dword 1
 pop ebx
 pop eax
 add eax, ebx
 push eax
-pop dword [ebp-4]
+pop dword [ebp-8]
 push dword 0
 pop dword [ebp-12]
 _while_MAIN2:
@@ -93,9 +95,27 @@ push eax
 pop dword [ebp-12]
 jmp _while_MAIN2
 _end_while_MAIN2:
+push dword [ebp-12]
+push dword 50
+pop ebx
+pop eax
+cmp eax, ebx
+jne MAIN_false_cmp_4
+push dword 1
+jmp MAIN_end_cmp_4
+MAIN_false_cmp_4:
+push dword 0
+MAIN_end_cmp_4:
+push dword 1
+pop ebx
+pop eax
+cmp eax, ebx
+jne _end_if_MAIN2
+jmp _end_while_MAIN2
+_end_if_MAIN2:
 jmp _while_MAIN2
 _end_while_MAIN2:
-_end_if_MAIN1:
+_end_if_MAIN3:
 mov esp, ebp
 pop ebp
 ret
