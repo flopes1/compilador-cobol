@@ -494,7 +494,7 @@ public class Encoder implements IVisitor
 		{
 			return 4;
 		}
-		else if (str.equals("="))
+		else if (str.equals("=="))
 		{
 			return 5;
 		}
