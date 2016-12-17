@@ -18,8 +18,8 @@ _WinMain@16:
 push ebp
 mov ebp, esp
 sub esp, 4
-push dword [ebp+8]
-push dword [ebp+12]
+push dword 10
+push dword 0
 push dword 1
 pop ebx
 pop eax

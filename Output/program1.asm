@@ -50,7 +50,6 @@ mov ebp, esp
 sub esp, 4
 sub esp, 4
 sub esp, 4
-push dword [ebp+8]
 push dword 0
 pop dword [ebp-8]
 _while_MAIN1:

@@ -14,15 +14,15 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM5.
 				
 		ENDPROC.
 		
-		INTEGER MAIN SECTION. INTEGER nomevar1 BOOLEAN nomevar2
+		INTEGER MAIN SECTION.
 			
 			BEGINDECLARATIONS
 				nomevar3 PIC INTEGER.
 			ENDDECLARATIONS
 			
-			MOVE nomevar1 TO nomevar3.
+			MOVE 10 TO nomevar3.
 					
-			IF nomevar2 THEN 
+			IF TRUE THEN 
 				MOVE PERFORM sec2 USING nomevar3 TO nomevar3. 
 				ENDCOM.
 			ENDIF.

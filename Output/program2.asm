@@ -13,8 +13,6 @@ mov ebp, esp
 sub esp, 4
 sub esp, 4
 sub esp, 4
-push dword [ebp+8]
-pop dword [ebp-4]
 push dword 0
 pop dword [ebp-8]
 push dword 0
