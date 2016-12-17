@@ -37,11 +37,6 @@ push dword [ebp-8]
 push dword 2
 pop ebx
 pop eax
-idiv eax, ebx
-push eax
-push dword 0
-pop ebx
-pop eax
 cmp eax, ebx
 jne _false_cmp_MAIN2
 push dword 1
@@ -54,6 +49,13 @@ pop ebx
 pop eax
 cmp eax, ebx
 jne _end_if_MAIN1
+push dword [ebp-8]
+push dword 1
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop dword [ebp-8]
 jmp _while_MAIN1
 _end_if_MAIN1:
 push dword [ebp-8]
