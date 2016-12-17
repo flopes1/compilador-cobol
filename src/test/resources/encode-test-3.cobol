@@ -2,7 +2,7 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM3.
 	
 	PROCEDUREDIVISION.	
 			
-		MAIN SECTION. INTEGER nomevar1
+		MAIN SECTION. 
 		
 			BEGINDECLARATIONS
 				nomevar2 PIC INTEGER.
@@ -10,7 +10,7 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM3.
 				nomevar4 PIC INTEGER.
 			ENDDECLARATIONS
 		
-			MOVE nomevar1 TO nomevar2.
+			MOVE 10 TO nomevar2.
 			MOVE 0 TO nomevar3.
 			MOVE 0 TO nomevar4.
 					
@@ -18,8 +18,8 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM3.
 		
 				UNTIL nomevar3 <= nomevar2 
 					
-					DISPLAY nomevar2.
-					MOVE nomevar2 + 1 TO nomevar2.
+					DISPLAY nomevar3.
+					MOVE nomevar3 + 1 TO nomevar3.
 					MOVE 0 TO nomevar4.
 		
 					UNTIL nomevar4 <= nomevar2 
@@ -27,7 +27,12 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM3.
 						MOVE nomevar4 + 1 TO nomevar4.
 						ENDCOM.
 					ENDWHILE.
-		
+					
+					IF nomevar4 = 50 THEN 
+						BREAK 
+						ENDCOM.
+					ENDIF.
+					
 					ENDCOM.
 				ENDWHILE.
 					

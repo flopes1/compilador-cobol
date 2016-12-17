@@ -2,7 +2,7 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM4.
 	
 	PROCEDUREDIVISION.	
 
-		INTEGER funcQuad SECTION. INTEGER nomevar4
+		INTEGER FUNCQUAD SECTION. INTEGER nomevar4
 
 			BEGINDECLARATIONS
 			ENDDECLARATIONS
@@ -14,7 +14,7 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM4.
 		ENDPROC.
 		
 
-		MAIN SECTION. INTEGER nomevar1 INTEGER nomevar2
+		MAIN SECTION.
 
 			BEGINDECLARATIONS
 				nomevar3 PIC INTEGER.
@@ -23,14 +23,14 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM4.
 				result PIC INTEGER.
 			ENDDECLARATIONS
 		
-			MOVE nomevar1 TO nomevar3.
-			MOVE nomevar2 TO nomevar5.
+			MOVE 5 TO nomevar3.
+			MOVE 4 TO nomevar5.
 			MOVE 0 TO cont.
 					
-			UNTIL cont <= nomevar2 
-				MOVE PERFORM funcQuad USING nomevar3 TO result.
+			UNTIL cont <= nomevar3 
+				MOVE PERFORM FUNCQUAD USING nomevar3 TO result.
 				DISPLAY result.
-				MOVE nomevar2 + 1 TO nomevar2.
+				MOVE nomevar3 + 1 TO nomevar3.
 				ENDCOM.
 			ENDWHILE.
 									
