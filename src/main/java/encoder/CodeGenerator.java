@@ -45,6 +45,7 @@ public class CodeGenerator
 		this.assemblyCode.append("\n");
 		this.assemblyCode.append(InstructionsCommons.SECTION + " " + InstructionsCommons.DATA_SECTION + "\n\n");
 		this.assemblyCode.append(this.dataField);
+		this.assemblyCode.append(InstructionsCommons.INT_FORMAT_DEFAULT);
 		this.assemblyCode.append("\n");
 		this.assemblyCode.append(InstructionsCommons.SECTION + " " + InstructionsCommons.TEXT_SECTION + "\n\n");
 		this.assemblyCode.append(InstructionsCommons.GLOBAL + " " + InstructionsCommons.DEFAULT_MAIN + "\n\n");
