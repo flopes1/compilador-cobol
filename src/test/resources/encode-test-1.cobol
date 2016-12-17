@@ -2,13 +2,12 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM1.
 
 	DATADIVISION.
 	# Global variables
-		globalIdBool PIC BOOLEAN.
 		globalIdInt PIC INTEGER.
 	EXIT.
 	
 	PROCEDUREDIVISION.	
 
-		MAIN SECTION. INTEGER intParameter BOOLEAN booleanParameter
+		MAIN SECTION.
 
 			BEGINDECLARATIONS
 			# Local main variables
@@ -16,24 +15,21 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM1.
 				localIdInt PIC INTEGER.
 			ENDDECLARATIONS
 			
+			MOVE 5 TO globalIdInt.
+			MOVE 3 TO localIdInt.
+					
+			IF ( globalIdInt > localIdInt )  THEN 
+				MOVE TRUE TO localIdBool.
+				ENDCOM.
+			ELSE
+				MOVE FALSE TO localIdBool.
+				ENDCOM.
+			ENDIF.
+			
 			DISPLAY localIdBool.
 			
 			ENDCOM.
 		
 		ENDPROC.
 		
-		FUNCTION SECTION. INTEGER intParameter
-		
-			BEGINDECLARATIONS
-			# Local function variables
-				localIdBool PIC BOOLEAN.
-				localIdInt PIC INTEGER.
-			ENDDECLARATIONS
-			
-			DISPLAY localIdInt.
-			
-			ENDCOM.
-		
-		ENDPROC.
-
 	EXIT.

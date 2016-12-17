@@ -13,7 +13,7 @@ public interface InstructionsCommons
 
 	// Main constants
 	static final String GLOBAL = "global";
-	static final String DEFAULT_MAIN = "WinMain@16";
+	static final String DEFAULT_MAIN = "_WinMain@16";
 	static final String MAIN = "main";
 
 	// Variable constants

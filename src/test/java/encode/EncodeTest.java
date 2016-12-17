@@ -25,7 +25,7 @@ public class EncodeTest
 	@Before
 	public void initialize()
 	{
-		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("encode-test-5.cobol").getFile();
+		Properties.sourceCodeLocation = this.getClass().getClassLoader().getResource("encode-test-1.cobol").getFile();
 		this.parser = new Parser();
 		this.checker = new Checker();
 		this.encoder = new Encoder();

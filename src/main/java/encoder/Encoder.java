@@ -115,12 +115,13 @@ public class Encoder implements IVisitor
 
 		for (VarDeclare varDeclare : varDeclareList)
 		{
-//			varDeclare.setScope(identificationTable.getScope());
+			// varDeclare.setScope(identificationTable.getScope());
 			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
 			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
 			varDeclare.setTerminalId(terminalIdentificator);
+			
 			String varName = varDeclare.getTerminalId().getToken().getSpelling();
-			this.emit(InstructionsCommons.DATA_FIELD, varName + InstructionsCommons.TYPE_BOOLEAN_INTEGER_INIT);
+			this.emit(InstructionsCommons.DATA_FIELD, varName + " " + InstructionsCommons.TYPE_BOOLEAN_INTEGER_INIT);
 			this.globalVariables.put(varName, 0);
 		}
 
@@ -146,7 +147,7 @@ public class Encoder implements IVisitor
 			{
 				this.emit("_" + procedureId.toLowerCase() + ":");
 			}
-			
+
 			this.savePointersStates();
 
 			astParam.add(procedure);
@@ -196,13 +197,11 @@ public class Encoder implements IVisitor
 
 		for (VarDeclare varDeclare : procedureParametersList)
 		{
-//			varDeclare.setScope(identificationTable.getScope());
+			// varDeclare.setScope(identificationTable.getScope());
 			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
 			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
 			varDeclare.setTerminalId(terminalIdentificator);
-			
-			
-			
+
 			count += 4;
 			this.localVariables.put(varDeclare.getTerminalId().getToken().getSpelling(), count);
 		}
@@ -211,7 +210,7 @@ public class Encoder implements IVisitor
 		count = 0;
 		for (VarDeclare varDeclare : varDeclareList)
 		{
-//			varDeclare.setScope(identificationTable.getScope());
+			// varDeclare.setScope(identificationTable.getScope());
 			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
 			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
 			varDeclare.setTerminalId(terminalIdentificator);
@@ -274,15 +273,13 @@ public class Encoder implements IVisitor
 		}
 
 		this.emit(InstructionsCommons.END_IF + procedureId + this.countIf + ":");
-		this.countIf++;
-
+		
 		if (ifCommandList.size() > 1)
 		{
-			this.emit(InstructionsCommons.JUMP + " " + procedureId + InstructionsCommons.ELSE + this.countElse);
+			this.emit(InstructionsCommons.JUMP + " " + InstructionsCommons.ELSE + procedureId + this.countElse);
 			this.emit(InstructionsCommons.ELSE + procedureId + this.countElse + ":");
 			ifCommandList.get(1).visit(this, object);
 			this.emit(InstructionsCommons.END_ELSE + procedureId + this.countElse + ":");
-			this.countElse++;
 		}
 
 		return null;
@@ -426,11 +423,21 @@ public class Encoder implements IVisitor
 		TerminalId terminalId = (TerminalId) attrib.getTokenId();
 		VarDeclare varDeclare = (VarDeclare) terminalId.getDeclaredTerminalIdNode();
 		attrib.getExpression().visit(this, object);
-		localVariables.get(attrib.getTokenId().getToken().getSpelling());
-		if(localVariables.get(attrib.getTokenId().getToken().getSpelling()) > 0){
+		
+		Integer item = this.localVariables.get(attrib.getTokenId().getToken().getSpelling());
+		
+		if(item == null)
+		{
+			item = this.globalVariables.get(attrib.getTokenId().getToken().getSpelling());
+		}
+		
+		if (item > 0)
+		{
 			emit("pop dword [ebp+" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
 
-		}else{
+		}
+		else
+		{
 			switch (varDeclare.getScope())
 			{
 				case 0:
@@ -439,7 +446,7 @@ public class Encoder implements IVisitor
 				case 1:
 					emit("pop dword [ebp" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
 					break;
-				
+
 			}
 		}
 		return null;
@@ -530,31 +537,31 @@ public class Encoder implements IVisitor
 			switch (returnValue(expression.getTokenComparator().getToken().getSpelling()))
 			{
 				case 5:
-					emit("jne " + functionId + "_false_cmp_" + countCmp);
+					emit("jne " + "_false_cmp_" + functionId + countCmp);
 					break;
 				case 6:
-					emit("je " + functionId + "_false_cmp_" + countCmp);
+					emit("je " + "_false_cmp_" + functionId + countCmp);
 					break;
 				case 2:
-					emit("jge " + functionId + "_false_cmp_" + countCmp);
+					emit("jge " + "_false_cmp_" + functionId + countCmp);
 					break;
 				case 4:
-					emit("jg " + functionId + "_false_cmp_" + countCmp);
+					emit("jg " + "_false_cmp_" + functionId + countCmp);
 					break;
 				case 1:
-					emit("jle " + functionId + "_false_cmp_" + countCmp);
+					emit("jle " + "_false_cmp_" + functionId + countCmp);
 					break;
 				case 3:
-					emit("jl " + functionId + "_false_cmp_" + countCmp);
+					emit("jl " + "_false_cmp_" + functionId + countCmp);
 					break;
 
 			}
 
 			emit("push dword 1");
-			emit("jmp " + functionId + "_end_cmp_" + countCmp);
-			emit(functionId + "_false_cmp_" + countCmp + ":");
+			emit("jmp " + "_end_cmp_" + functionId + countCmp);
+			emit("_false_cmp_" + functionId + countCmp + ":");
 			emit("push dword 0");
-			emit(functionId + "_end_cmp_" + countCmp + ":");
+			emit("_end_cmp_" + functionId + countCmp + ":");
 			countCmp++;
 
 		}
@@ -629,7 +636,7 @@ public class Encoder implements IVisitor
 				}
 				else
 				{
-					emit("div eax, ebx");
+					emit("idiv eax, ebx");
 				}
 				emit("push eax");
 
@@ -724,14 +731,17 @@ public class Encoder implements IVisitor
 		else
 		{
 			int ebpLocator = this.localVariables.get(idName);
-			
-			if(ebpLocator<0){
-				this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "[" + InstructionsCommons.EBP
-						+ ebpLocator + "]");
-			}else{
-			
-			this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "[" + InstructionsCommons.EBP
-					+ "+"+ebpLocator + "]");
+
+			if (ebpLocator < 0)
+			{
+				this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "["
+						+ InstructionsCommons.EBP + ebpLocator + "]");
+			}
+			else
+			{
+
+				this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "["
+						+ InstructionsCommons.EBP + "+" + ebpLocator + "]");
 			}
 		}
 
