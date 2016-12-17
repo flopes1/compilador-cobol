@@ -141,7 +141,7 @@ public class Encoder implements IVisitor
 			if (procedureId.equalsIgnoreCase(InstructionsCommons.MAIN))
 			{
 				procedureId = InstructionsCommons.DEFAULT_MAIN;
-				this.emit("_" + procedureId + ":");
+				this.emit(procedureId + ":");
 			}
 			else
 			{
@@ -698,7 +698,7 @@ public class Encoder implements IVisitor
 	public Object visitTerminalBool(TerminalBool terminalBool, Object object)
 	{
 		// Filipe
-		int valueToPush = (terminalBool.getToken().getSpelling() == "true") ? 1 : 0;
+		int valueToPush = (terminalBool.getToken().getSpelling().equalsIgnoreCase("true")) ? 1 : 0;
 		this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + valueToPush);
 
 		return null;

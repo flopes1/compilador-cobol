@@ -33,7 +33,7 @@ pop ebx
 pop eax
 cmp eax, ebx
 jne _end_if_MAIN1
-push dword 0
+push dword 1
 pop dword [ebp-4]
 jmp _end_else_MAIN1
 _end_if_MAIN1:

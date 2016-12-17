@@ -1,57 +1,34 @@
 IDENTIFICATORDIVISION. PROGRAMID. PROGRAM2.
-	
+
 	PROCEDUREDIVISION.	
-		
-		
-			BOOLEAN NOVA SECTION. INTEGER nomevar10
-		
-			BEGINDECLARATIONS
-				nomevar11 PIC INTEGER.
-			ENDDECLARATIONS
-					
-			MOVE nomevar10 + 1 TO nomevar11.
-					
-			IF ( nomevar11 = 20 )  THEN 
-				RETURN TRUE.
-				ENDCOM.
-			ELSE
-				RETURN FALSE.
-				ENDCOM.
-			ENDIF.
-		
-			ENDCOM.
-			
-		ENDPROC.
-		
-		
+				
 		MAIN SECTION. 
 
 			BEGINDECLARATIONS
-				nomevar2 PIC INTEGER.
-				cont PIC INTEGER.
+				total PIC INTEGER.
+				count PIC INTEGER.
 				b PIC BOOLEAN.
 			ENDDECLARATIONS
 		
-			MOVE 0 TO cont.
+			MOVE TRUE TO b.
+			MOVE 0 TO count.
+			MOVE 5 TO total.
 					
-			UNTIL  cont <= nomevar2 
+			UNTIL (count <= total) 
 
-				MOVE PERFORM NOVA USING nomevar2 TO b.
-
-				IF ( b )  THEN 
-					DISPLAY 0000000.
+				IF b THEN 
+					DISPLAY count.
 					ENDCOM.
 				ENDIF.
 							
-				MOVE nomevar2 + 1 TO nomevar2.
+				MOVE (count + 1) TO count.
 						
 				ENDCOM.
+				
 			ENDWHILE.
 		
 			ENDCOM.
 			
 		ENDPROC.
 			
-	
-
 	EXIT.
