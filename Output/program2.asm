@@ -15,13 +15,13 @@ mov ebp, esp
 sub esp, 4
 sub esp, 4
 sub esp, 4
-push dword [ebp8]
+push dword [ebp+8]
 push dword 10
 pop ebx
 pop eax
 add eax, ebx
 push eax
-pop dword [ebp?-12]
+pop dword [ebp-12]
 push dword [ebp-8]
 push dword [ebp-12]
 pop ebx

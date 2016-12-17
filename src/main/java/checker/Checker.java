@@ -80,6 +80,11 @@ public class Checker implements IVisitor
 		{
 			for (VarDeclare varDeclare : varDeclareList)
 			{
+				
+//				varDeclare.setScope(identificationTable.getScope());
+//				TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+//				terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+//				varDeclare.setTerminalId(terminalIdentificator);
 				varDeclare.visit(this, object);
 
 			}
@@ -114,11 +119,13 @@ public class Checker implements IVisitor
 
 		this.identificationTable.enter(varDeclare.getTerminalId().getToken().getSpelling(), varDeclare);
 		varDeclare.setScope(identificationTable.getScope());
+		TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+		terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+		varDeclare.setTerminalId(terminalIdentificator);
 		varDeclare.getTerminalBooleanOrInteger().visit(this, object);
 		varDeclare.getTerminalId().visit(this, object);
 
-		TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
-		terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+		
 
 		return null;
 	}
@@ -154,6 +161,10 @@ public class Checker implements IVisitor
 			// iteracao para colocar as variaveis parametros no escopo
 			for (VarDeclare parameter : parametersList)
 			{
+//				varDeclare.setScope(identificationTable.getScope());
+//				TerminalId terminalIdentificator = (TerminalId) parameter.getTerminalId();
+//				terminalIdentificator.setDeclaredTerminalIdNode(parameter);
+//				parameter.setTerminalId(terminalIdentificator);
 				parameter.visit(this, object);
 			}
 		}
@@ -164,6 +175,7 @@ public class Checker implements IVisitor
 			for (VarDeclare varDeclare : varDeclareList)
 			{
 				varDeclare.visit(this, object);
+				
 			}
 		}
 
@@ -213,7 +225,8 @@ public class Checker implements IVisitor
 			}
 			command.visit(this, procedure);
 		}
-
+		
+		
 		this.identificationTable.closeScope();
 
 		return null;
@@ -415,8 +428,12 @@ public class Checker implements IVisitor
 			{
 				for (int i = 1; i < callProcedureTerminalItens.size(); i++)
 				{
+					
+					
+				
+					
 					String typeOfCurrentArgumentPassed = (String) ((TerminalId) callProcedureTerminalItens.get(i))
-							.visit(this, object);
+							.visit(this, new Integer(10));
 					String typeOfCurrentArgumentOfProcedure = calledProcedureArguments.get(i - 1)
 							.getTerminalBooleanOrInteger().getToken().getSpelling();
 
@@ -579,17 +596,51 @@ public class Checker implements IVisitor
 	public Object visitTerminalIdentificator(TerminalId terminalId, Object object) throws SemanticException
 	{
 
+		
 		Object varDeclaration = this.identificationTable.retrieve(terminalId.getToken().getSpelling());
-
+		
+		String varType = null;
+		
+		if (object instanceof Integer)
+		{
+			if (varDeclaration == null)
+			{
+				throw new SemanticException("The Identifier " + terminalId.getToken().getSpelling() + " is not defined.");
+			}
+			
+			if (varDeclaration instanceof VarDeclare)
+			{
+				VarDeclare varDeclare = (VarDeclare) varDeclaration;
+				varDeclare.setScope(10);
+//				varDeclare.setScope(identificationTable.getScope());
+//				TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+				terminalId.setDeclaredTerminalIdNode(varDeclare);
+				varDeclare.setTerminalId(terminalId);
+				((VarDeclare)terminalId.getDeclaredTerminalIdNode()).setScope(10);
+				
+				
+				
+				VarDeclare declarationCommand = (VarDeclare) varDeclaration;
+				varType = declarationCommand.getTerminalBooleanOrInteger().getToken().getSpelling();
+			}
+		}else{
 		if (varDeclaration == null)
 		{
 			throw new SemanticException("The Identifier " + terminalId.getToken().getSpelling() + " is not defined.");
 		}
-		String varType = null;
+		
 		if (varDeclaration instanceof VarDeclare)
 		{
+			VarDeclare varDeclare = (VarDeclare) varDeclaration;
+//			varDeclare.setScope(identificationTable.getScope());
+//			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+			terminalId.setDeclaredTerminalIdNode(varDeclare);
+			varDeclare.setTerminalId(terminalId);
+			
 			VarDeclare declarationCommand = (VarDeclare) varDeclaration;
 			varType = declarationCommand.getTerminalBooleanOrInteger().getToken().getSpelling();
+			
+		}
 		}
 
 		return varType;

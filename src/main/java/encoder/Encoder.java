@@ -115,6 +115,10 @@ public class Encoder implements IVisitor
 
 		for (VarDeclare varDeclare : varDeclareList)
 		{
+//			varDeclare.setScope(identificationTable.getScope());
+			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+			varDeclare.setTerminalId(terminalIdentificator);
 			String varName = varDeclare.getTerminalId().getToken().getSpelling();
 			this.emit(InstructionsCommons.DATA_FIELD, varName + InstructionsCommons.TYPE_BOOLEAN_INTEGER_INIT);
 			this.globalVariables.put(varName, 0);
@@ -192,17 +196,27 @@ public class Encoder implements IVisitor
 
 		for (VarDeclare varDeclare : procedureParametersList)
 		{
+//			varDeclare.setScope(identificationTable.getScope());
+			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+			varDeclare.setTerminalId(terminalIdentificator);
+			
+			
+			
 			count += 4;
 			this.localVariables.put(varDeclare.getTerminalId().getToken().getSpelling(), count);
 		}
 
 		List<VarDeclare> varDeclareList = procedure.getVarDeclareList();
-		count = -1;
-
+		count = 0;
 		for (VarDeclare varDeclare : varDeclareList)
 		{
+//			varDeclare.setScope(identificationTable.getScope());
+			TerminalId terminalIdentificator = (TerminalId) varDeclare.getTerminalId();
+			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
+			varDeclare.setTerminalId(terminalIdentificator);
 			varDeclare.visit(this, object);
-			count *= 4;
+			count -= 4;
 			this.localVariables.put(varDeclare.getTerminalId().getToken().getSpelling(), count);
 		}
 
@@ -412,16 +426,21 @@ public class Encoder implements IVisitor
 		TerminalId terminalId = (TerminalId) attrib.getTokenId();
 		VarDeclare varDeclare = (VarDeclare) terminalId.getDeclaredTerminalIdNode();
 		attrib.getExpression().visit(this, object);
-		switch (varDeclare.getScope())
-		{
-			case 0:
-				emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
-				break;
-			case 1:
-				emit("pop dword [ebp+" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
-				break;
-			default:
-				emit("pop dword [ebp" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+		localVariables.get(attrib.getTokenId().getToken().getSpelling());
+		if(localVariables.get(attrib.getTokenId().getToken().getSpelling()) > 0){
+			emit("pop dword [ebp+" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+
+		}else{
+			switch (varDeclare.getScope())
+			{
+				case 0:
+					emit("pop dword [" + attrib.getTokenId().getToken().getSpelling() + "]");
+					break;
+				case 1:
+					emit("pop dword [ebp" + localVariables.get(attrib.getTokenId().getToken().getSpelling()) + "]");
+					break;
+				
+			}
 		}
 		return null;
 
@@ -452,27 +471,27 @@ public class Encoder implements IVisitor
 	private int returnValue(String str)
 	{
 
-		if (str == ">")
+		if (str.equals(">"))
 		{
 			return 1;
 		}
-		else if (str == "<")
+		else if (str.equals("<"))
 		{
 			return 2;
 		}
-		else if (str == ">=")
+		else if (str.equals(">="))
 		{
 			return 3;
 		}
-		else if (str == "<=")
+		else if (str.equals("<="))
 		{
 			return 4;
 		}
-		else if (str == "=")
+		else if (str.equals("="))
 		{
 			return 5;
 		}
-		else if (str == "!=")
+		else if (str.equals("!="))
 		{
 			return 6;
 		}
@@ -532,7 +551,7 @@ public class Encoder implements IVisitor
 			}
 
 			emit("push dword 1");
-			emit("jmp" + functionId + "_end_cmp_" + countCmp);
+			emit("jmp " + functionId + "_end_cmp_" + countCmp);
 			emit(functionId + "_false_cmp_" + countCmp + ":");
 			emit("push dword 0");
 			emit(functionId + "_end_cmp_" + countCmp + ":");
@@ -705,9 +724,15 @@ public class Encoder implements IVisitor
 		else
 		{
 			int ebpLocator = this.localVariables.get(idName);
-
+			
+			if(ebpLocator<0){
+				this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "[" + InstructionsCommons.EBP
+						+ ebpLocator + "]");
+			}else{
+			
 			this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.DWORD + " " + "[" + InstructionsCommons.EBP
-					+ ebpLocator + "]");
+					+ "+"+ebpLocator + "]");
+			}
 		}
 
 		return terminalId.getToken().getSpelling();

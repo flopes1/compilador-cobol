@@ -20,6 +20,11 @@ public class VarDeclare extends AST
 	{
 		return terminalId;
 	}
+	
+	public void setTerminalId(Terminal id)
+	{
+		terminalId = id;
+	}
 
 	public Terminal getTerminalBooleanOrInteger()
 	{
