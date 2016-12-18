@@ -34,12 +34,7 @@ pop eax
 cmp eax, ebx
 jne _end_while_MAIN1
 push dword [ebp-8]
-push dword 2
-pop ebx
-pop eax
-idiv eax, ebx
-push eax
-push dword 0
+push dword 3
 pop ebx
 pop eax
 cmp eax, ebx
@@ -54,7 +49,7 @@ pop ebx
 pop eax
 cmp eax, ebx
 jne _end_if_MAIN1
-jmp _while_MAIN1
+jmp _end_while_MAIN1
 _end_if_MAIN1:
 push dword [ebp-8]
 push dword intFormat

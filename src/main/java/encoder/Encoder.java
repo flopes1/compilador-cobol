@@ -193,7 +193,7 @@ public class Encoder implements IVisitor
 		this.countCmp = 1;
 
 		List<VarDeclare> procedureParametersList = procedure.getProcedureParametersList();
-		int count = 4;
+		int count = 4 * (procedureParametersList.size() + 2);
 
 		for (VarDeclare varDeclare : procedureParametersList)
 		{
@@ -202,7 +202,7 @@ public class Encoder implements IVisitor
 			terminalIdentificator.setDeclaredTerminalIdNode(varDeclare);
 			varDeclare.setTerminalId(terminalIdentificator);
 
-			count += 4;
+			count -= 4;
 			this.localVariables.put(varDeclare.getTerminalId().getToken().getSpelling(), count);
 		}
 
@@ -310,6 +310,7 @@ public class Encoder implements IVisitor
 		// Filipe
 		if (statementReturn != null && statementReturn.getExpression() != null)
 		{
+			statementReturn.getExpression().visit(this, object);
 			this.emit(InstructionsCommons.POP + " " + InstructionsCommons.EAX);
 		}
 		return null;
@@ -471,6 +472,11 @@ public class Encoder implements IVisitor
 
 		emit(InstructionsCommons.ADD + " " + InstructionsCommons.ESP + ", "
 				+ ((Integer.parseInt(InstructionsCommons.BOOLEAN_INTEGER_SIZE)) * procedureParameters.size()));
+		
+		if(callProcedure.getTerminalList().size() > 1)
+		{
+			this.emit(InstructionsCommons.PUSH + " " + InstructionsCommons.EAX);
+		}
 
 		return null;
 	}
@@ -636,7 +642,10 @@ public class Encoder implements IVisitor
 				}
 				else
 				{
-					emit("idiv eax, ebx");
+					// professor, testamos com div e com idiv mas o SASM dá erro de operando com ambos
+					// pelo o que pesquisei deve-se ao fato que dd (inteiro) nao suporta o valor
+					// deve-se usar dq (float) mas não tenho certeza
+					emit("idiv eax"); 
 				}
 				emit("push eax");
 

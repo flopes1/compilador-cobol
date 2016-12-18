@@ -2,38 +2,80 @@ IDENTIFICATORDIVISION. PROGRAMID. PROGRAM5.
 	
 	PROCEDUREDIVISION.	
 		
-		
-		INTEGER MULT10 SECTION. INTEGER nomevar4
+		INTEGER SOMA SECTION. INTEGER n1 INTEGER n2
 	
 			BEGINDECLARATIONS
 			ENDDECLARATIONS
 			
-			RETURN nomevar4*10.
+			RETURN (n1 + n2).
 			
 			ENDCOM.
 				
 		ENDPROC.
 		
+		INTEGER SUB SECTION. INTEGER n1 INTEGER n2
+	
+			BEGINDECLARATIONS
+			ENDDECLARATIONS
+			
+			RETURN (n1 - n2).
+			
+			ENDCOM.
+				
+		ENDPROC.
+		
+		INTEGER MULT SECTION. INTEGER n1 INTEGER n2
+	
+			BEGINDECLARATIONS
+			ENDDECLARATIONS
+			
+			RETURN (n1 * n2).
+			
+			ENDCOM.
+				
+		ENDPROC.
+		
+		INTEGER DIV SECTION. INTEGER n1 INTEGER n2
+	
+			BEGINDECLARATIONS
+			ENDDECLARATIONS
+			
+			RETURN (n1 / n2).
+			
+			ENDCOM.
+				
+		ENDPROC.
+			
 		MAIN SECTION.
 			
 			BEGINDECLARATIONS
-				nomevar3 PIC INTEGER.
+				a PIC INTEGER.
+				b PIC INTEGER.
+				r PIC INTEGER.
 			ENDDECLARATIONS
 			
-			MOVE 10 TO nomevar3.
-					
-			IF TRUE THEN 
-				MOVE PERFORM MULT10 USING nomevar3 TO nomevar3. 
-				ENDCOM.
-			ENDIF.
+			MOVE 3 TO a.
+			MOVE 2 TO b.
+					 
+			MOVE (PERFORM SOMA USING a  USING b) TO r. 
 			
-			DISPLAY nomevar3.
+			DISPLAY r.
 			
+			MOVE (PERFORM SUB USING a  USING b) TO r. 
+			
+			DISPLAY r.
+			
+			MOVE (PERFORM MULT USING a  USING b) TO r. 
+			
+			DISPLAY r.
+			
+			# o assembly da erro de operando quando chama a instrução div ou idiv
+			# MOVE (PERFORM DIV USING a  USING b) TO r. 
+			
+			DISPLAY r.
 			
 			ENDCOM.
 				
-		ENDPROC.
-				
-		
+		ENDPROC.	
 		
 	EXIT.
