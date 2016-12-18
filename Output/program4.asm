@@ -46,19 +46,6 @@ pop eax
 mov esp, ebp
 pop ebp
 ret
-_div:
-push ebp
-mov ebp, esp
-push dword [ebp+12]
-push dword [ebp+8]
-pop ebx
-pop eax
-idiv eax
-push eax
-pop eax
-mov esp, ebp
-pop ebp
-ret
 _WinMain@16:
 push ebp
 mov ebp, esp
@@ -95,10 +82,6 @@ call _mult
 add esp, 8
 push eax
 pop dword [ebp-12]
-push dword [ebp-12]
-push dword intFormat
-call _printf
-add esp, 8
 push dword [ebp-12]
 push dword intFormat
 call _printf
