@@ -645,7 +645,7 @@ public class Encoder implements IVisitor
 					// professor, testamos com div e com idiv mas o SASM dá erro de operando com ambos
 					// pelo o que pesquisei deve-se ao fato que dd (inteiro) nao suporta o valor
 					// deve-se usar dq (float) mas não tenho certeza
-					emit("idiv eax"); 
+					emit("idiv eax, ebx"); 
 				}
 				emit("push eax");
 
